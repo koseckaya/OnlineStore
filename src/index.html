@@ -9,16 +9,99 @@
         <title>OnlineShop</title>
     </head>
     <body>
-        <header class="header">
-            <h1>YANKI</h1>
+        <header>
+            <div class="container">
+                <div class="header">
+                    <nav class="nav">
+                        <div class="nav__burger">
+                            <a href="./">
+                                <img src="./img/menu-burgeer.svg" alt="menu" />
+                            </a>
+                        </div>
+                        <div class="nav__menu">
+                            <ul class="menu-list">
+                                <li class="list-item">
+                                    <a href="#"
+                                        ><img src="./img/NEW.svg" alt="new"
+                                    /></a>
+                                </li>
+                                <li class="list-item">
+                                    <a href="#">КАТАЛОГ</a>
+                                </li>
+                                <li class="list-item"><a href="#">О НАС</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <h1>
+                        YANKI
+                        <img src="./img/YANKI-white.svg" alt="logo" />
+                    </h1>
+                    <div class="settings">
+                        <div class="settings__search">
+                            <a href="#">
+                                <img src="./img/find.svg" alt="search">
+                            </a>
+                        </div>
+                        <div class="settings__cart">
+                            <a href="#">
+                                <img src="./img/cart.svg" alt="cart">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
 
         <main class="main">
             <div id="root">Main page</div>
         </main>
 
-        <footer class="footer">
-            <p>©️ 2021 Yanki. All rights reserved</p>
+        <footer class="footer container">
+            <div class="footer__blocks">
+                <div class="company">
+                    <p class="company__title">КОМПАНИЯ</p>
+                    <a class="company__about" href="#">О нас</a>
+                    <a class="company__contacts" href="#">Контакты</a>
+                </div>
+                <div class="contacts">
+                    <p class="contacts__title">КОНТАКТЫ</p>
+                    <div class="contacts__social">
+                        <div class="social__instagram">
+                            <a href="https://www.instagram.com/">
+                                <img src="./img/instagram.svg" alt="instagram"
+                            /></a>
+                        </div>
+                        <div class="social__telegram">
+                            <a href="https://web.telegram.org/">
+                                <img src="./img/telegram.svg" alt="telegram" />
+                            </a>
+                        </div>
+                        <div class="social__rsschool">
+                            <a href="https://rs.school/">
+                                <img src="./img/rs_school_js.svg" alt="school"
+                            /></a>
+                        </div>
+                        <div class="social__git">
+                            <a href="https://github.com/siverianserpent">
+                                <img src="./img/github.svg" alt="github"
+                            /></a>
+                        </div>
+                        <div class="social__git">
+                            <a href="https://github.com/koseckaya">
+                                <img src="./img/github.svg" alt="github"
+                            /></a>
+                        </div>
+                    </div>
+                    <p class="contacts__phone">
+                        <a href="tel:+380999999999">+38(099) 999 99 99</a>
+                    </p>
+                    <p class="contacts__email">
+                        <a href="email:info@yanki.com">info@yanki.com</a>
+                    </p>
+                </div>
+            </div>
+
+            <p class="footer__copy">©️ 2021 Yanki. All rights reserved</p>
         </footer>
 
         <script type="module" src="index.ts"></script>
