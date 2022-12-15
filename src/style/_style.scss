@@ -1,3 +1,5 @@
+@import './fonts.scss';
+
 body {
   color: $text;
   background: $background;
@@ -9,4 +11,5 @@ body {
   box-sizing: border-box;
   padding: 0 15px;
   width: 100%;
+  margin: 0 auto;
 }
