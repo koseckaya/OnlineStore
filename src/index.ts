@@ -1,4 +1,4 @@
-// @ts-nocheck
+ // @ts-nocheck
 
 import './index.html';
 import './index.scss';
@@ -25,7 +25,7 @@ const router = () => {
         (request.verb ? `/${request.verb}` : '');
     const page = routes[parseUrl] ? routes[parseUrl] : Error404;
 
-    const main = document.querySelector('.main')
+    const main = document.getElementById('root')
     main?.innerHTML = page.render();
 }
 
