@@ -1,0 +1,112 @@
+[
+  {
+    "id": "1",
+    "brand": "Dope",
+    "name": "Blizzard",
+    "color": "Black",
+    "jacketType": "Snowboard Jacket",
+    "gender": "Men",
+    "price": "189",
+    "description": "Riding hoodie not technical enough? Ski jacket too cumbersome? Yep, we get it, don’t worry. That’s why we designed the Blizzard. It feels like a riding hood, and performs like a full-blooded snow jacket. Awesome waterproofing and all the features you need for all-mountain hijinks, the Blizzard is a no-fuss, minimalist choice ideal for spring slush sessions or winter resort cruising. If comfort and performance are the name of the game, then the Blizzard is here to play.",
+    "url": "https://www.dopesnow.com/images/H1295_01_bQuNs3v.jpg?w=838&dpr=1"
+  },
+  {
+    "id": "2",
+    "brand": "Dope",
+    "name": "Akin",
+    "color": "Grey Camo",
+    "jacketType": "Snowboard Jacket",
+    "gender": "Men",
+    "price": "259",
+    "description": "The Akin is everything you ever wanted in a jacket, and a whole lot more. We took inspiration from old school utility jackets and decked this one out with seven outer pockets. Never worry again with this awesome design. Just zip up, load up, and head into the great unknown. Highly waterproof and insulated enough to tackle the harshest weather, the Akin is an easy park cruiser, and a big mountain bruiser. This is where we’d drop the mic, if we had one.",
+    "url": "https://www.dopesnow.com/images/H1288_02_i5DEfDB.jpg?w=838&dpr=1"
+  },
+  {
+    "id": "3",
+    "brand": "Dope",
+    "name": "JT Legacy",
+    "color": "JT Cobalt Blue/Navy Blue",
+    "jacketType": "Ski Jacket",
+    "gender": "Men",
+    "price": "219",
+    "description": "The Limited Edition JT Legacy Pull Over is the product of our newest collaboration with ski wizard Jesper Tjäder. Made with relaxed sessions in mind, the Legacy is a pull-on-and-go style jacket that'll keep the snow off your back, and the other riders on their toes. When you don't need fancy zips or any of that other bulky snow-jacket stuff, the Legacy is perfect. It's new to the lineup this year, and is sure to leave a Legacy.",
+    "url": "https://www.dopesnow.com/images/H1640_01_SuL9BvP.jpg?w=838&dpr=1"
+  },
+  {
+    "id": "4",
+    "brand": "Dope",
+    "name": "Yeti",
+    "color": "Peak Black",
+    "jacketType": "Ski Jacket",
+    "gender": "Men",
+    "price": "169",
+    "description": "The Yeti is a mythical, elusive, mysterious beast... but there is one thing we know about it — that it's the best dang riding hoodie in the mountains! If you're looking for a reliable, cosy, comfy, and gosh-darn steezy softshell to take from the park to the pow, then hunt yourself down one of these and embrace the monster within. With lots of slick touches to make your day at the resort legendary, the Yeti is the only choice for your next snowy adventure.",
+    "url": "https://www.dopesnow.com/images/H1509_01_2dktihP.jpg?w=838&dpr=1"
+  },
+  {
+    "id": "5",
+    "brand": "Dope",
+    "name": "Adept",
+    "color": "Blue Steel",
+    "jacketType": "Ski Jacket",
+    "gender": "Men",
+    "price": "219",
+    "description": "Simplicity redefined. The Adept is a reliable zip-through jacket with all the features you need for a long day on the slopes. Highly waterproof, durable, and designed with the whole mountain in mind, the Adept is a staple in the Dope Snow lineup, and for good reason too. So say goodbye to swapping coats on the fly and choose the last one you'll ever want to own. When it comes to checking all the boxes, this is it. One jacket that really can do it all.",
+    "url": "https://www.dopesnow.com/images/H1277_01_Qh55FgM.jpg?w=838&dpr=1"
+  },
+  {
+    "id": "6",
+    "brand": "Dope",
+    "name": "Adept W",
+    "color": "Faded Violet",
+    "jacketType": "Snowboard Jacket",
+    "gender": "Women",
+    "price": "219",
+    "description": "Simplicity redefined. The Adept is a reliable zip-through jacket with all the features you need for a long day on the slopes. Highly waterproof, durable, and designed with the whole mountain in mind, the Adept is a staple in the Dope Snow lineup, and for good reason too. So say goodbye to swapping coats on the fly and choose the last one you'll ever want to own. When it comes to checking all the boxes, this is it. One jacket that really can do it all.",
+    "url": "https://www.dopesnow.com/images/H1316_01_KKiURru.jpg?w=725&dpr=1"
+  },
+  {
+    "id": "7",
+    "brand": "Dope",
+    "name": "Blizzard W",
+    "color": "Black",
+    "jacketType": "Snowboard Jacket",
+    "gender": "Women",
+    "price": "189",
+    "description": "Riding hoodie not technical enough? Ski jacket too cumbersome? Yep, we get it, don’t worry. That’s why we designed the Blizzard. It feels like a riding hood, and performs like a full-blooded snow jacket. Awesome waterproofing and all the features you need for all-mountain hijinks, the Blizzard is a no-fuss, minimalist choice ideal for spring slush sessions or winter resort cruising. If comfort and performance are the name of the game, then the Blizzard is here to play.",
+    "url": "https://www.dopesnow.com/images/H1349_01_1Eyz1ew.jpg?w=725&dpr=1"
+  },
+  {
+    "id": "8",
+    "brand": "Dope",
+    "name": "Akin W",
+    "color": "Soft Pink",
+    "jacketType": "Snowboard Jacket",
+    "gender": "Women",
+    "price": "259",
+    "description": "The Akin is everything you ever wanted in a jacket, and a whole lot more. We took inspiration from old school utility jackets and decked this one out with seven outer pockets. Never worry again with this awesome design. Just zip up, load up, and head into the great unknown. Highly waterproof and insulated enough to tackle the harshest weather, the Akin is an easy park cruiser, and a big mountain bruiser. This is where we’d drop the mic, if we had one.",
+    "url": "https://www.dopesnow.com/images/H1329_01_ee4zwLN.jpg?w=725&dpr=1"
+  },
+  {
+    "id": "9",
+    "brand": "Dope",
+    "name": "Cyclone W",
+    "color": "Walnut",
+    "jacketType": "Snowboard Jacket",
+    "gender": "Women",
+    "price": "169",
+    "description": "Sitting around pining for the nineties? For boxy cut jackets and really bad pop music? Well, us too. We sprinkled some retro flavour into our lineup with the Cyclone and blended modern softshell performance with a touch of throwback style to create... uh... this! Glorious, isn't it? It's got tech specs that'll make most ski jackets look like they're still running dial-up, and some awesome all-mountain design touches that make riding the whole resort a neon dream.",
+    "url": "https://www.dopesnow.com/images/H1377_01_h3KaglT.jpg?w=725&dpr=1"
+  },
+  {
+    "id": "10",
+    "brand": "Dope",
+    "name": "Adept W",
+    "color": "Cumulus",
+    "jacketType": "Snowboard Jacket",
+    "gender": "Women",
+    "price": "219",
+    "description": "Simplicity redefined. The Adept is a reliable zip-through jacket with all the features you need for a long day on the slopes. Highly waterproof, durable, and designed with the whole mountain in mind, the Adept is a staple in the Dope Snow lineup, and for good reason too. So say goodbye to swapping coats on the fly and choose the last one you'll ever want to own. When it comes to checking all the boxes, this is it. One jacket that really can do it all.",
+    "url": "https://www.dopesnow.com/images/H1323_01_9eH0e6v.jpg?w=725&dpr=1"
+  }
+]
