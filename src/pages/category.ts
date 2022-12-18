@@ -1,25 +1,23 @@
 // @ts-nocheck
-import data from '../data.json';
+import { items } from '../data.ts';
 
 const Category= {
     render: () => {
-        console.log(data )
+        console.log(items )
 
         return `
-        <p>Go to <a href="./">Main</a></p>
          <div class="filters"> 
             <div class="filter filter-size">
                 <button onclick="myFunction()" class="filter-btn">Размер</button>
-                <div id="filter-size" class="filter-sizes">
-                    <a href="#small">S</a>
-                    <a href="#medium">M</a>
-                    <a href="#large">L</a>
-                </div>
+                <button onclick="myFunction()" class="filter-btn">Цвет</button>
+                <button onclick="myFunction()" class="filter-btn">Цена</button>
+                <button onclick="myFunction()" class="filter-btn">Сортировать по</button>
+                
             </div>
         </div>
 
         <ul class="product-list">
-        ${data.map((prod) => `
+        ${items.map((prod) => `
              <li class="product-card">
                 <div class="card__image">
                     <a href="/#/product/${prod._id}">

@@ -32,4 +32,3 @@ const router = () => {
 window.addEventListener('load', router)
 window.addEventListener('hashchange', router)
 
-console.log(multiple(3, 4));

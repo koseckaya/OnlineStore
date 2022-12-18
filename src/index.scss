@@ -2,6 +2,8 @@
 @import 'style/fonts';
 @import 'style/var';
 @import 'style/style';
+@import 'style/error';
+@import 'style/categories';
 
 body{
     min-height: 100vh;
@@ -63,9 +65,7 @@ header {
 
 .main {
    min-height: calc(100vh - 200px); 
-   a {
-    color: $main;
-   }
+  
 }
 .footer {
     width: 100%;
@@ -173,6 +173,10 @@ header {
     }
     
 }
+.filters{
+    margin-bottom: 20px;
+}
+
 .filter {
     &-btn {
         background:  transparent;
