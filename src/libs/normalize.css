@@ -98,6 +98,13 @@ b,
 strong {
   font-weight: bolder;
 }
+ul {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style: none;
+}
 
 /**
  * 1. Correct the inheritance and scaling of font size in all browsers.
@@ -178,6 +185,8 @@ textarea {
 button,
 input { /* 1 */
   overflow: visible;
+  outline: none;
+  border: none;
 }
 
 /**
