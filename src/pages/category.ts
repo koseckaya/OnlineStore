@@ -1,9 +1,18 @@
 // @ts-nocheck
-import { items } from '../data.ts';
+import { items, categories } from '../data.ts';
+import { parseRequestURL } from '../helpers/utils.ts';
 
 const Category= {
     render: () => {
-        console.log(items )
+        const request = parseRequestURL()
+        console.log(request)
+        let categoryId = 0;
+        categories.forEach(cat => {
+            if (cat.name.toLowerCase() === request.id) {
+                categoryId = cat.id;
+            }
+        })
+        const filteredItems = items.filter(item => item.categoryId ===  categoryId);
 
         return `
          <div class="filters"> 
@@ -17,7 +26,7 @@ const Category= {
         </div>
 
         <ul class="product-list">
-        ${items.map((prod) => `
+        ${filteredItems.map((prod) => `
              <li class="product-card">
                 <div class="card__image">
                     <a href="/#/product/${prod._id}">
