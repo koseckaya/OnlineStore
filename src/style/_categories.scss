@@ -2,6 +2,29 @@
     display: flex;
     flex-direction: row;
     gap: 15px;
+    margin-top: 30px;
+    justify-content: space-between;
+    &-side{
+
+    }
+    .side__title{
+        font-size: 20px;
+        font-weight: 300;
+        line-height: 23px;
+        margin-bottom: 30px;
+        margin-top: 0;
+    }
+    .categ-item {
+         margin-bottom: 20px;
+         transition: all 0.5s ease;
+        a{
+            font-size: 18px;
+            line-height: 19px;
+            &:hover{
+                font-weight: 700;
+            }
+        }
+    }
 }
 .category{
     position: relative;
@@ -30,4 +53,102 @@
             line-height: 23px;
         }
     }
+}
+
+.product {
+    font-size: 16px;
+    line-height: 18px;
+    a {
+        color: $text;       
+    }
+    &-list{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 15px;
+        margin-bottom: 100px;
+    }
+    &-card{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    &-price {
+        font-weight: 700;
+    }
+}
+.card {
+     transition: all 1s ease;
+    &__image{
+        position: relative;
+        img{
+            width: 310px;
+            height: 360px; 
+            object-fit: cover;
+        }
+        &:hover .btn-category {
+            display: block;
+        }
+    }
+}
+.filters{
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.filter {
+    position: relative;
+    display: inline-block;
+    &-btn {
+        background:  transparent;
+        cursor: pointer;
+        margin-bottom: 5px;
+        transition: all 0.5s linear;
+        &:hover {
+            
+        }
+        &:active {
+            &::after{
+                content: '⏶';
+                color: $white;
+            }
+        }
+         
+        &::after {
+            content: '⏷';
+            color: $main;
+            margin-left: 5px;
+        }
+        &-size{
+            background-color: #f6f6f6;
+            position: absolute;
+        }
+    }
+}
+.dropdown-answers{
+    display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 150px;
+  border-radius: 10px;
+  z-index: 1;
+  a {
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid $main;
+    &:hover {
+        background-color: #f1f1f1;
+    }
+  }
+}
+.show {display:block;}
+.btn-category {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 4px;
+    display: none;
+    transition: all 1s ease;
 }

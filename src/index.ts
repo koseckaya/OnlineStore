@@ -2,7 +2,6 @@
 
 import './index.html';
 import './index.scss';
-import { multiple } from './modules/calc.ts';
 import Main from './pages/main.ts';
 import Product from './pages/product.ts';
 import Error404 from './pages/error404.ts';
@@ -14,6 +13,7 @@ const routes = {
     '/': Main,
     '/product/:id': Product,
     '/category/:id': Category,
+    '/category': Category,
     '/cart': Cart,
 }
 
