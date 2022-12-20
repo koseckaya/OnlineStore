@@ -1,6 +1,7 @@
 // @ts-nocheck
-import { items, categories } from '../data.ts';
+import { items, categories, sizes, colors } from '../data.ts';
 import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts';
+
 
 class Category {
     filters = {
@@ -40,27 +41,27 @@ class Category {
 
     getFilterItems = () => {
         const { categoryId, color, size } = this.filters;
+        let filteredItems = items;
 
-        if (categoryId === 0) return items;
-        return items.filter(item => item.categoryId === categoryId);
+        if (categoryId === 0) {
+           filteredItems = items;
+        } else {
+            filteredItems = items.filter(item => item.categoryId === categoryId);
+        }
+        if (color) {
+          filteredItems = items.filter(item => item.color.toLowerCase() === color.toLowerCase());  
+        }
+        if (size) {
+           filteredItems = items.filter(item => item.size.toLowerCase() === size.toLowerCase());   
+        }
+        console.log( filteredItems);
+        return filteredItems
     }
     
     sortByPrice = () => {
         return items.sort((a, b) => a.price > b.price ? 1 : -1);
     }
     
-    
-    filterGoods = (e) => {
-        const filters = document.querySelector('.filters')
-        const size = filters.querySelector('#filter-size').value
-        const color = filters.querySelector('#filter-color').value
-        const filteredItems =  items.filter(item => 
-            //(item.size.toLowerCase() === size.toLowerCase()) &&
-            (item.color.toLowerCase() === color.toLowerCase())
-        );
-        console.log( filteredItems);
-        return filteredItems
-    }
 
     handleChangeFilters = (e) => {
         const { name, value } = e.target;
@@ -106,17 +107,18 @@ class Category {
          <div class="filters"> 
             <select name="size" class="filter filter-size" id="filter-size">
                 <option class="filter-size__val" value="">Размер</option>
-                <option class="filter-size__val" value="s">S</option>
-                <option class="filter-size__val" value="m">M</option>
-                <option class="filter-size__val" value="l">L</option>
-                
+                ${sizes.map(s => `
+                    <option class="filter-size__val" value="${s}" 
+                   
+                    >${s.toUpperCase()}</option>
+                `).join('')}  
             </select>
             
             <select name="color" class="filter filter-color"  id="filter-color">
                 <option class="filter-size__val" value="">Цвет</option>
-                <option class="filter-size__val" value="white">White</option>
-                <option class="filter-size__val" value="black">Black</option>
-                <option class="filter-size__val" value="blue">Blue</option> 
+                ${colors.map(c => `
+                    <option class="filter-color__val" value="${c}">${c}</option>
+                `).join('')} 
             </select>
 
 
@@ -127,6 +129,7 @@ class Category {
                     <a href="#base">Рейтингу</a>
                 </div>  
             </div>
+            <div>Найдено: ${filteredItems.length}</div>
             <button onclick="myFunction()" class="btn">Сбросить фильтры</button>
         </div>
 

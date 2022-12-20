@@ -1,5 +1,8 @@
 import { Item, Category } from './types'
 
+export const sizes = ['S', 'M', 'L', 'XL', 'XXL']
+export  const colors = ['black', 'grey', 'blue', 'violet']
+
 export const items: Item[] = [
   {
     "id": 1,
