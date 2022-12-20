@@ -3,10 +3,14 @@ export interface Item {
   "categoryId": number;
   "brand": string;
   "name": string;
-  "color": string;
+  "colorHTML": string,
+  "availableColors": string[],
+  "color": string,
   "type": string;
   "gender": string;
   "price": number;
+  "rating": number;
+  "sizes": string[];
   "description": string;
   "url": string[];
 }
