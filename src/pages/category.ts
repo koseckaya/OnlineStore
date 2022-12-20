@@ -43,16 +43,19 @@ class Category {
         const { categoryId, color, size } = this.filters;
         let filteredItems = items;
 
+        console.log('size', size);
+
         if (categoryId === 0) {
            filteredItems = items;
         } else {
             filteredItems = items.filter(item => item.categoryId === categoryId);
-        }
-        if (color) {
-          filteredItems = items.filter(item => item.color.toLowerCase() === color.toLowerCase());  
+        } 
+        if(color) {
+          filteredItems = filteredItems.filter(item => item.color.toLowerCase() === color.toLowerCase());  
         }
         if (size) {
-           filteredItems = items.filter(item => item.size.toLowerCase() === size.toLowerCase());   
+            console.log('foll', filteredItems);
+            filteredItems = filteredItems.filter(item => item.sizes.includes(size.toUpperCase()));   
         }
         console.log( filteredItems);
         return filteredItems
@@ -108,7 +111,7 @@ class Category {
             <select name="size" class="filter filter-size" id="filter-size">
                 <option class="filter-size__val" value="">Размер</option>
                 ${sizes.map(s => `
-                    <option class="filter-size__val" value="${s}" 
+                    <option class="filter-size__val" value="${s}" ${this.filters.size === s ? 'selected="selected"' : ''} 
                    
                     >${s.toUpperCase()}</option>
                 `).join('')}  
@@ -117,7 +120,9 @@ class Category {
             <select name="color" class="filter filter-color"  id="filter-color">
                 <option class="filter-size__val" value="">Цвет</option>
                 ${colors.map(c => `
-                    <option class="filter-color__val" value="${c}">${c}</option>
+                    <option class="filter-color__val" value="${c}"
+                    ${this.filters.color === c ? ' selected="selected" ' : ''}
+                    >${c}</option>
                 `).join('')} 
             </select>
 
