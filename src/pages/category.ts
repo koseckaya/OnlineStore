@@ -40,8 +40,6 @@ class Category {
     getFilterItems = () => {
         const { categoryId, color, size } = this.filters;
 
-        console.log('FILTER', color, size)
-
         if (categoryId === 0) return items;
         return items.filter(item => item.categoryId === categoryId);
     }
@@ -56,25 +54,24 @@ class Category {
         const size = filters.querySelector('#filter-size').value
         const color = filters.querySelector('#filter-color').value
         const filteredItems =  items.filter(item => 
-            //(item.size.toLowerCase() === size.toLowerCase()) 
+            //(item.size.toLowerCase() === size.toLowerCase()) &&
             (item.color.toLowerCase() === color.toLowerCase())
         );
         console.log( filteredItems);
         return filteredItems
     }
-    toggleShow = (event) => {
-        console.log(12451);
-        console.log(event.target)
-        return;
-        
-    }
 
     handleChangeFilters = (e) => {
         const { name, value } = e.target;
-
+        console.log('у', e.target);
         this.filters[name] = value;
 
-        setUrlParams(this.filters)
+        this.updateUrlParams()
+    }
+
+    updateUrlParams = () => {
+        const { categoryId, ...rest} = this.filters
+        setUrlParams(rest)
     }
 
     bind = () => {
@@ -86,11 +83,7 @@ class Category {
     }
 
     render = () => {
-        const request = parseRequestURL()
-        console.log(request)
-        URLSearchParams 
-
-
+   
         const filteredItems = this.getFilterItems()
 
         return `
@@ -109,16 +102,8 @@ class Category {
                 </ul>
             </div>
         <div class="categories-main">
-            
+
          <div class="filters"> 
-            <div class="filter filter-size">
-                <button  class="filter-btn">Размер</button>
-                <div class="dropdown-answers">
-                    <a href="#about">S</a>
-                    <a href="#base">M</a>
-                    <a href="#blog">L</a>
-                </div> 
-            </div>
             <select name="size" class="filter filter-size" id="filter-size">
                 <option class="filter-size__val" value="">Размер</option>
                 <option class="filter-size__val" value="s">S</option>

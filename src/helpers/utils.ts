@@ -19,7 +19,6 @@ export const setUrlParams = (params) => {
         if (params[param]) {
             acc.set(param, params[param]);
         }
-
         return acc
     }, new URLSearchParams())
 
