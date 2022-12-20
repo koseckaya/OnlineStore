@@ -1,9 +1,32 @@
 // @ts-nocheck
 import { items, categories } from '../data.ts';
-import { parseRequestURL } from '../helpers/utils.ts';
+import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts';
 
-const Category = {
-    getCategoryId: () => {
+class Category {
+    filters = {
+        size: '',
+        color: '',
+        categoryId: 0,
+    };
+
+    constructor() {
+        let categoryId = this.getCategoryId();
+        this.filters.categoryId = categoryId;
+
+        const urlParams = getUrlParams();
+
+        if (urlParams.has('size')) {
+            this.filters.size = urlParams.get('size');
+        }
+
+        if (urlParams.has('color')) {
+            this.filters.color = urlParams.get('color');
+        }
+
+        console.log(this.filters);
+    }
+    
+    getCategoryId = () => {
         const request = parseRequestURL()
         let categoryId = 0;
         categories.forEach(cat => {
@@ -12,28 +35,68 @@ const Category = {
             }
         })
        return categoryId
-    },
-    getFilterItems: (categoryId) => {
+    }
+
+    getFilterItems = () => {
+        const { categoryId, color, size } = this.filters;
+
+        console.log('FILTER', color, size)
+
         if (categoryId === 0) return items;
         return items.filter(item => item.categoryId === categoryId);
-    },
-    sortByPrice: () => {
+    }
+    
+    sortByPrice = () => {
         return items.sort((a, b) => a.price > b.price ? 1 : -1);
-    },
-    toggleShow: () => {
-        document.querySelectorAll(".dropdown-answers").classList.toggle("show")
-    },
+    }
+    
+    
+    filterGoods = (e) => {
+        const filters = document.querySelector('.filters')
+        const size = filters.querySelector('#filter-size').value
+        const color = filters.querySelector('#filter-color').value
+        const filteredItems =  items.filter(item => 
+            //(item.size.toLowerCase() === size.toLowerCase()) 
+            (item.color.toLowerCase() === color.toLowerCase())
+        );
+        console.log( filteredItems);
+        return filteredItems
+    }
+    toggleShow = (event) => {
+        console.log(12451);
+        console.log(event.target)
+        return;
+        
+    }
 
-    render: () => {
+    handleChangeFilters = (e) => {
+        const { name, value } = e.target;
 
-        let categoryId = Category.getCategoryId()
-        const filteredItems = Category.getFilterItems(categoryId)
+        this.filters[name] = value;
+
+        setUrlParams(this.filters)
+    }
+
+    bind = () => {
+
+        const lists = document.querySelectorAll(".filters select");
+        for (let i = 0; i < lists.length; i++) {
+            lists[i].addEventListener('change', this.handleChangeFilters)
+        }
+    }
+
+    render = () => {
+        const request = parseRequestURL()
+        console.log(request)
+        URLSearchParams 
+
+
+        const filteredItems = this.getFilterItems()
 
         return `
         <div class="categories">
-            <div class="bread-crumbs">
+            <div class="bread-crumbs"></div>
 
-            </div>
             <div class="categories-side">
                 <h2 class="side__title">Каталог</h2>
                 <ul class="categ-list">
@@ -49,15 +112,36 @@ const Category = {
             
          <div class="filters"> 
             <div class="filter filter-size">
-                <button onclick="toggleShow()" class="filter-btn">Размер</button>
-                <div class="dropdown-answers show">
+                <button  class="filter-btn">Размер</button>
+                <div class="dropdown-answers">
                     <a href="#about">S</a>
                     <a href="#base">M</a>
                     <a href="#blog">L</a>
+                </div> 
+            </div>
+            <select name="size" class="filter filter-size" id="filter-size">
+                <option class="filter-size__val" value="">Размер</option>
+                <option class="filter-size__val" value="s">S</option>
+                <option class="filter-size__val" value="m">M</option>
+                <option class="filter-size__val" value="l">L</option>
+                
+            </select>
+            
+            <select name="color" class="filter filter-color"  id="filter-color">
+                <option class="filter-size__val" value="">Цвет</option>
+                <option class="filter-size__val" value="white">White</option>
+                <option class="filter-size__val" value="black">Black</option>
+                <option class="filter-size__val" value="blue">Blue</option> 
+            </select>
+
+
+            <div class="filter filter-sortby">
+                <button id="filter-sortby" class="filter-btn filter-btn-sortby">Сортировать по</button>
+                <div class="dropdown-answers">
+                    <a href="#about">Цене</a>
+                    <a href="#base">Рейтингу</a>
                 </div>  
             </div>
-            <button onclick="myFunction()" class="filter-btn">Цвет</button>
-            <button onclick="myFunction()" class="filter-btn">Сортировать по</button>
             <button onclick="myFunction()" class="btn">Сбросить фильтры</button>
         </div>
 
@@ -87,7 +171,7 @@ const Category = {
         `
         ).join('')}
         </div></div>`;
-    },
+    }
 };
 
-export default Category
+export default Category;

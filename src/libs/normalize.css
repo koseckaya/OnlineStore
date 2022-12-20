@@ -189,6 +189,11 @@ input { /* 1 */
   border: none;
 }
 
+option, select {
+  outline: none;
+  border: none;
+}
+
 /**
  * Remove the inheritance of text transform in Edge, Firefox, and IE.
  * 1. Remove the inheritance of text transform in Firefox.

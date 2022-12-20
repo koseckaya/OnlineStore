@@ -100,29 +100,17 @@
 .filter {
     position: relative;
     display: inline-block;
-    &-btn {
-        background:  transparent;
-        cursor: pointer;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.5s linear;
+  
+    &-btn{
         margin-bottom: 5px;
-        transition: all 0.5s linear;
-        &:hover {
-            
-        }
-        &:active {
-            &::after{
-                content: '⏶';
-                color: $white;
-            }
-        }
-         
+        background: transparent;
         &::after {
             content: '⏷';
             color: $main;
             margin-left: 5px;
-        }
-        &-size{
-            background-color: #f6f6f6;
-            position: absolute;
         }
     }
 }
@@ -142,6 +130,26 @@
         background-color: #f1f1f1;
     }
   }
+}
+.filter-size, .filter-color{
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    border-bottom: 1px solid $main;
+    border-radius: 5px;
+    background: transparent;
+    &:hover {
+        background-color: #f1f1f1;
+    }
+    &__val{
+        background: #f1f1f1;
+        &:hover {
+            box-shadow: 0 0 10px 100px $main inset;
+        }
+    }
+}
+select option:hover {
+    background: $main;
 }
 .show {display:block;}
 .btn-category {

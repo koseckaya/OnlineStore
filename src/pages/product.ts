@@ -2,7 +2,8 @@
 
 const Product = {
     render: () => {
-        return `<div>Product</div> <p>Go to <a href="./">Main</a></p>`
+        return `<div>Product</div> 
+        <p>Go to <a href="./">Main</a></p>`
     }
 }
 

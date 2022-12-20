@@ -9,15 +9,17 @@ import Category from './pages/category.ts';
 import Cart from './pages/cart.ts';
 import { parseRequestURL } from './helpers/utils.ts';
 
-const routes = {
+
+
+const router = () => {
+    const routes = {
     '/': Main,
     '/product/:id': Product,
-    '/category/:id': Category,
-    '/category': Category,
+    '/category/:id': new Category(),
+    '/category': new Category(),
     '/cart': Cart,
 }
 
-const router = () => {
     const request = parseRequestURL()
     const parseUrl =
         (request.resource ? `/${request.resource}` : '/') +
@@ -27,7 +29,9 @@ const router = () => {
 
     const main = document.getElementById('root')
     main?.innerHTML = page.render();
+    page?.bind()
 }
+
 
 window.addEventListener('load', router)
 window.addEventListener('hashchange', router)
