@@ -2,7 +2,6 @@
 import { items, categories, sizes, colors } from '../data.ts';
 import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts';
 
-
 class Category {
     filters = {
         size: '',
@@ -24,8 +23,6 @@ class Category {
         if (urlParams.has('color')) {
             this.filters.color = urlParams.get('color');
         }
-
-        console.log(this.filters);
     }
     
     getCategoryId = () => {
@@ -43,8 +40,6 @@ class Category {
         const { categoryId, color, size } = this.filters;
         let filteredItems = items;
 
-        console.log('size', size);
-
         if (categoryId === 0) {
            filteredItems = items;
         } else {
@@ -54,29 +49,23 @@ class Category {
           filteredItems = filteredItems.filter(item => item.color.toLowerCase() === color.toLowerCase());  
         }
         if (size) {
-            console.log('foll', filteredItems);
             filteredItems = filteredItems.filter(item => item.sizes.includes(size.toUpperCase()));   
         }
-        console.log( filteredItems);
         return filteredItems
     }
-    
     sortByPrice = () => {
         return items.sort((a, b) => a.price > b.price ? 1 : -1);
     }
-    
-
     handleChangeFilters = (e) => {
         const { name, value } = e.target;
-        console.log('handleChangeFilters', e.target);
         this.filters[name] = value;
         this.updateUrlParams()
     }
-
     updateUrlParams = () => {
         const { categoryId, ...rest} = this.filters
         setUrlParams(rest)
     }
+  
 
     bind = () => {
 
@@ -84,6 +73,9 @@ class Category {
         for (let i = 0; i < lists.length; i++) {
             lists[i].addEventListener('change', this.handleChangeFilters)
         }
+
+        const resetBtn = document.querySelector('.btn-reset')
+        resetBtn?.addEventListener('click', this.resetFilters)
     }
 
     render = () => {
@@ -112,7 +104,6 @@ class Category {
                 <option class="filter-size__val" value="">Размер</option>
                 ${sizes.map(s => `
                     <option class="filter-size__val" value="${s}" ${this.filters.size === s ? 'selected="selected"' : ''} 
-                   
                     >${s.toUpperCase()}</option>
                 `).join('')}  
             </select>
@@ -135,7 +126,7 @@ class Category {
                 </div>  
             </div>
             <div>Найдено: ${filteredItems.length}</div>
-            <button onclick="myFunction()" class="btn">Сбросить фильтры</button>
+            <button class="btn btn-reset">Сбросить фильтры</button>
         </div>
 
         <ul class="product-list">

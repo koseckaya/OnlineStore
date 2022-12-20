@@ -138,12 +138,12 @@
     border-bottom: 1px solid $main;
     border-radius: 5px;
     background: transparent;
+    text-transform: capitalize;
     &:hover {
         background-color: #f1f1f1;
     }
     &__val{
         background: #f1f1f1;
-        text-transform: capitalize;
         &:hover {
             box-shadow: 0 0 10px 100px $main inset;
         }
