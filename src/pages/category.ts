@@ -8,6 +8,7 @@ class Category {
         color: '',
         categoryId: 0,
     };
+    
 
     constructor() {
         let categoryId = this.getCategoryId();
@@ -63,9 +64,8 @@ class Category {
 
     handleChangeFilters = (e) => {
         const { name, value } = e.target;
-        console.log('у', e.target);
+        console.log('handleChangeFilters', e.target);
         this.filters[name] = value;
-
         this.updateUrlParams()
     }
 
