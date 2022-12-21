@@ -12,7 +12,7 @@ const Main = {
              <div class="categories">
                 ${categories.map((cat) => `
                     <div class="category">
-                        <a class="category__item" href="/#/category/${cat.name.toLowerCase()}">
+                        <a class="category__item" href="#/category/${cat.name.toLowerCase()}">
                             <img src="${cat.url}">
                         </a>
                          <div class="product-name">

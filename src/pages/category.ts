@@ -42,10 +42,11 @@ class Category {
 
         if (categoryId === 0) {
            filteredItems = items;
-        } else {
-            filteredItems = items.filter(item => item.categoryId === categoryId);
         } 
-        if(color) {
+        if (categoryId !== 0) {
+            filteredItems = items.filter(item => item.categoryId === categoryId);
+        }
+        if (color) {
           filteredItems = filteredItems.filter(item => item.color.toLowerCase() === color.toLowerCase());  
         }
         if (size) {
@@ -65,7 +66,12 @@ class Category {
         const { categoryId, ...rest} = this.filters
         setUrlParams(rest)
     }
-  
+   resetFilters = () => {
+     this.filters.size = '';
+     this.filters.color = '';
+     this.filters.categoryId = 0;
+     this.updateUrlParams()
+    }
 
     bind = () => {
 
@@ -96,28 +102,32 @@ class Category {
                                 ${cat.name}</a></li>
                     `).join('')}
                 </ul>
+                <div class="filters"> 
+                    
+                    <select name="size" class="filter filter-size" id="filter-size">
+                        <option class="filter-size__val" value="">Размер</option>
+                        ${sizes.map(s => `
+                            <option class="filter-size__val" value="${s}" ${this.filters.size === s ? 'selected="selected"' : ''} 
+                            >${s.toUpperCase()}</option>
+                        `).join('')}  
+                    </select>
+                    
+                    <select name="color" class="filter filter-color"  id="filter-color">
+                        <option class="filter-size__val" value="">Цвет</option>
+                        ${colors.map(c => `
+                            <option class="filter-color__val" value="${c}"
+                            ${this.filters.color === c ? ' selected="selected" ' : ''}
+                            >${c}</option>
+                        `).join('')} 
+                    </select>
+
+            <button class="btn btn-reset">Сбросить фильтры</button>
+        </div>
             </div>
+
         <div class="categories-main">
-
-         <div class="filters"> 
-            <select name="size" class="filter filter-size" id="filter-size">
-                <option class="filter-size__val" value="">Размер</option>
-                ${sizes.map(s => `
-                    <option class="filter-size__val" value="${s}" ${this.filters.size === s ? 'selected="selected"' : ''} 
-                    >${s.toUpperCase()}</option>
-                `).join('')}  
-            </select>
-            
-            <select name="color" class="filter filter-color"  id="filter-color">
-                <option class="filter-size__val" value="">Цвет</option>
-                ${colors.map(c => `
-                    <option class="filter-color__val" value="${c}"
-                    ${this.filters.color === c ? ' selected="selected" ' : ''}
-                    >${c}</option>
-                `).join('')} 
-            </select>
-
-
+        <div class='sortby'>
+             <div>Найдено: ${filteredItems.length}</div>
             <div class="filter filter-sortby">
                 <button id="filter-sortby" class="filter-btn filter-btn-sortby">Сортировать по</button>
                 <div class="dropdown-answers">
@@ -125,11 +135,10 @@ class Category {
                     <a href="#base">Рейтингу</a>
                 </div>  
             </div>
-            <div>Найдено: ${filteredItems.length}</div>
-            <button class="btn btn-reset">Сбросить фильтры</button>
+            
         </div>
-
         <ul class="product-list">
+        ${filteredItems.length === 0 ? '<div class="no-products">no ptroducts</div>' : ''}
         ${filteredItems.map((prod) => `
              <li class="product-card">
                 <div class="card__image">
