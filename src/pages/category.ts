@@ -111,7 +111,7 @@ class Category {
             <div class="bread-crumbs"></div>
 
             <div class="categories-side">
-                <h2 class="side__title">Каталог</h2>
+                <h2 class="side__title">Categories</h2>
                 <ul class="categ-list">
                     <li class="categ-item"><a href="/#/category">All</a></li>
                     ${categories.map(cat => `
@@ -123,7 +123,7 @@ class Category {
                 <div class="filters"> 
                     
                     <select name="size" class="filter filter-size" id="filter-size">
-                        <option class="filter-size__val" value="">Размер</option>
+                        <option class="filter-size__val" value="">Size</option>
                         ${sizes.map(s => `
                             <option class="filter-size__val" value="${s}" ${this.filters.size === s ? 'selected="selected"' : ''} 
                             >${s.toUpperCase()}</option>
@@ -131,7 +131,7 @@ class Category {
                     </select>
                     
                     <select name="color" class="filter filter-color"  id="filter-color">
-                        <option class="filter-size__val" value="">Цвет</option>
+                        <option class="filter-size__val" value="">Color</option>
                         ${colors.map(c => `
                             <option class="filter-color__val" value="${c}"
                             ${this.filters.color === c ? ' selected="selected" ' : ''}
@@ -156,16 +156,16 @@ class Category {
                         </div>
                     </div>
 
-            <button class="btn btn-reset">Сбросить фильтры</button>
+            <button class="btn btn-reset">Clear filters</button>
         </div>
             </div>
 
         <div class="categories-main">
         <div class='sortBy'>
-             <div>Найдено: ${filteredItems.length}</div>
+             <div>Found: ${filteredItems.length}</div>
              <div class="filters"> 
                 <select name='sortBy' class="filter filter-sortBy" id="filter-sortBy">
-                    <option class="filter-sortBy" value="">Сортировать по</option>
+                    <option class="filter-sortBy" value="">Sort by</option>
                      ${sortBy.map((s:SortByTypes)  => `
                             <option class="filter-sortBy" value="${s}"
                             ${this.filters.sortBy === s ? ' selected="selected" ' : ''}
@@ -176,14 +176,14 @@ class Category {
             
         </div>
         <ul class="product-list">
-        ${filteredItems.length === 0 ? '<div class="no-products">Товары не найдены</div>' : ''}
+        ${filteredItems.length === 0 ? '<div class="no-products">Products not found</div>' : ''}
         ${filteredItems.map((prod) => `
              <li class="product-card">
                 <div class="card__image">
                     <a href="/#/product/${prod.id}">
                         <img src="${prod.url}" alt="${prod.name}">
                     </a>
-                    <button class="btn btn-category">добавить в карзину</button>
+                    
                 </div>
                 <div class="product-name">
                     <a href="/#/product/1">
