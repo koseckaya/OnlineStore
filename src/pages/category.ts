@@ -9,6 +9,8 @@ class Category {
         color: '',
         categoryId: 0,
         sortBy: '',
+        priceMin: 0,
+        priceMax: 259,
     };
     
 
@@ -28,6 +30,12 @@ class Category {
          if (urlParams.has('sortBy')) {
             this.filters.sortBy = urlParams.get('sortBy');
         }
+         if (urlParams.has('priceMin')) {
+            this.filters.priceMin = urlParams.get('priceMin');
+        }
+         if (urlParams.has('priceMax')) {
+            this.filters.priceMax = urlParams.get('priceMax');
+        }
     }
     
     getCategoryId = () => {
@@ -42,7 +50,7 @@ class Category {
     }
 
     getFilterItems = () => {
-        const { categoryId, color, size, sortBy } = this.filters;
+        const { categoryId, color, size, sortBy, priceMin, priceMax } = this.filters;
         let filteredItems = items;
 
         if (categoryId === 0) {
@@ -67,7 +75,13 @@ class Category {
             if (sortBy === 'rating') {
                 filteredItems = filteredItems.sort((a, b) => a.rating < b.rating ? 1 : -1)
             }
-            
+        }
+        console.log('priceMin', priceMin);
+        if (priceMin) {
+            filteredItems = filteredItems.filter(item => item.price >= priceMin)
+        }
+        if (priceMax) {
+            filteredItems = filteredItems.filter(item => item.price <= priceMax)
         }
 
         return filteredItems
@@ -82,12 +96,56 @@ class Category {
         const { categoryId, ...rest} = this.filters
         setUrlParams(rest)
     }
-   resetFilters = () => {
-    this.filters.size = '';
-    this.filters.color = '';
-    this.filters.categoryId = 0;
-    this.filters.sortBy = '';
-    this.updateUrlParams()
+    resetFilters = () => {
+        this.filters.size = '';
+        this.filters.color = '';
+        this.filters.categoryId = 0;
+        this.filters.sortBy = '';
+        this.filters.priceMax = 500;
+        this.filters.priceMin = 0;
+        this.updateUrlParams()
+    }
+    initRangePrice = () => {
+        const that = this
+        console.log('initRangePrice');
+        const lowerSlider = document.querySelector('#price-lower');
+        const upperSlider = document.querySelector('#price-upper');
+        
+        document.querySelector('#price-two').value= that.filters.priceMax;
+        document.querySelector('#price-one').value = that.filters.priceMin ; 
+        let lowerVal = parseInt(lowerSlider.value);
+        let upperVal = parseInt(upperSlider.value);
+
+        upperSlider.oninput = function () {
+            lowerVal = parseInt(lowerSlider.value);
+            upperVal = parseInt(upperSlider.value);
+
+            if (upperVal < lowerVal + 4) {
+                lowerSlider.value = upperVal - 4;
+                if (lowerVal == lowerSlider.min) {
+                upperSlider.value = 4;
+                }
+            }
+            document.querySelector('#price-two').value = this.value
+            that.filters.priceMax = this.value
+        };
+        lowerSlider.oninput = function () {
+            lowerVal = parseInt(lowerSlider.value);
+            upperVal = parseInt(upperSlider.value);
+            if (lowerVal > upperVal - 4) {
+                upperSlider.value = lowerVal + 4;
+                if (upperVal == upperSlider.max) {
+                    lowerSlider.value = parseInt(upperSlider.max) - 4;
+                }
+            }
+            document.querySelector('#price-one').value = this.value
+            that.filters.priceMin = this.value
+        }; 
+    }
+    handlePriceApply = () => {
+        console.log('filters', this.filters);
+        this.updateUrlParams()
+        this.getFilterItems()
     }
 
     bind = () => {
@@ -99,6 +157,11 @@ class Category {
 
         const resetBtn = document.querySelector('.btn-reset')
         resetBtn?.addEventListener('click', this.resetFilters)
+
+        const applyBtn = document.querySelector('.btn-applyPrice')
+        applyBtn?.addEventListener('click', this.handlePriceApply)
+
+        this.initRangePrice()
     }
 
     render = () => {
@@ -139,22 +202,27 @@ class Category {
                         `).join('')} 
                     </select>
 
-                    <div class="filter filter-price">
-                        <input type="range" min="0" max="500" value="135" id="price-lower">
-                        <input type="range" min="0" max="500" value="500" id="price-upper">
+                    <fieldset class="filter filter-price">
+                        <div class="price-title">Price</div>
+                        <div class="price-field">
+                            <input type="range" min="0" max="500" value="${this.filters.priceMin}" id="price-lower">
+                            <input type="range" min="0" max="500" value="${this.filters.priceMax}" id="price-upper">
+                        </div>
                         <div class ="price-wrap">
                             <div class="price-container">
                                 <div class="price-wrap-1">
-                                    <label for="one">$</label>
-                                    <input id="one">
+                                    <input id="price-one">
+                                    <label for="price-one">$</label>
+                                    
                                 </div>
                                 <div class="price-wrap-2">
-                                    <label for="two">$</label>
-                                    <input id="two">
+                                    <input id="price-two">
+                                    <label for="price-two">$</label>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <button class="btn btn-applyPrice">Apply</button>
+                    </fieldset>
 
             <button class="btn btn-reset">Clear filters</button>
         </div>
@@ -183,7 +251,7 @@ class Category {
                     <a href="/#/product/${prod.id}">
                         <img src="${prod.url}" alt="${prod.name}">
                     </a>
-                    
+                    <button class="btn btn-category">Add to cart</button>
                 </div>
                 <div class="product-name">
                     <a href="/#/product/1">
