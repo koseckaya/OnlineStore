@@ -4,6 +4,9 @@
     gap: 15px;
     margin-top: 30px;
     justify-content: space-between;
+    &-main {
+        width: 100%;
+    }
     &-side{
 
     }
@@ -121,7 +124,7 @@
 }
 .no-products{
     width: 100%;
-    
+
 }
 .dropdown-answers{
     display: none;

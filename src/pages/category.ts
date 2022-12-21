@@ -138,7 +138,7 @@ class Category {
             
         </div>
         <ul class="product-list">
-        ${filteredItems.length === 0 ? '<div class="no-products">no ptroducts</div>' : ''}
+        ${filteredItems.length === 0 ? '<div class="no-products">Товары не найдены</div>' : ''}
         ${filteredItems.map((prod) => `
              <li class="product-card">
                 <div class="card__image">
