@@ -139,6 +139,23 @@ class Category {
                         `).join('')} 
                     </select>
 
+                    <div class="filter filter-price">
+                        <input type="range" min="0" max="500" value="135" id="price-lower">
+                        <input type="range" min="0" max="500" value="500" id="price-upper">
+                        <div class ="price-wrap">
+                            <div class="price-container">
+                                <div class="price-wrap-1">
+                                    <label for="one">$</label>
+                                    <input id="one">
+                                </div>
+                                <div class="price-wrap-2">
+                                    <label for="two">$</label>
+                                    <input id="two">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
             <button class="btn btn-reset">Сбросить фильтры</button>
         </div>
             </div>

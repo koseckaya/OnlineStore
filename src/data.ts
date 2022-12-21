@@ -1,7 +1,8 @@
 import { Item, Category, SortByTypes } from './types'
 
-export const sizes = ['S', 'M', 'L', 'XL', 'XXL']
-export const colors = ['black', 'grey', 'blue', 'violet']
+export const sizes: string[] = ['S', 'M', 'L', 'XL', 'XXL']
+export const colors: string[] = ['black', 'grey', 'blue', 'violet', 'white', 'peach', 'pink', 'brown', 'khaki', 'sand',
+  'red', 'green', 'orange']
 export const sortBy: SortByTypes[] = [
   SortByTypes.priceAsc,
   SortByTypes.priceDesc,
