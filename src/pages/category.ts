@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { items, categories, sizes, colors } from '../data.ts';
+import { items, categories, sizes, colors , sortBy} from '../data.ts';
+import { stringsSortBy } from '../helpers/strings';
 import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts';
 
 class Category {
@@ -7,6 +8,7 @@ class Category {
         size: '',
         color: '',
         categoryId: 0,
+        sortBy: '',
     };
     
 
@@ -23,6 +25,9 @@ class Category {
         if (urlParams.has('color')) {
             this.filters.color = urlParams.get('color');
         }
+         if (urlParams.has('sortBy')) {
+            this.filters.sortBy = urlParams.get('sortBy');
+        }
     }
     
     getCategoryId = () => {
@@ -37,7 +42,7 @@ class Category {
     }
 
     getFilterItems = () => {
-        const { categoryId, color, size } = this.filters;
+        const { categoryId, color, size, sortBy } = this.filters;
         let filteredItems = items;
 
         if (categoryId === 0) {
@@ -52,11 +57,22 @@ class Category {
         if (size) {
             filteredItems = filteredItems.filter(item => item.sizes.includes(size.toUpperCase()));   
         }
+        if (sortBy) {
+            if (sortBy === 'priceAsc') {
+                filteredItems = filteredItems.sort((a, b) => a.price > b.price ? 1 : -1)
+            }
+            if (sortBy === 'priceDesc') {
+                filteredItems = filteredItems.sort((a, b) => a.price < b.price ? 1 : -1)
+            }
+            if (sortBy === 'rating') {
+                filteredItems = filteredItems.sort((a, b) => a.rating < b.rating ? 1 : -1)
+            }
+            
+        }
+
         return filteredItems
     }
-    sortByPrice = () => {
-        return items.sort((a, b) => a.price > b.price ? 1 : -1);
-    }
+    
     handleChangeFilters = (e) => {
         const { name, value } = e.target;
         this.filters[name] = value;
@@ -67,10 +83,11 @@ class Category {
         setUrlParams(rest)
     }
    resetFilters = () => {
-     this.filters.size = '';
-     this.filters.color = '';
-     this.filters.categoryId = 0;
-     this.updateUrlParams()
+    this.filters.size = '';
+    this.filters.color = '';
+    this.filters.categoryId = 0;
+    this.filters.sortBy = '';
+    this.updateUrlParams()
     }
 
     bind = () => {
@@ -87,6 +104,7 @@ class Category {
     render = () => {
    
         const filteredItems = this.getFilterItems()
+        
 
         return `
         <div class="categories">
@@ -126,14 +144,17 @@ class Category {
             </div>
 
         <div class="categories-main">
-        <div class='sortby'>
+        <div class='sortBy'>
              <div>Найдено: ${filteredItems.length}</div>
-            <div class="filter filter-sortby">
-                <button id="filter-sortby" class="filter-btn filter-btn-sortby">Сортировать по</button>
-                <div class="dropdown-answers">
-                    <a href="#about">Цене</a>
-                    <a href="#base">Рейтингу</a>
-                </div>  
+             <div class="filters"> 
+                <select name='sortBy' class="filter filter-sortBy" id="filter-sortBy">
+                    <option class="filter-sortBy" value="">Сортировать по</option>
+                     ${sortBy.map((s:SortByTypes)  => `
+                            <option class="filter-sortBy" value="${s}"
+                            ${this.filters.sortBy === s ? ' selected="selected" ' : ''}
+                            >${stringsSortBy[s]}</option>
+                    `).join('')} 
+                </select>
             </div>
             
         </div>

@@ -1,7 +1,12 @@
-import { Item, Category } from './types'
+import { Item, Category, SortByTypes } from './types'
 
 export const sizes = ['S', 'M', 'L', 'XL', 'XXL']
-export  const colors = ['black', 'grey', 'blue', 'violet']
+export const colors = ['black', 'grey', 'blue', 'violet']
+export const sortBy: SortByTypes[] = [
+  SortByTypes.priceAsc,
+  SortByTypes.priceDesc,
+  SortByTypes.rating
+]
 
 export const items: Item[] = [
   {

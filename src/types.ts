@@ -20,3 +20,13 @@ export interface Category {
   "name": string;
   "url": string;
 }
+
+export enum SortByTypes {
+  priceAsc = 'priceAsc',
+  priceDesc = 'priceDesc',
+  rating = 'rating'
+}
+
+export type StringsSortByType = {
+    [key in SortByTypes]: string;
+};

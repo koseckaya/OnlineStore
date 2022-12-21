@@ -106,7 +106,6 @@
     background: transparent;
     cursor: pointer;
     transition: all 0.5s linear;
-    width: 75%;
     margin-bottom: 15px;
     &-btn{
         margin-bottom: 5px;
@@ -118,7 +117,7 @@
         }
     }
 }
-.sortby{
+.sortBy{
     display: flex;
     justify-content: space-between;
 }
@@ -143,7 +142,7 @@
     }
   }
 }
-.filter-size, .filter-color{
+.filter-size, .filter-color, .filter-sortBy{
     padding: 10px 15px;
     text-decoration: none;
     display: block;
@@ -161,6 +160,9 @@
             box-shadow: 0 0 10px 100px $main inset;
         }
     }
+}
+.filter-sortBy{
+    text-transform: none;
 }
 select option:hover {
     background: $main;
