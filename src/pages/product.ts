@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { parseRequestURL } from "../helpers/utils.ts";
-import { items, _categories } from "../data.ts";
+import { items } from "../data.ts";
 import starsImage from "../img/stars5.png";
 const request = parseRequestURL()
 const neededItemId = request.id;
-const {name, colorHTML, availableColors, categoryId, brand, type, gender, price, description, url, rating, sizes} = items[Number(neededItemId-1)];
+const {name, colorHTML, availableColors, categoryId, brand, type, gender, price, description, url, rating, sizes} = items[neededItemId-1];
 
 console.log(starsImage)
 // transformation of available sizes in Product object to html-string, that we add to render()
@@ -30,13 +30,38 @@ function filterAvailableColors() {
     return filteredArray;
 }
 //---------------------------------------------------------------------------------
+
+let i = 0;
+
+function iterator() {
+    if (i === 0) {
+        i = 2;
+    } else {
+        i -= 1;
+    }
+    return console.log(i);
+} 
+
+export default iterator;
+// (function(){
+//     let ParentNode = document.querySelector('.slides-container');
+//     let firstChild = document.querySelector('.slides-container').firstChild;
+//     ParentNode.insertBefore(document.createElement('div'), document.querySelector('.slides-container').firstChild);
+//     return false;
+// })();return false;
+
 const Product = {
+    bind: () => {
+        document.querySelector('.slider-left')?.addEventListener('click', iterator);
+    },
     render: () => {
         console.log({colorHTML, categoryId, brand, type, gender, price, description, url, rating, sizes})
         return `<div class="product">
         <div class="product__slider">
             <button class="slider-left"><span></span></button>
-            <img src="${url[0]}" alt="card-image">
+            <div class="slides-container">
+                <img src="${url[i]}" alt="card-image">
+            </div>
             <button class="slider-right"><span></span></button>
         </div>
         <div class="product__info">
