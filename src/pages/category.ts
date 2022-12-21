@@ -11,6 +11,8 @@ class Category {
         sortBy: '',
         priceMin: 0,
         priceMax: 259,
+        ratingMin: 0,
+        ratingMax: 5,
     };
     
 
@@ -23,7 +25,6 @@ class Category {
         if (urlParams.has('size')) {
             this.filters.size = urlParams.get('size');
         }
-
         if (urlParams.has('color')) {
             this.filters.color = urlParams.get('color');
         }
@@ -35,6 +36,12 @@ class Category {
         }
          if (urlParams.has('priceMax')) {
             this.filters.priceMax = urlParams.get('priceMax');
+        }
+         if (urlParams.has('ratingMin')) {
+            this.filters.ratingMin = urlParams.get('ratingMin');
+        }
+         if (urlParams.has('ratingMax')) {
+            this.filters.ratingMax = urlParams.get('ratingMax');
         }
     }
     
@@ -50,7 +57,7 @@ class Category {
     }
 
     getFilterItems = () => {
-        const { categoryId, color, size, sortBy, priceMin, priceMax } = this.filters;
+        const { categoryId, color, size, sortBy, priceMin, priceMax, ratingMin, ratingMax } = this.filters;
         let filteredItems = items;
 
         if (categoryId === 0) {
@@ -76,14 +83,19 @@ class Category {
                 filteredItems = filteredItems.sort((a, b) => a.rating < b.rating ? 1 : -1)
             }
         }
-        console.log('priceMin', priceMin);
         if (priceMin) {
             filteredItems = filteredItems.filter(item => item.price >= priceMin)
         }
         if (priceMax) {
             filteredItems = filteredItems.filter(item => item.price <= priceMax)
         }
-
+        if (ratingMin) {
+            filteredItems = filteredItems.filter(item => item.rating >= ratingMin)
+        }
+        if (ratingMax) {
+            filteredItems = filteredItems.filter(item => item.rating <= ratingMax)
+        }
+        console.log('filteredItems', filteredItems);
         return filteredItems
     }
     
@@ -103,11 +115,12 @@ class Category {
         this.filters.sortBy = '';
         this.filters.priceMax = 500;
         this.filters.priceMin = 0;
+        this.filters.ratingMax = 5;
+        this.filters.ratingMin= 0;
         this.updateUrlParams()
     }
     initRangePrice = () => {
         const that = this
-        console.log('initRangePrice');
         const lowerSlider = document.querySelector('#price-lower');
         const upperSlider = document.querySelector('#price-upper');
         
@@ -142,8 +155,43 @@ class Category {
             that.filters.priceMin = this.value
         }; 
     }
-    handlePriceApply = () => {
-        console.log('filters', this.filters);
+      initRangeRating = () => {
+        const that = this
+        const lowerSlider = document.querySelector('#rating-lower');
+        const upperSlider = document.querySelector('#rating-upper');
+        
+        document.querySelector('#rating-two').value= that.filters.ratingMax;
+        document.querySelector('#rating-one').value = that.filters.ratingMin ; 
+        let lowerVal = parseInt(lowerSlider.value);
+        let upperVal = parseInt(upperSlider.value);
+
+        upperSlider.oninput = function () {
+            lowerVal = parseInt(lowerSlider.value);
+            upperVal = parseInt(upperSlider.value);
+
+            if (upperVal < lowerVal + 1) {
+                lowerSlider.value = upperVal - 1;
+                if (lowerVal == lowerSlider.min) {
+                upperSlider.value = 1;
+                }
+            }
+            document.querySelector('#rating-two').value = this.value
+            that.filters.ratingMax = this.value
+        };
+        lowerSlider.oninput = function () {
+            lowerVal = parseInt(lowerSlider.value);
+            upperVal = parseInt(upperSlider.value);
+            if (lowerVal > upperVal - 1) {
+                upperSlider.value = lowerVal + 1;
+                if (upperVal == upperSlider.max) {
+                    lowerSlider.value = parseInt(upperSlider.max) - 1;
+                }
+            }
+            document.querySelector('#rating-one').value = this.value
+            that.filters.ratingMin = this.value
+        }; 
+    }
+    handleApply = () => {
         this.updateUrlParams()
         this.getFilterItems()
     }
@@ -158,17 +206,19 @@ class Category {
         const resetBtn = document.querySelector('.btn-reset')
         resetBtn?.addEventListener('click', this.resetFilters)
 
-        const applyBtn = document.querySelector('.btn-applyPrice')
-        applyBtn?.addEventListener('click', this.handlePriceApply)
+        const applyPriceBtn = document.querySelector('.btn-applyPrice')
+        applyPriceBtn?.addEventListener('click', this.handleApply)
+        const applyRatingBtn = document.querySelector('.btn-applyRating')
+        applyRatingBtn?.addEventListener('click', this.handleApply)
 
         this.initRangePrice()
+        this.initRangeRating()
     }
 
     render = () => {
    
         const filteredItems = this.getFilterItems()
         
-
         return `
         <div class="categories">
             <div class="bread-crumbs"></div>
@@ -222,6 +272,28 @@ class Category {
                             </div>
                         </div>
                         <button class="btn btn-applyPrice">Apply</button>
+                    </fieldset>
+
+                    <fieldset class="filter filter-rating">
+                        <div class="rating-title">Rating</div>
+                        <div class="rating-field">
+                            <input type="range" min="0" max="5" value="${this.filters.ratingMin}" id="rating-lower">
+                            <input type="range" min="0" max="5" value="${this.filters.ratingMax}" id="rating-upper">
+                        </div>
+                        <div class ="rating-wrap">
+                            <div class="rating-container">
+                                <div class="rating-wrap-1">
+                                    <input id="rating-one">
+                                    <label for="rating-one"></label>
+                                    
+                                </div>
+                                <div class="rating-wrap-2">
+                                    <input id="rating-two">
+                                    <label for="rating-two"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-applyRating">Apply</button>
                     </fieldset>
 
             <button class="btn btn-reset">Clear filters</button>
