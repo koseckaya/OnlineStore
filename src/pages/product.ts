@@ -39,28 +39,77 @@ function iterator() {
     } else {
         i -= 1;
     }
-    return console.log(i);
+    return i;
 } 
 
-export default iterator;
-// (function(){
-//     let ParentNode = document.querySelector('.slides-container');
-//     let firstChild = document.querySelector('.slides-container').firstChild;
-//     ParentNode.insertBefore(document.createElement('div'), document.querySelector('.slides-container').firstChild);
-//     return false;
-// })();return false;
+function sliderLeft() {
+    document.querySelector('.slider-left')?.removeEventListener('click', sliderLeft);
+    document.querySelector('.slider-right')?.removeEventListener('click', sliderRight);
+    let ParentNode = document.getElementById('slides-container');
+    let firstChild = ParentNode.firstChild;
+    let newSlide = document.createElement('img');
+    newSlide.setAttribute('src', `${url[iterator()]}`);
+    newSlide.setAttribute('alt', `card-image`);
+    newSlide.classList.add('slider-image');
+    ParentNode.insertBefore(newSlide, firstChild);
+    let startWidth = ParentNode?.offsetWidth;
+    ParentNode?.style.width = `${ParentNode?.offsetWidth * 2}px`;
+    ParentNode?.style.transform = `translateX(-${startWidth}px)`;
+    ParentNode?.style.animation = `blur .5s`;
+    setTimeout(function(){
+        ParentNode?.style.transition = `all .5s ease`;
+        ParentNode?.style.transform = `translateX(0px)`;
+        ParentNode?.style.animation = ``;
+        setTimeout(function(){
+        ParentNode?.removeChild(ParentNode.lastElementChild);
+        ParentNode?.style.width = `${startWidth}px`;
+        ParentNode?.style.transition = `all .0s ease`;
+        document.querySelector('.slider-left')?.addEventListener('click', sliderLeft);
+        document.querySelector('.slider-right')?.addEventListener('click', sliderRight);
+        }, 500)
+    }, 500);
+}
+function sliderRight() {
+    document.querySelector('.slider-right')?.removeEventListener('click', sliderRight);
+    document.querySelector('.slider-left')?.removeEventListener('click', sliderLeft);
+    let ParentNode = document.getElementById('slides-container');
+    let firstChild = ParentNode.firstChild;
+    let newSlide = document.createElement('img');
+    newSlide.setAttribute('src', `${url[iterator()]}`);
+    newSlide.setAttribute('alt', `card-image`);
+    newSlide.classList.add('slider-image');
+    ParentNode?.appendChild(newSlide);
+    let startWidth = ParentNode?.offsetWidth;
+    ParentNode?.style.width = `${ParentNode?.offsetWidth * 2}px`;
+    
+    ParentNode?.style.animation = `blur .5s`;
+    setTimeout(function(){
+        ParentNode?.style.transition = `all .5s ease`;
+        ParentNode?.style.transform = `translateX(${-startWidth}px)`;
+        ParentNode?.style.animation = ``;
+        setTimeout(function(){
+        ParentNode?.removeChild(ParentNode.firstElementChild);
+        ParentNode?.style.width = `${startWidth}px`;
+        ParentNode?.style.transform = `translateX(0px)`;
+        ParentNode?.style.transition = `all .0s ease`;
+        document.querySelector('.slider-right')?.addEventListener('click', sliderRight);
+        document.querySelector('.slider-left')?.addEventListener('click', sliderLeft);
+        }, 500)
+    }, 500);
+}
 
 const Product = {
     bind: () => {
-        document.querySelector('.slider-left')?.addEventListener('click', iterator);
+        document.querySelector('.slider-left')?.addEventListener('click', sliderLeft);
+        document.querySelector('.slider-right')?.addEventListener('click', sliderRight);
     },
     render: () => {
         console.log({colorHTML, categoryId, brand, type, gender, price, description, url, rating, sizes})
         return `<div class="product">
         <div class="product__slider">
             <button class="slider-left"><span></span></button>
-            <div class="slides-container">
-                <img src="${url[i]}" alt="card-image">
+            <div id="slides-container">
+                <img class="slider-image" src="${url[i]}" alt="card-image">
             </div>
             <button class="slider-right"><span></span></button>
         </div>

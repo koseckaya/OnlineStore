@@ -1,3 +1,94 @@
+@keyframes blur {
+  0% {
+    
+    filter: blur(0px);
+  }
+
+  5% {
+    
+    filter: blur(10px);
+  }
+  10% {
+    
+    filter: blur(20px);
+  }
+  15% {
+   
+    filter: blur(30px);
+  }
+  20% {
+   
+    filter: blur(40px);
+  }
+  25% {
+    
+    filter: blur(50px);
+  }
+  30% {
+    
+    filter: blur(60px);
+  }
+  35% {
+    
+    filter: blur(70px);
+  }
+  40% {
+    
+    filter: blur(80px);
+  }
+  45% {
+    
+    filter: blur(90px);
+  }
+
+  50% {
+    
+    filter: blur(100px);
+  }
+  55% {
+    
+    filter: blur(90px);
+  }
+  60% {
+    
+    filter: blur(70px);
+  }
+  65% {
+   
+    filter: blur(60px);
+  }
+  70% {
+   
+    filter: blur(50px);
+  }
+  75% {
+    
+    filter: blur(40px);
+  }
+  80% {
+    
+    filter: blur(30px);
+  }
+  85% {
+    
+    filter: blur(20px);
+  }
+  90% {
+    
+    filter: blur(10px);
+  }
+  95% {
+    
+    filter: blur(5px);
+  }
+
+  100% {
+    
+    filter: blur(0);
+  }
+}
+
+
 
 .product {
   display: flex;
@@ -10,6 +101,9 @@
     height: 590px;
     width: 502px;
     min-width: 40%;
+    overflow: hidden;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    border-radius: 0.1%;
     button {
       span {
         cursor: pointer;
@@ -31,6 +125,7 @@
       }
     }
     .slider-left, .slider-right {
+      z-index: 10;
       position: absolute;
       top: calc(50% - 41px + 6px);
       border-radius: 100%;
@@ -51,10 +146,23 @@
     .slider-right { 
       right: 10px;
     }
-    img {
+    #slides-container {
+      display: flex;
+      will-change: transform !important;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+      backface-visibility: hidden !important; /* add to fix webkit bug jitter */
+    }
+    .slider-image {
       width: 100%;
       min-height: 100%;
       object-fit: cover;
+      will-change: transform;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+      transform: translate3d(0,0,0);
+      backface-visibility: hidden !important;
+      box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
     }
   }
   &__info {
