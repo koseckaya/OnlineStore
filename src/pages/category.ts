@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { items, categories, sizes, colors , sortBy} from '../data.ts';
+import { items, categories, sizes, colors , sortBy, modelsName} from '../data.ts';
 import { stringsSortBy } from '../helpers/strings';
 import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts';
 
@@ -13,6 +13,7 @@ class Category {
         priceMax: 259,
         ratingMin: 0,
         ratingMax: 5,
+        productName: '',
     };
     
 
@@ -43,6 +44,9 @@ class Category {
          if (urlParams.has('ratingMax')) {
             this.filters.ratingMax = urlParams.get('ratingMax');
         }
+          if (urlParams.has('productName')) {
+            this.filters.productName = urlParams.get('productName');
+        }
     }
     
     getCategoryId = () => {
@@ -57,7 +61,7 @@ class Category {
     }
 
     getFilterItems = () => {
-        const { categoryId, color, size, sortBy, priceMin, priceMax, ratingMin, ratingMax } = this.filters;
+        const { categoryId, color, size, sortBy, priceMin, priceMax, ratingMin, ratingMax, productName } = this.filters;
         let filteredItems = items;
 
         if (categoryId === 0) {
@@ -95,7 +99,9 @@ class Category {
         if (ratingMax) {
             filteredItems = filteredItems.filter(item => item.rating <= ratingMax)
         }
-        console.log('filteredItems', filteredItems);
+        if (productName) {
+            filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(productName.toLowerCase()))
+        }
         return filteredItems
     }
     
@@ -117,6 +123,7 @@ class Category {
         this.filters.priceMin = 0;
         this.filters.ratingMax = 5;
         this.filters.ratingMin= 0;
+        this.filters.productName= "";
         this.updateUrlParams()
     }
     initRangePrice = () => {
@@ -155,7 +162,7 @@ class Category {
             that.filters.priceMin = this.value
         }; 
     }
-      initRangeRating = () => {
+    initRangeRating = () => {
         const that = this
         const lowerSlider = document.querySelector('#rating-lower');
         const upperSlider = document.querySelector('#rating-upper');
@@ -224,17 +231,16 @@ class Category {
             <div class="bread-crumbs"></div>
 
             <div class="categories-side">
-                <h2 class="side__title">Categories</h2>
-                <ul class="categ-list">
-                    <li class="categ-item"><a href="/#/category">All</a></li>
-                    ${categories.map(cat => `
-                        <li class="categ-item">
-                            <a href="/#/category/${cat.name.toLowerCase()}">
-                                ${cat.name}</a></li>
-                    `).join('')}
-                </ul>
                 <div class="filters"> 
                     
+                    <select name="productName" class="filter filter-productName" id="filter-productName">
+                        <option class="filter-productName__val" value="">Product Name</option>
+                        ${modelsName.map(name => `
+                            <option class="filter-productName__val" value="${name}" ${this.filters.productName === name ? 'selected="selected"' : ''} 
+                            >${name}</option>
+                        `).join('')}  
+                    </select>
+
                     <select name="size" class="filter filter-size" id="filter-size">
                         <option class="filter-size__val" value="">Size</option>
                         ${sizes.map(s => `
@@ -244,7 +250,7 @@ class Category {
                     </select>
                     
                     <select name="color" class="filter filter-color"  id="filter-color">
-                        <option class="filter-size__val" value="">Color</option>
+                        <option class="filter-color__val" value="">Color</option>
                         ${colors.map(c => `
                             <option class="filter-color__val" value="${c}"
                             ${this.filters.color === c ? ' selected="selected" ' : ''}
@@ -302,7 +308,6 @@ class Category {
 
         <div class="categories-main">
         <div class='sortBy'>
-             <div>Found: ${filteredItems.length}</div>
              <div class="filters"> 
                 <select name='sortBy' class="filter filter-sortBy" id="filter-sortBy">
                     <option class="filter-sortBy" value="">Sort by</option>
@@ -315,6 +320,18 @@ class Category {
             </div>
             
         </div>
+        <div class='filter-categories'>
+            <ul class="categ-list">
+                <li class="categ-item"><a href="/#/category">All</a></li>
+                ${categories.map(cat => `
+                    <li class="categ-item">
+                        <a href="/#/category/${cat.name.toLowerCase()}">
+                            ${cat.name}</a></li>
+                `).join('')}
+            </ul>
+            <div>Found: ${filteredItems.length}</div>
+        </div>
+
         <ul class="product-list">
         ${filteredItems.length === 0 ? '<div class="no-products">Products not found</div>' : ''}
         ${filteredItems.map((prod) => `

@@ -24,3 +24,4 @@ export const setUrlParams = (params) => {
 
     window.location.search = urlParams;
 }
+

@@ -9,6 +9,9 @@ export const sortBy: SortByTypes[] = [
   SortByTypes.rating
 ]
 
+export const modelsName: string[] = ['Adept', 'Akin', 'Blizzard', 'Common', 'Con', 'Cyclone', 'Daily', 'Iconic', 'JT', 'Notorious', 'Ozed', 'Regular', 'Standard', 'Tigress', 'Yeti'];
+
+
 export const items: Item[] = [
   {
     "id": 1,
