@@ -77,8 +77,21 @@
         flex-direction: column;
         align-items: center;
     }
+    &-price, &-brand, &-name {
+        margin-left: 30px;
+    }
     &-price {
         font-weight: 700;
+    }
+}
+.product-list.four{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
+    margin-bottom: 100px;
+    .card__image img {
+        width: 230px;
+        height: 270px;
     }
 }
 .card {
@@ -124,6 +137,13 @@
             color: $main;
             margin-left: 5px;
         }
+    }
+    &-products-view {
+        font-weight: 900;
+        font-size: 32px;
+        letter-spacing: 0px;
+        text-align: center;
+        top: -10px;
     }
 }
 .sortBy{
@@ -267,6 +287,23 @@
 }
 .filter-sortBy{
     text-transform: none;
+}
+#filter-products-view option[value="three"] {
+    &:after{
+        content: url('../img/three-dots.svg');
+         width: 30px;
+         height: 30px;
+         position: absolute;
+         top: 0;
+         left: 0;
+         z-index: 5;
+    }
+    position: relative;
+     background-image: url('../img/three-dots.svg');
+    z-index: 2;
+}
+#filter-products-view option[value="four"] {
+     background-image: url('../img/four-dots.svg');   
 }
 select option:hover {
     background: $main;

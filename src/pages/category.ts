@@ -3,19 +3,20 @@ import { items, categories, sizes, colors , sortBy, modelsName} from '../data.ts
 import { stringsSortBy } from '../helpers/strings';
 import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts';
 
+const DEFAULT_FILTERS = {
+    categoryId: 0,
+};
+
+const DEFAULT_PRICES = { min: 0, max: 500 };
+
+const DEFAULT_RATINGS = { min: 0, max: 5 };
+
 class Category {
-    filters = {
-        size: '',
-        color: '',
-        categoryId: 0,
-        sortBy: '',
-        priceMin: 0,
-        priceMax: 259,
-        ratingMin: 0,
-        ratingMax: 5,
-        productName: '',
-    };
-    
+    filters = { ...DEFAULT_FILTERS };
+    prices = { ...DEFAULT_PRICES };
+    ratings = { ...DEFAULT_RATINGS };
+
+    items = [];
 
     constructor() {
         let categoryId = this.getCategoryId();
@@ -39,7 +40,8 @@ class Category {
             this.filters.priceMax = urlParams.get('priceMax');
         }
          if (urlParams.has('ratingMin')) {
-            this.filters.ratingMin = urlParams.get('ratingMin');
+             this.filters.ratingMin = urlParams.get('ratingMin');
+             
         }
          if (urlParams.has('ratingMax')) {
             this.filters.ratingMax = urlParams.get('ratingMax');
@@ -47,7 +49,53 @@ class Category {
           if (urlParams.has('productName')) {
             this.filters.productName = urlParams.get('productName');
         }
+
+        this.filters.view = urlParams.has('view') ? 'grid' : '';
+
+        this.initItems();
+        this.initRangeFilters();
+        this.sortItems();
     }
+
+    initRangeFilters = () => {
+        let min = 0, max = 0, minR = 0, maxR = 0;
+        this.items.forEach(i => {
+            if (min === 0) {
+                min = i.price;
+            } else if (min > i.price) {
+                min = i.price;
+            }
+
+            if (max === 0) {
+                max = i.price;
+            } else if (max < i.price) {
+                max = i.price;
+            }
+
+            if (minR === 0) {
+                minR = i.rating;
+            } else if (minR > i.rating) {
+                minR = i.rating;
+            }
+
+            if (maxR === 0) {
+                maxR = i.rating;
+            } else if (maxR < i.rating) {
+                maxR = i.rating;
+            }
+        });
+
+        this.prices = { min, max };
+
+        this.ratings = {
+            min: minR,
+            max: maxR,
+        }
+
+        console.log(this.ratings)
+
+        this.initItemsForRangeFilters();
+    };
     
     getCategoryId = () => {
         const request = parseRequestURL()
@@ -60,33 +108,53 @@ class Category {
        return categoryId
     }
 
-    getFilterItems = () => {
+    initItems = () => {
         const { categoryId, color, size, sortBy, priceMin, priceMax, ratingMin, ratingMax, productName } = this.filters;
         let filteredItems = items;
 
         if (categoryId === 0) {
            filteredItems = items;
         } 
+
         if (categoryId !== 0) {
             filteredItems = items.filter(item => item.categoryId === categoryId);
         }
+
         if (color) {
           filteredItems = filteredItems.filter(item => item.color.toLowerCase() === color.toLowerCase());  
         }
+
         if (size) {
             filteredItems = filteredItems.filter(item => item.sizes.includes(size.toUpperCase()));   
         }
+        
+        if (productName) {
+            filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(productName.toLowerCase()))
+        }
+
+        this.items = filteredItems;
+    }
+
+    sortItems = () => {
+        const { sortBy } = this.filters;
+        
         if (sortBy) {
             if (sortBy === 'priceAsc') {
-                filteredItems = filteredItems.sort((a, b) => a.price > b.price ? 1 : -1)
+                this.items = this.items.sort((a, b) => a.price > b.price ? 1 : -1)
             }
             if (sortBy === 'priceDesc') {
-                filteredItems = filteredItems.sort((a, b) => a.price < b.price ? 1 : -1)
+                this.items = this.items.sort((a, b) => a.price < b.price ? 1 : -1)
             }
             if (sortBy === 'rating') {
-                filteredItems = filteredItems.sort((a, b) => a.rating < b.rating ? 1 : -1)
+                this.items = this.items.sort((a, b) => a.rating < b.rating ? 1 : -1)
             }
         }
+    };
+
+    initItemsForRangeFilters = () => {
+        const { priceMin, priceMax, ratingMin, ratingMax } = this.filters;
+        let filteredItems = this.items;
+
         if (priceMin) {
             filteredItems = filteredItems.filter(item => item.price >= priceMin)
         }
@@ -99,10 +167,8 @@ class Category {
         if (ratingMax) {
             filteredItems = filteredItems.filter(item => item.rating <= ratingMax)
         }
-        if (productName) {
-            filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(productName.toLowerCase()))
-        }
-        return filteredItems
+
+        this.items = filteredItems;
     }
     
     handleChangeFilters = (e) => {
@@ -115,15 +181,8 @@ class Category {
         setUrlParams(rest)
     }
     resetFilters = () => {
-        this.filters.size = '';
-        this.filters.color = '';
-        this.filters.categoryId = 0;
-        this.filters.sortBy = '';
-        this.filters.priceMax = 500;
-        this.filters.priceMin = 0;
-        this.filters.ratingMax = 5;
-        this.filters.ratingMin= 0;
-        this.filters.productName= "";
+        console.log(this.filters);
+        this.filters = { ...DEFAULT_FILTERS };
         this.updateUrlParams()
     }
     initRangePrice = () => {
@@ -131,8 +190,8 @@ class Category {
         const lowerSlider = document.querySelector('#price-lower');
         const upperSlider = document.querySelector('#price-upper');
         
-        document.querySelector('#price-two').value= that.filters.priceMax;
-        document.querySelector('#price-one').value = that.filters.priceMin ; 
+        document.querySelector('#price-two').value = that.filters.priceMax || that.prices.max;
+        document.querySelector('#price-one').value = that.filters.priceMin || that.prices.min; 
         let lowerVal = parseInt(lowerSlider.value);
         let upperVal = parseInt(upperSlider.value);
 
@@ -167,8 +226,8 @@ class Category {
         const lowerSlider = document.querySelector('#rating-lower');
         const upperSlider = document.querySelector('#rating-upper');
         
-        document.querySelector('#rating-two').value= that.filters.ratingMax;
-        document.querySelector('#rating-one').value = that.filters.ratingMin ; 
+        document.querySelector('#rating-two').value= that.filters.ratingMax || that.ratings.max;
+        document.querySelector('#rating-one').value = that.filters.ratingMin || that.ratings.min; 
         let lowerVal = parseInt(lowerSlider.value);
         let upperVal = parseInt(upperSlider.value);
 
@@ -200,11 +259,21 @@ class Category {
     }
     handleApply = () => {
         this.updateUrlParams()
-        this.getFilterItems()
+    }
+
+    handleProductView = (e) => {
+        if (e.target.value === 'four') {
+            document.querySelector('.product-list')?.classList.add('four')
+            this.filters.view = 'grid'
+        } else {
+            document.querySelector('.product-list')?.classList.remove('four')
+            delete this.filters.view;
+        }
+
+        this.updateUrlParams()
     }
 
     bind = () => {
-
         const lists = document.querySelectorAll(".filters select");
         for (let i = 0; i < lists.length; i++) {
             lists[i].addEventListener('change', this.handleChangeFilters)
@@ -218,14 +287,19 @@ class Category {
         const applyRatingBtn = document.querySelector('.btn-applyRating')
         applyRatingBtn?.addEventListener('click', this.handleApply)
 
+        const productViewBtn = document.querySelector('#filter-products-view')
+        productViewBtn?.addEventListener('change', this.handleProductView)
+
         this.initRangePrice()
         this.initRangeRating()
     }
 
+    isGridView = () => {
+        return this.filters.view === 'grid';
+    }
+
     render = () => {
-   
-        const filteredItems = this.getFilterItems()
-        
+
         return `
         <div class="categories">
             <div class="bread-crumbs"></div>
@@ -261,8 +335,8 @@ class Category {
                     <fieldset class="filter filter-price">
                         <div class="price-title">Price</div>
                         <div class="price-field">
-                            <input type="range" min="0" max="500" value="${this.filters.priceMin}" id="price-lower">
-                            <input type="range" min="0" max="500" value="${this.filters.priceMax}" id="price-upper">
+                            <input type="range" min="${this.prices.min}" max="${this.prices.max}" value="${this.filters.priceMin || this.prices.min}" id="price-lower">
+                            <input type="range" min="${this.prices.min}" max="${this.prices.max}" value="${this.filters.priceMax || this.prices.max}" id="price-upper">
                         </div>
                         <div class ="price-wrap">
                             <div class="price-container">
@@ -283,8 +357,8 @@ class Category {
                     <fieldset class="filter filter-rating">
                         <div class="rating-title">Rating</div>
                         <div class="rating-field">
-                            <input type="range" min="0" max="5" value="${this.filters.ratingMin}" id="rating-lower">
-                            <input type="range" min="0" max="5" value="${this.filters.ratingMax}" id="rating-upper">
+                            <input type="range" step="0.01" min="${this.ratings.min}" max="${this.ratings.max}" value="${this.filters.ratingMin || this.ratings.min}" id="rating-lower">
+                            <input type="range" step="0.01" min="${this.ratings.min}" max="${this.ratings.max}" value="${this.filters.ratingMax || this.ratings.max}" id="rating-upper">
                         </div>
                         <div class ="rating-wrap">
                             <div class="rating-container">
@@ -329,12 +403,18 @@ class Category {
                             ${cat.name}</a></li>
                 `).join('')}
             </ul>
-            <div>Found: ${filteredItems.length}</div>
+            <div>Found: ${this.items.length}</div>
+            <select name='products-view' class="filter filter-products-view" id="filter-products-view">
+                <option class="filter-products-view" value="three">:::</option>
+                <option class="filter-products-view" value="four" ${this.filters.view ? 'selected="selected"' : ''}}>
+                    ::::</option>
+            </select>
+            
         </div>
 
-        <ul class="product-list">
-        ${filteredItems.length === 0 ? '<div class="no-products">Products not found</div>' : ''}
-        ${filteredItems.map((prod) => `
+        <ul class="product-list ${this.isGridView() ? 'four' : ''}">
+        ${this.items.length === 0 ? '<div class="no-products">Sorry, we have no products in this category right now</div>' : ''}
+        ${this.items.map((prod) => `
              <li class="product-card">
                 <div class="card__image">
                     <a href="/#/product/${prod.id}">
