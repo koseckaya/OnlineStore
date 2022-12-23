@@ -1,8 +1,8 @@
 // @ts-nocheck
 import { categories } from '../data.ts';
 
-const Main = {
-    render: () => {
+class Main {
+    render = () => {
         return (`
         <div class="main-container">
             
@@ -25,12 +25,8 @@ const Main = {
                 ).join('')}
             </div>
         </div>
-
-
-
-
         `)
     }
-}
+};
 
 export default Main;

@@ -14,13 +14,17 @@ export const getUrlParams = () => {
     return new URLSearchParams(window.location.search);
 }
 
-export const setUrlParams = (params) => {
-    const urlParams = Object.keys(params).reduce((acc, param) => {
+export const getUrlWithParams = (params) => {
+    return Object.keys(params).reduce((acc, param) => {
         if (params[param]) {
             acc.set(param, params[param]);
         }
         return acc
     }, new URLSearchParams())
+}
+
+export const setUrlParams = (params) => {
+    const urlParams = getUrlWithParams(params);
 
     window.location.search = urlParams;
 }

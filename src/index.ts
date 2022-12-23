@@ -8,12 +8,13 @@ import Error404 from './pages/error404.ts';
 import Category from './pages/category.ts';
 import Cart from './pages/cart.ts';
 import { parseRequestURL } from './helpers/utils.ts';
+import Header from './modules/header';
 
 
 
 const router = () => {
     const routes = {
-    '/': Main,
+    '/': new Main(),
     '/product/:id': Product,
     '/category/:id': new Category(),
     '/category': new Category(),
@@ -30,6 +31,9 @@ const router = () => {
     const main = document.getElementById('root')
     main?.innerHTML = page.render();
     page?.bind()
+
+    const HeaderModule = new Header();
+    HeaderModule.init();
 }
 
 

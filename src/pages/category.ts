@@ -6,9 +6,7 @@ import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts
 const DEFAULT_FILTERS = {
     categoryId: 0,
 };
-
 const DEFAULT_PRICES = { min: 0, max: 500 };
-
 const DEFAULT_RATINGS = { min: 0, max: 5 };
 
 class Category {
@@ -23,7 +21,6 @@ class Category {
         this.filters.categoryId = categoryId;
 
         const urlParams = getUrlParams();
-
         if (urlParams.has('size')) {
             this.filters.size = urlParams.get('size');
         }
@@ -46,11 +43,17 @@ class Category {
          if (urlParams.has('ratingMax')) {
             this.filters.ratingMax = urlParams.get('ratingMax');
         }
-          if (urlParams.has('productName')) {
+        if (urlParams.has('productName')) {
             this.filters.productName = urlParams.get('productName');
         }
 
         this.filters.view = urlParams.has('view') ? 'grid' : '';
+
+        if (urlParams.has('search')) {
+            this.filters.search = urlParams.get('search');
+        }
+
+        console.log(this.filters);
 
         this.initItems();
         this.initRangeFilters();
@@ -92,8 +95,6 @@ class Category {
             max: maxR,
         }
 
-        console.log(this.ratings)
-
         this.initItemsForRangeFilters();
     };
     
@@ -109,27 +110,42 @@ class Category {
     }
 
     initItems = () => {
-        const { categoryId, color, size, sortBy, priceMin, priceMax, ratingMin, ratingMax, productName } = this.filters;
+        const { categoryId, color, size, productName, search } = this.filters;
+        console.log('filter', this.filters);
         let filteredItems = items;
 
         if (categoryId === 0) {
-           filteredItems = items;
-        } 
+            filteredItems = items;
+        }
 
         if (categoryId !== 0) {
             filteredItems = items.filter(item => item.categoryId === categoryId);
         }
 
         if (color) {
-          filteredItems = filteredItems.filter(item => item.color.toLowerCase() === color.toLowerCase());  
+            filteredItems = filteredItems.filter(item => item.color.toLowerCase() === color.toLowerCase());
         }
 
         if (size) {
-            filteredItems = filteredItems.filter(item => item.sizes.includes(size.toUpperCase()));   
+            filteredItems = filteredItems.filter(item => item.sizes.includes(size.toUpperCase()));
         }
         
         if (productName) {
             filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(productName.toLowerCase()))
+        }
+
+        if (search) {
+            const searchString = search.toLowerCase();
+            const fields = ['brand', 'name', 'colorHTML', 'type', 'description']
+            filteredItems = filteredItems.filter(item => {
+                const searchFields = fields.reduce((acc, field) => {
+                    acc += ' ' + item[field];
+
+                    return acc;
+                }, '');
+
+                return searchFields.toLowerCase().includes(searchString);
+            });
         }
 
         this.items = filteredItems;
@@ -181,9 +197,15 @@ class Category {
         setUrlParams(rest)
     }
     resetFilters = () => {
-        console.log(this.filters);
         this.filters = { ...DEFAULT_FILTERS };
         this.updateUrlParams()
+    }
+    copyFilters = () => {
+        const url = document.location.href;
+        navigator.clipboard.writeText(url);
+        const copyBtn = document.querySelector('.btn-copy')
+        copyBtn?.innerHTML = 'Copied'
+        setTimeout(()=> copyBtn?.innerHTML = 'Copy Filters', 2000)
     }
     initRangePrice = () => {
         const that = this
@@ -269,7 +291,6 @@ class Category {
             document.querySelector('.product-list')?.classList.remove('four')
             delete this.filters.view;
         }
-
         this.updateUrlParams()
     }
 
@@ -281,6 +302,9 @@ class Category {
 
         const resetBtn = document.querySelector('.btn-reset')
         resetBtn?.addEventListener('click', this.resetFilters)
+
+        const copyBtn = document.querySelector('.btn-copy')
+        copyBtn?.addEventListener('click', this.copyFilters)
 
         const applyPriceBtn = document.querySelector('.btn-applyPrice')
         applyPriceBtn?.addEventListener('click', this.handleApply)
@@ -377,6 +401,7 @@ class Category {
                     </fieldset>
 
             <button class="btn btn-reset">Clear filters</button>
+            <button class="btn btn-copy">Copy filters </button>
         </div>
             </div>
 
