@@ -196,3 +196,11 @@ a {
         background: darken($main, 10%)
     }
 }
+.checkout {
+    &-container {
+        width: 800px;
+        height: 800px;
+        background: rgba($main, 0.6);
+        margin: 0 auto;
+    }
+}
