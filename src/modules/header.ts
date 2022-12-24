@@ -18,9 +18,8 @@ class Header {
     handleSearch = (e) => {
         e.stopPropagation();
         const searchInput = document.querySelector('.search-input')
-
         if (this.isActive) {            
-            if (this.search.length > 2) {
+            if (this.search.length > 1) {
                 const url = window.location.origin + '/?' + getUrlWithParams({ search: this.search }) + '#/category'
                 window.location.href = url;
                 if (window.location.href === url) {

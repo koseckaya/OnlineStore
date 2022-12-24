@@ -308,6 +308,9 @@ class Category {
         const productViewBtn = document.querySelector('#filter-products-view')
         productViewBtn?.addEventListener('change', this.handleProductView)
 
+        const searchInput = document.querySelector('.search-input')
+        searchInput.value = this.filters.search
+
         this.initRangePrice()
         this.initRangeRating()
     }
