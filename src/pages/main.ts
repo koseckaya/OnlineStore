@@ -1,19 +1,19 @@
 // @ts-nocheck
 import { categories } from '../data.ts';
 
-const Main = {
-    render: () => {
+class Main {
+    bind= () => {}
+    render = () => {
         return (`
         <div class="main-container">
             
-            <p>Go to <a href="#/category/1">Categories</a></p>
             <p>Go to <a href="#/product/1">Product Card</a></p>
             <p>Go to <a href="#/cart">Cart</a></p>
             <p>Go to <a href="#/error404">404</a></p>
              <div class="categories">
                 ${categories.map((cat) => `
                     <div class="category">
-                        <a class="category__item" href="/#/category/${cat.name.toLowerCase()}">
+                        <a class="category__item" href="#/category/${cat.name.toLowerCase()}">
                             <img src="${cat.url}">
                         </a>
                          <div class="product-name">
@@ -26,12 +26,8 @@ const Main = {
                 ).join('')}
             </div>
         </div>
-
-
-
-
         `)
     }
-}
+};
 
 export default Main;

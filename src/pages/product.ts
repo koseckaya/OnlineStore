@@ -13,6 +13,7 @@ function sizesString() {
     let resultString = '';
     for (let i = 0; i < sizesArrLength; i++) {
         resultString += `<option value='${sizes[i]}'>${sizes[i]}</option>`
+
     }
     return resultString;
 }

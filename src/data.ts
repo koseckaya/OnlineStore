@@ -1,4 +1,16 @@
-import { Item, Category } from './types'
+import { Item, Category, SortByTypes } from './types'
+
+export const sizes: string[] = ['S', 'M', 'L', 'XL', 'XXL']
+export const colors: string[] = ['black', 'grey', 'blue', 'violet', 'white', 'peach', 'pink', 'brown', 'khaki', 'sand',
+  'red', 'green', 'orange']
+export const sortBy: SortByTypes[] = [
+  SortByTypes.priceAsc,
+  SortByTypes.priceDesc,
+  SortByTypes.rating
+]
+
+export const modelsName: string[] = ['Adept', 'Akin', 'Blizzard', 'Common', 'Con', 'Cyclone', 'Daily', 'Iconic', 'JT', 'Notorious', 'Ozed', 'Regular', 'Standard', 'Tigress', 'Yeti'];
+
 
 export const items: Item[] = [
   {

@@ -2,22 +2,25 @@
 
 import './index.html';
 import './index.scss';
-import { multiple } from './modules/calc.ts';
 import Main from './pages/main.ts';
 import Product from './pages/product.ts';
 import Error404 from './pages/error404.ts';
 import Category from './pages/category.ts';
 import Cart from './pages/cart.ts';
 import { parseRequestURL } from './helpers/utils.ts';
+import Header from './modules/header';
 
-const routes = {
-    '/': Main,
+
+
+const router = () => {
+    const routes = {
+    '/': new Main(),
     '/product/:id': Product,
-    '/category/:id': Category,
+    '/category/:id': new Category(),
+    '/category': new Category(),
     '/cart': Cart,
 }
 
-const router = () => {
     const request = parseRequestURL()
     const parseUrl =
         (request.resource ? `/${request.resource}` : '/') +
@@ -27,8 +30,12 @@ const router = () => {
 
     const main = document.getElementById('root')
     main?.innerHTML = page.render();
-    page?.bind();
+    page?.bind()
+
+    const HeaderModule = new Header();
+    HeaderModule.init();
 }
+
 
 window.addEventListener('load', router)
 window.addEventListener('hashchange', router)

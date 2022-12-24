@@ -31,6 +31,9 @@ module.exports = {
       filename: '[name].[contenthash].css',
     }),
   ],
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+  },
   module: {
     rules: [
       {
@@ -51,6 +54,9 @@ module.exports = {
             },
           },
           'group-css-media-queries-loader',
+          {
+            loader: "resolve-url-loader"
+          },
           'sass-loader',
         ],
       },
