@@ -9,11 +9,14 @@ const DEFAULT_FILTERS = {
 const DEFAULT_PRICES = { min: 0, max: 500 };
 const DEFAULT_RATINGS = { min: 0, max: 5 };
 
+
 class Category {
     filters = { ...DEFAULT_FILTERS };
     prices = { ...DEFAULT_PRICES };
     ratings = { ...DEFAULT_RATINGS };
-
+    filteredSize = new Set() 
+    filteredColor = new Set()
+    filteredProductName = new Set()
     items = [];
 
     constructor() {
@@ -118,7 +121,6 @@ class Category {
         if (categoryId !== 0) {
             filteredItems = items.filter(item => item.categoryId === categoryId);
         }
-
         if (color) {
             filteredItems = filteredItems.filter(item => item.color.toLowerCase() === color.toLowerCase());
         }
@@ -143,6 +145,9 @@ class Category {
             });
         }
         this.items = filteredItems;
+        filteredItems.forEach(item => this.filteredProductName.add(item.name )) 
+        filteredItems.forEach(item => this.filteredColor.add(item.color )) 
+        filteredItems.forEach(item => item.sizes.forEach(i => this.filteredSize.add(i)) )
     }
 
     sortItems = () => {
@@ -320,7 +325,6 @@ class Category {
     }
 
     render = () => {
-
         return `
         <div class="categories">
             <div class="bread-crumbs"></div>
@@ -330,7 +334,7 @@ class Category {
                     
                     <select name="productName" class="filter filter-productName" id="filter-productName">
                         <option class="filter-productName__val" value="">Product Name</option>
-                        ${modelsName.map(name => `
+                        ${[...this.filteredProductName].map(name => `
                             <option class="filter-productName__val" value="${name}" ${this.filters.productName === name ? 'selected="selected"' : ''} 
                             >${name}</option>
                         `).join('')}  
@@ -338,7 +342,7 @@ class Category {
 
                     <select name="size" class="filter filter-size" id="filter-size">
                         <option class="filter-size__val" value="">Size</option>
-                        ${sizes.map(s => `
+                        ${[...this.filteredSize].map(s => `
                             <option class="filter-size__val" value="${s}" ${this.filters.size === s ? 'selected="selected"' : ''} 
                             >${s.toUpperCase()}</option>
                         `).join('')}  
@@ -346,7 +350,7 @@ class Category {
                     
                     <select name="color" class="filter filter-color"  id="filter-color">
                         <option class="filter-color__val" value="">Color</option>
-                        ${colors.map(c => `
+                        ${[...this.filteredColor].map(c => `
                             <option class="filter-color__val" value="${c}"
                             ${this.filters.color === c ? ' selected="selected" ' : ''}
                             >${c}</option>
