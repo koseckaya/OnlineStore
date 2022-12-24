@@ -2,6 +2,7 @@
 import { categories } from '../data.ts';
 
 class Main {
+    bind= () => {}
     render = () => {
         return (`
         <div class="main-container">

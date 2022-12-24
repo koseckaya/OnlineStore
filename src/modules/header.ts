@@ -19,11 +19,13 @@ class Header {
         e.stopPropagation();
         const searchInput = document.querySelector('.search-input')
 
-        if (this.isActive) {
+        if (this.isActive) {            
             if (this.search.length > 2) {
                 const url = window.location.origin + '/?' + getUrlWithParams({ search: this.search }) + '#/category'
                 window.location.href = url;
-                window.location.reload();
+                if (window.location.href === url) {
+                    window.location.reload();
+                }
             }
         } else {
             searchInput?.classList.add('visible');
@@ -32,15 +34,20 @@ class Header {
     }
     handleSearchInput = (e) => {
         e.stopPropagation();
-        this.search = e.target.value;
+        this.search = e.target.value; 
+    }
+    handleSearchInputKeyPress = (e) => {
+        if (e.keyCode == 13) {
+            this.handleSearch(e)
+        }
     }
     
     bind = () => {
         const search = document.querySelector('.settings__search .settings__btn')
-        console.log(search);
         search?.addEventListener('click', this.handleSearch)
         const searchInput = document.querySelector('.search-input')
         searchInput?.addEventListener('input', this.handleSearchInput)
+        searchInput?.addEventListener('keypress', this.handleSearchInputKeyPress)
 
         document.getElementsByTagName('body')[0].addEventListener('click', (e) => {
             if (!e.target.classList.contains('search-input')) {

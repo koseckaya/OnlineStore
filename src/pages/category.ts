@@ -48,7 +48,7 @@ class Category {
         }
 
         this.filters.view = urlParams.has('view') ? 'grid' : '';
-
+        console.log('search', this.filters);
         if (urlParams.has('search')) {
             this.filters.search = urlParams.get('search');
         }
@@ -111,7 +111,7 @@ class Category {
 
     initItems = () => {
         const { categoryId, color, size, productName, search } = this.filters;
-        console.log('filter', this.filters);
+        
         let filteredItems = items;
 
         if (categoryId === 0) {
@@ -133,21 +133,19 @@ class Category {
         if (productName) {
             filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(productName.toLowerCase()))
         }
-
+    console.log('filter', this.filters, this.filters.search);
         if (search) {
             const searchString = search.toLowerCase();
             const fields = ['brand', 'name', 'colorHTML', 'type', 'description']
             filteredItems = filteredItems.filter(item => {
                 const searchFields = fields.reduce((acc, field) => {
                     acc += ' ' + item[field];
-
                     return acc;
                 }, '');
 
                 return searchFields.toLowerCase().includes(searchString);
             });
         }
-
         this.items = filteredItems;
     }
 
