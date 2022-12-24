@@ -15,7 +15,7 @@ import Header from './modules/header';
 const router = () => {
     const routes = {
     '/': new Main(),
-    '/product/:id': Product,
+    '/product/:id': new Product(),
     '/category/:id': new Category(),
     '/category': new Category(),
     '/cart': Cart,
