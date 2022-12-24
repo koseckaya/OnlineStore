@@ -2,7 +2,7 @@ import { Item, Category } from './types'
 
 export const items: Item[] = [
   {
-    "id": 1,
+    "id": 0,
     "categoryId": 1,
     "brand": "Dope",
     "name": "Blizzard",
@@ -21,7 +21,7 @@ export const items: Item[] = [
     ]
   },
   {
-    "id": 2,
+    "id": 1,
     "categoryId": 1,
     "brand": "Dope",
     "name": "Akin",
@@ -40,7 +40,7 @@ export const items: Item[] = [
     ]
   },
   {
-    "id": 3,
+    "id": 2,
     "categoryId": 1,
     "brand": "Dope",
     "name": "JT Legacy",
@@ -59,7 +59,7 @@ export const items: Item[] = [
     ]
   },
   {
-    "id": 4,
+    "id": 3,
     "categoryId": 1,
     "brand": "Dope",
     "name": "Yeti",
@@ -78,7 +78,7 @@ export const items: Item[] = [
     ]
   },
   {
-    "id": 5,
+    "id": 4,
     "categoryId": 1,
     "brand": "Dope",
     "name": "Adept",
@@ -97,7 +97,7 @@ export const items: Item[] = [
     ]
   },
   {
-    "id": 6,
+    "id": 5,
     "categoryId": 1,
     "brand": "Dope",
     "name": "Adept W",
@@ -116,12 +116,12 @@ export const items: Item[] = [
     ]
   },
   {
-    "id": 7,
+    "id": 6,
     "categoryId": 1,
     "brand": "Dope",
     "name": "Blizzard W",
     "colorHTML": "Black",
-    "availableColors": ['black', 'peach'],
+    "availableColors": ['black'],
     "color": 'black',
     "type": "Snowboard Jacket",
     "gender": "Women",
@@ -135,7 +135,7 @@ export const items: Item[] = [
     ]
   },
   {
-    "id": 8,
+    "id": 7,
     "categoryId": 1,
     "brand": "Dope",
     "name": "Akin W",
@@ -154,7 +154,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 9,
+    "id": 8,
     "categoryId": 1,
     "brand": "Dope",
     "name": "Cyclone W",
@@ -173,7 +173,7 @@ export const items: Item[] = [
     ]  
   },
   {
-    "id": 10,
+    "id": 9,
     "categoryId": 1,
     "brand": "Dope",
     "name": "Adept W",
@@ -192,7 +192,7 @@ export const items: Item[] = [
     ]  
   },
   {
-    "id": 11,
+    "id": 10,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Iconic 2021",
@@ -211,7 +211,7 @@ export const items: Item[] = [
     ]
   },
   {
-    "id": 12,
+    "id": 11,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Notorious B.I.B",
@@ -230,7 +230,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 13,
+    "id": 12,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Notorious B.I.B W",
@@ -249,7 +249,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 14,
+    "id": 13,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Con W",
@@ -268,7 +268,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 15,
+    "id": 14,
     "categoryId": 3,
     "brand": "Dope",
     "name": "Daily",
@@ -287,7 +287,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 16,
+    "id": 15,
     "categoryId": 3,
     "brand": "Dope",
     "name": "Standard W",
@@ -306,7 +306,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 17,
+    "id": 16,
     "categoryId": 3,
     "brand": "Dope",
     "name": "Standard W",
@@ -325,7 +325,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 18,
+    "id": 17,
     "categoryId": 3,
     "brand": "Dope",
     "name": "Daily",
@@ -344,7 +344,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 19,
+    "id": 18,
     "categoryId": 4,
     "brand": "Dope",
     "name": "Common W",
@@ -363,7 +363,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 20,
+    "id": 19,
     "categoryId": 4,
     "brand": "Dope",
     "name": "Common W",
@@ -382,7 +382,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 21,
+    "id": 20,
     "categoryId": 4,
     "brand": "Dope",
     "name": "Ozed",
@@ -401,30 +401,31 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 22,
+    "id": 21,
     "categoryId": 4,
     "brand": "Dope",
     "name": "Common",
     "colorHTML": "Peak Metal Blue",
-    "availableColors": ['blue', 'sand', 'violet'],
+    "availableColors": ['blue', 'sand', 'violet', 'red'],
     "color": 'blue',
     "type": "Hoodie",
     "gender": "Men",
     "price": 89,
     "rating": 5.00,
-    "sizes": ['S', 'M', 'L', 'XL', 'XXL'], "description": "The Common Hoodie is anything except run of the mill. Cosy, soft, and ready for anything, the Common hoodie is made from 100% organic cotton with a heavy-duty 400gsm Oekotex 100 certified terry loop fleece fabric for total warmth and all-season versatility. Finished off with plenty of slick Dope touches, this hoodie is the ultimate in both style and utility. Made in Portugal.",
-    "url": ["https://www.dopesnow.com/images/H1614_01_BdFp1kf.jpg?w=60&blur=60",
+    "sizes": ['S', 'M', 'L', 'XL', 'XXL'], 
+    "description": "The Common Hoodie is anything except run of the mill. Cosy, soft, and ready for anything, the Common hoodie is made from 100% organic cotton with a heavy-duty 400gsm Oekotex 100 certified terry loop fleece fabric for total warmth and all-season versatility. Finished off with plenty of slick Dope touches, this hoodie is the ultimate in both style and utility. Made in Portugal.",
+    "url": ["https://www.dopesnow.com/images/H1614_02_y50MvxZ.jpg?w=725&dpr=1",
           "https://www.dopesnow.com/images/H1614_05_GW1OdIr.jpg?w=725&dpr=1",
           "https://www.dopesnow.com/images/H1614_06_dzWEH7H.jpg?w=725&dpr=1",
     ]      
   },
   {
-    "id": 23,
+    "id": 22,
     "categoryId": 4,
     "brand": "Dope",
     "name": "Common",
     "colorHTML": "Sand",
-    "availableColors": ['blue', 'sand', 'violet'],
+    "availableColors": ['blue', 'sand', 'violet', 'red'],
     "color": 'sand',
     "type": "Hoodie",
     "gender": "Men",
@@ -438,12 +439,12 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 24,
+    "id": 23,
     "categoryId": 4,
     "brand": "Dope",
     "name": "Common",
     "colorHTML": "Violet",
-    "availableColors": ['blue', 'sand', 'violet'],
+    "availableColors": ['blue', 'sand', 'violet', 'red'],
     "color": 'violet',
     "type": "Hoodie",
     "gender": "Men",
@@ -457,13 +458,13 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 25,
+    "id": 24,
     "categoryId": 4,
     "brand": "Dope",
     "name": "Common",
-    "colorHTML": "Peak Metal Blue",
-    "availableColors": ['black', 'red', 'green'],
-    "color": 'blue',
+    "colorHTML": "2X-Up Burgundy",
+    "availableColors": ['blue', 'sand', 'violet', 'red'],
+    "color": 'red',
     "type": "Hoodie",
     "gender": "Men",
     "price": 89,
@@ -476,7 +477,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 26,
+    "id": 25,
     "categoryId": 4,
     "brand": "Dope",
     "name": "Regular",
@@ -495,7 +496,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 27,
+    "id": 26,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Iconic W",
@@ -514,7 +515,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 28,
+    "id": 27,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Iconic W",
@@ -533,12 +534,12 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 29,
+    "id": 28,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Blizzard W",
     "colorHTML": "Peach",
-    "availableColors": ['black', 'peach'],
+    "availableColors": ['peach'],
     "color": 'peach',
     "type": "Snowboard Pants",
     "gender": "Women",
@@ -552,7 +553,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 30,
+    "id": 29,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Iconic",
@@ -571,7 +572,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 31,
+    "id": 30,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Iconic",
@@ -590,7 +591,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 32,
+    "id": 31,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Iconic",
@@ -609,7 +610,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 33,
+    "id": 32,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Iconic",
@@ -628,7 +629,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 34,
+    "id": 33,
     "categoryId": 2,
     "brand": "Dope",
     "name": "JT Blizzard",
@@ -647,7 +648,7 @@ export const items: Item[] = [
     ]      
   },
   {
-    "id": 35,
+    "id": 34,
     "categoryId": 2,
     "brand": "Dope",
     "name": "Tigress W",

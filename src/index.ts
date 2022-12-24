@@ -27,6 +27,7 @@ const router = () => {
 
     const main = document.getElementById('root')
     main?.innerHTML = page.render();
+    page?.bind();
 }
 
 window.addEventListener('load', router)
