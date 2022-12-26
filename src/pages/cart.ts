@@ -8,8 +8,8 @@ class Cart {
     
     openCheckout = () => {
         console.log('openCheckout');
-        const CheckoutModule = new Checkout();
-        CheckoutModule.init();
+        // const CheckoutModule = new Checkout();
+        // CheckoutModule.init();
         
     }
     bind = () => {
@@ -18,6 +18,8 @@ class Cart {
 
     }
     render = () => {
+        const CheckoutModule = new Checkout();
+        CheckoutModule.init();
         return `<h1>Cart</h1>
         <div>Product1</div>
         <div>Product2</div>
