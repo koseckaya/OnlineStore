@@ -1,16 +1,22 @@
+// @ts-nocheck
 class Checkout {
-
+    constructor () {}
 
     bind = () => {
 
     }
     render = () => {
-        console.log('checkout');
-        return `
-            <div class="checkout-container">CHECKOUT</div>
+       
+        
+        console.log('windowInnerHeight',windowInnerWidth);
+        const modal = document.querySelector('.modal')
+        modal?.innerHTML = `
+            <div class="checkout-container">Checkout</div>
         `
+        
     }
     init = () => {
+        this.render();
         this.bind();
     }
 }

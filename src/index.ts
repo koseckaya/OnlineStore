@@ -19,7 +19,7 @@ const router = () => {
     '/product/:id': new Product(),
     '/category/:id': new Category(),
     '/category': new Category(),
-    '/cart': Cart,
+    '/cart': new Cart(),
 }
 
     const request = parseRequestURL()
@@ -35,8 +35,7 @@ const router = () => {
 
     const HeaderModule = new Header();
     HeaderModule.init();
-    const CheckoutModule = new Checkout();
-    CheckoutModule.init();
+    
 }
 
 

@@ -198,8 +198,11 @@ a {
 }
 .checkout {
     &-container {
-        width: 800px;
-        height: 800px;
+       position: absolute;
+       top: 200px;
+       left: calc(50% - 200px);
+        width: 400px;
+        height: 400px;
         background: rgba($main, 0.6);
         margin: 0 auto;
     }
