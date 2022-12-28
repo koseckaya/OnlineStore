@@ -192,10 +192,26 @@ a {
     text-align: center;
     padding: 10px 40px;
     border-radius: 4px;
+    transition: all 0.3s linear;
     cursor: pointer;
     &:hover {
         background: darken($main, 10%)
     }
+    &:active {
+        background: $green;
+    }
+    &:disabled , &:disabled:hover{
+        background: #2525257a;
+    }
+}
+.modal-container.show {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .checkout {
     &-container {
@@ -249,6 +265,30 @@ a {
                  &:invalid {
                     border: 1px solid $red;
                  }
+            }
+            .info {
+                position: relative;
+                &__i {
+                    position: absolute;
+                    right: 8px;
+                    top: 11px;
+                    font-size: 20px;
+                    border: 1px solid $main;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    padding: 0 9px;
+                    &:hover + .info__desc{
+                        display: block;
+                        position: absolute;
+                        top: -5px;
+                        font-size: 14px;
+                        right: 3px;
+                        background: $white;
+                    }
+                }
+                &__desc {
+                    display: none;
+                }
             }
        } 
         .input-box.focus,

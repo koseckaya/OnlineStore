@@ -2,24 +2,23 @@
 import Checkout from "../modules/checkout";
 
 class Cart {
+    checkoutModule = null;
     constructor () {
         
     }
     
     openCheckout = () => {
-        console.log('openCheckout');
-        // const CheckoutModule = new Checkout();
-        // CheckoutModule.init();
-        
+        if (!this.checkoutModule) {
+            this.checkoutModule = new Checkout();
+        }
+        this.checkoutModule.init();
     }
     bind = () => {
         const checkout = document.querySelector('.btn-checkout')
         checkout?.addEventListener('click', this.openCheckout)
-
     }
     render = () => {
-        const CheckoutModule = new Checkout();
-        CheckoutModule.init();
+        
         return `<h1>Cart</h1>
         <div>Product1</div>
         <div>Product2</div>
