@@ -7,9 +7,12 @@
     margin: 70px 0 auto;
 }
 .error{
-    font-weight: 700;
-    font-size: 43px;
-    margin-bottom: 30px;
+    &-title{
+        font-weight: 700;
+        font-size: 43px;
+        margin-bottom: 30px;
+    }
+    
     &-message{
         margin-bottom: 20px;
     }

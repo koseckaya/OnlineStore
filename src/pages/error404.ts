@@ -5,10 +5,9 @@ import { categories } from '../data.ts';
 
 const Error404 = {
     render: () => {
-        console.log(categories )
         return `
         <div class="error-container">
-            <div class='error'>404</div>
+            <div class='error-title'>404</div>
             <div class='error-message'>Page you are trying to find is not available or has been removed.</div>
 
             <div class="categories">

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { items, categories, sizes, colors , sortBy, modelsName} from '../data.ts';
+import { items, categories, sizes, colors , sortBy} from '../data.ts';
 import { stringsSortBy } from '../helpers/strings';
 import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts';
 
