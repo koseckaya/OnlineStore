@@ -38,7 +38,9 @@ const router = () => {
     
 }
 
-
+if (localStorage.getItem('fullCart')) {
+    document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
+}
 window.addEventListener('load', router)
 window.addEventListener('hashchange', router)
 

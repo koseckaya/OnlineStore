@@ -7,16 +7,19 @@ class Product {
     i = 0;
     selectedProduct = null;
     cartProduct = {
-        id: 0,
+        id: -1,
         amount: 1,
         size: '',
     };
 
     constructor() {
         const request = parseRequestURL()
-        const neededItemId = +(request.id);
+        const neededItemId = Number(request.id);
         if (neededItemId) {
             this.selectedProduct = items[neededItemId];
+            this.cartProduct.id = this.selectedProduct.id
+        } else {
+            this.selectedProduct = items[0];
             this.cartProduct.id = this.selectedProduct.id
         }
     }
@@ -95,12 +98,6 @@ class Product {
     // filter available product colors and sort from the active color to other colors that we add to the render function() as available product colors
     filterAvailableColors = () => {
         let filteredArray = items.filter((el) => (el.name === this.selectedProduct.name && el.categoryId === this.selectedProduct.categoryId));
-        filteredArray.sort(el => {
-            if (el.colorHTML === this.selectedProduct.colorHTML) {
-                return -1;
-            } else {
-                return 1;
-            }});
         return filteredArray;
     }
     //---------------------------------------------------------------------------------
@@ -152,7 +149,7 @@ class Product {
                 if (arr.some((el) => el.id === this.cartProduct.id && el.size === this.cartProduct.size )) {
                     arr.map((el) => {
                         if (el.id === this.cartProduct.id && el.size === this.cartProduct.size ) {
-                            el.amount = this.cartProduct.amount;
+                            el.amount += this.cartProduct.amount;
                         }
                         return el;
                     })
@@ -160,8 +157,10 @@ class Product {
                     arr.push(this.cartProduct);
                 }
                 localStorage.setItem('fullCart', JSON.stringify(arr));
+                document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
             } else {
                 localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
+                document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
             }
         })
         document.querySelector('#slides-container')?.addEventListener('click', () => {
@@ -196,17 +195,37 @@ class Product {
                 window.onclick = null;
             }
         })
-        document.querySelectorAll('.product-color-btn').forEach((el) => el.addEventListener('click', () => console.log(1)))
+        document.querySelector('.product-buy-now-btn')?.addEventListener('click', () => {
+            this.cartProduct.size = document.querySelector('.product-sizes')?.value;
+            if (localStorage.getItem('fullCart')) {
+                let arr = JSON.parse(localStorage.getItem('fullCart'));
+                if (arr.some((el) => el.id === this.cartProduct.id && el.size === this.cartProduct.size )) {
+                    arr.map((el) => {
+                        if (el.id === this.cartProduct.id && el.size === this.cartProduct.size ) {
+                            el.amount += this.cartProduct.amount;
+                        }
+                        return el;
+                    })
+                } else {
+                    arr.push(this.cartProduct);
+                }
+                localStorage.setItem('fullCart', JSON.stringify(arr));
+                document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
+            } else {
+                localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
+                document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
+            }
+            window.location.href = './#/cart';
+        })
     }
     render = () => {
-
         return `
         <div class="product-road">
             <a href="#/category/">Categories</a>
             <span>></span>
-            <a href="#/category/${this.selectedProduct.categoryId}">${categories[this.selectedProduct.categoryId-1].name}</a>
+            <a href="#/category/${categories[this.selectedProduct.categoryId-1].name}">${categories[this.selectedProduct.categoryId-1].name}</a>
             <span>></span>
-            <a href="#/product/:${this.selectedProduct.id}">${this.selectedProduct.name + ' ' + this.selectedProduct.type + ' ' + this.selectedProduct.gender + ' ' + this.selectedProduct.colorHTML}</a>
+            <span>${this.selectedProduct.name + ' ' + this.selectedProduct.type + ' ' + this.selectedProduct.gender + ' ' + this.selectedProduct.colorHTML}</span>
         </div>
         <div class="product">
         <div class="product__slider">
@@ -225,7 +244,7 @@ class Product {
                 <img src="${starsImage}" alt="stars-rating-image">
             </div>
             <div class="product-available-colors">${this.selectedProduct.availableColors.map((_el, index) => {
-                if (index === 0) {
+                if (this.selectedProduct.id === this.filterAvailableColors()[index].id) {
                     return `<a href="#/product/${this.filterAvailableColors()[index].id}"><img class="product-color-btn activated" src="${this.filterAvailableColors()[index].url[0]}"></img></a>`
                 }
                 return `<a href="#/product/${this.filterAvailableColors()[index].id}"><img class="product-color-btn" src="${this.filterAvailableColors()[index].url[0]}"></img></a>`
@@ -242,13 +261,18 @@ class Product {
             </div>
             <h3 class="product-description-h2">Description:</h3>
             <div class="product-description">${this.selectedProduct.description}</div>
-            <button class="product-add-btn">
+            <div class="buy-buttons-container">
+                <button class="product-add-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
                     <g fill="none" fill-rule="evenodd"><path stroke="currentColor" stroke-width="2" d="M3.5 0v13.65h10.182L17.5 4.095h-14"></path><ellipse fill="currentColor" fill-rule="nonzero" cx="4" cy="17.9" rx="1.5" ry="1.575"></ellipse><ellipse fill="currentColor" fill-rule="nonzero" cx="12" cy="17.9" rx="1.5" ry="1.575"></ellipse>
                     </g>
                 </svg>
                 <span class="price-span">$${this.selectedProduct.price} USD</span>
-            </button>
+                </button>
+                <button class="product-buy-now-btn">
+                    <span class="price-span">BUY NOW</span>
+                </button>
+            </div>
         </div>
     </div>`
     }
