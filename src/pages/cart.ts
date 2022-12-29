@@ -16,7 +16,6 @@ class Cart {
     }
     bind = () => {
         const urlParams = getUrlParams()
-        console.log('urlParams', urlParams, urlParams.get('method'));
         urlParams.has('method')
         if (urlParams.has('method') && urlParams.get('method') === 'buynow') {
              this.openCheckout()
