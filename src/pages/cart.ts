@@ -1,5 +1,6 @@
 // @ts-nocheck
 import Checkout from "../modules/checkout";
+import { getUrlParams } from '../helpers/utils.ts';
 
 class Cart {
     checkoutModule = null;
@@ -14,6 +15,13 @@ class Cart {
         this.checkoutModule.init();
     }
     bind = () => {
+        const urlParams = getUrlParams()
+        console.log('urlParams', urlParams, urlParams.get('method'));
+        urlParams.has('method')
+        if (urlParams.has('method') && urlParams.get('method') === 'buynow') {
+             this.openCheckout()
+        }
+
         const checkout = document.querySelector('.btn-checkout')
         checkout?.addEventListener('click', this.openCheckout)
     }
