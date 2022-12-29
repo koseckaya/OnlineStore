@@ -195,6 +195,28 @@ class Product {
                 window.onclick = null;
             }
         })
+        document.querySelector('.product-buy-now-btn')?.addEventListener('click', () => {
+            this.cartProduct.size = document.querySelector('.product-sizes')?.value;
+            if (localStorage.getItem('fullCart')) {
+                let arr = JSON.parse(localStorage.getItem('fullCart'));
+                if (arr.some((el) => el.id === this.cartProduct.id && el.size === this.cartProduct.size )) {
+                    arr.map((el) => {
+                        if (el.id === this.cartProduct.id && el.size === this.cartProduct.size ) {
+                            el.amount += this.cartProduct.amount;
+                        }
+                        return el;
+                    })
+                } else {
+                    arr.push(this.cartProduct);
+                }
+                localStorage.setItem('fullCart', JSON.stringify(arr));
+                document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
+            } else {
+                localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
+                document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
+            }
+            window.location.href = './#/cart';
+        })
     }
     render = () => {
         return `
