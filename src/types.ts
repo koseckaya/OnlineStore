@@ -1,3 +1,6 @@
+import { ModuleInterface } from "./pages/types";
+
+
 export interface Item {
   "id": number;
   "categoryId": number;
@@ -30,3 +33,20 @@ export enum SortByTypes {
 export type StringsSortByType = {
     [key in SortByTypes]: string;
 };
+
+export interface Routes {
+    [key: string]: ModuleInterface;
+}
+
+type parseRequestURLResultType = {
+  resource: string ;
+  id: string;
+  action: string;
+}
+export type parseRequestURLType = () => parseRequestURLResultType
+
+type UrlParams = {
+    [key in string]: string;
+};
+export type getUrlWithParamsType = (params: UrlParams) => URLSearchParams
+export type setUrlParamsType = (params: UrlParams) => void

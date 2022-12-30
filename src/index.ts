@@ -1,43 +1,45 @@
- // @ts-nocheck
 
 import './index.html';
 import './index.scss';
-import Main from './pages/main.ts';
-import Product from './pages/product.ts';
-import Error404 from './pages/error404.ts';
-import Category from './pages/category.ts';
-import Cart from './pages/cart.ts';
-import { parseRequestURL } from './helpers/utils.ts';
+import Main from './pages/main';
+import Product from './pages/product';
+import Error404 from './pages/error404';
+import Category from './pages/category';
+import Cart from './pages/cart';
+import { parseRequestURL } from './helpers/utils';
 import Header from './modules/header';
-import Checkout from './modules/checkout';
+
+import { Routes } from './types'
+import { ModuleInterface } from './pages/types';
 
 
 
 const router = () => {
-    const routes = {
+    const routes: Routes = {
     '/': new Main(),
     '/product/:id': new Product(),
     '/category/:id': new Category(),
     '/category': new Category(),
     '/cart': new Cart(),
-}
+    }
 
     const request = parseRequestURL()
     const parseUrl =
         (request.resource ? `/${request.resource}` : '/') +
         (request.id ? `/:id` : '') +
-        (request.verb ? `/${request.verb}` : '');
-    const page = routes[parseUrl] ? routes[parseUrl] : Error404;
+        (request.action ? `/${request.action}` : '');
+    const page: ModuleInterface = routes[parseUrl] ? routes[parseUrl] : new Error404();
 
-    const main = document.getElementById('root')
-    main?.innerHTML = page.render();
-    page?.bind()
+    const main = document.getElementById('root') as HTMLInputElement | null
+    if (main !== null) {
+        main.innerHTML = page.render();
+        page?.bind()
+    }
+    
 
     const HeaderModule = new Header();
     HeaderModule.init();
-    
 }
-
 
 window.addEventListener('load', router)
 window.addEventListener('hashchange', router)

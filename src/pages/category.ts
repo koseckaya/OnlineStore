@@ -2,6 +2,7 @@
 import { items, categories, sizes, colors , sortBy} from '../data.ts';
 import { stringsSortBy } from '../helpers/strings';
 import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts';
+import { ModuleInterface} from './types'
 
 const DEFAULT_FILTERS = {
     categoryId: 0,

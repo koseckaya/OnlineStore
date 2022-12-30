@@ -1,10 +1,11 @@
 // @ts-nocheck
 import { categories } from '../data.ts';
+import { ModuleInterface } from './types'
 
-
-
-const Error404 = {
-    render: () => {
+class Error404 implements ModuleInterface {
+    bind =  () => {}
+    render = () => {
+        
         return `
         <div class="error-container">
             <div class='error-title'>404</div>

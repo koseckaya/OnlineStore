@@ -1,7 +1,8 @@
-// @ts-nocheck
-import { categories } from '../data.ts';
 
-class Main {
+import { categories } from '../data';
+import { ModuleInterface} from './types'
+
+class Main implements ModuleInterface {
     bind= () => {}
     render = () => {
         return (`
