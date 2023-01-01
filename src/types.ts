@@ -18,6 +18,8 @@ export interface Item {
   "url": string[];
 }
 
+export type ItemFieldsType = keyof Item;
+
 export interface Category {
   "id": number;
   "name": string;

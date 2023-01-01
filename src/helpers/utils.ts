@@ -16,7 +16,6 @@ export const getUrlParams:() => URLSearchParams = () => {
 }
 
 export const getUrlWithParams: getUrlWithParamsType = (params) => {
-    console.log('params',params);
     return Object.keys(params).reduce((acc, param) => {
         if (params[param]) {
             acc.set(param, params[param]);
