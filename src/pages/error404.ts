@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { categories } from '../data.ts';
+import { categories } from '../data';
 import { ModuleInterface } from './types'
 
 class Error404 implements ModuleInterface {
@@ -14,11 +13,11 @@ class Error404 implements ModuleInterface {
             <div class="categories">
                 ${categories.map((cat) => `
                     <div class="category">
-                        <a class="category__item" href="/#/category/${cat._id}">
+                        <a class="category__item" href="/#/category/${cat.id}">
                             <img src="${cat.url}">
                         </a>
                          <div class="product-name">
-                            <a href="/#/category/${cat._id}">
+                            <a href="/#/category/${cat.id}">
                                 ${cat.name}
                             </a>
                         </div>
