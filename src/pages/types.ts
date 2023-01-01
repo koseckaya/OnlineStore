@@ -25,6 +25,13 @@ export type defaultRangeType = {
 }
 export type filterParamType = string | null
 
+export interface cartProductType {
+    [key: string]: string | number;
+    "id": number;
+    "amount": number;
+    "size": string;
+}
+
 export interface storageItem {
-    [key: string]: string
+    [key: string]: string | number
 }

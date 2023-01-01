@@ -1,7 +1,8 @@
 // @ts-nocheck
 import Checkout from "../modules/checkout";
+import { ModuleInterface } from "./types";
 
-class Cart {
+class Cart implements ModuleInterface {
     checkoutModule = null;
     constructor () {
         
