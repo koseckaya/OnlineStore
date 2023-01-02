@@ -8,9 +8,9 @@ import Category from './pages/category';
 import Cart from './pages/cart';
 import { parseRequestURL } from './helpers/utils';
 import Header from './modules/header';
-
 import { Routes } from './types'
 import { ModuleInterface } from './pages/types';
+
 
 
 
@@ -39,6 +39,12 @@ const router = () => {
 
     const HeaderModule = new Header();
     HeaderModule.init();
+}
+
+const fullCart = localStorage.getItem('fullCart')
+
+if (document.querySelector('.cart-amount') && fullCart) {
+    document.querySelector('.cart-amount')!.innerHTML = `${JSON.parse(fullCart).length}`;
 }
 
 window.addEventListener('load', router)

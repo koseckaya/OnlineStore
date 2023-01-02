@@ -16,9 +16,12 @@ class Product implements ModuleInterface {
 
     constructor() {
         const request = parseRequestURL()
-        const neededItemId = +(request.id);
+        const neededItemId = Number(request.id);
         if (neededItemId) {
             this.selectedProduct = items[neededItemId];
+            this.cartProduct.id = this.selectedProduct.id
+        } else {
+            this.selectedProduct = items[0];
             this.cartProduct.id = this.selectedProduct.id
         }
     }
@@ -52,8 +55,8 @@ class Product implements ModuleInterface {
                     ParentNode.style.transform = `translateX(0px)`;
                     ParentNode.style.animation = ``;
                     setTimeout(function () {
-                        if (ParentNode) {
-                            ParentNode.removeChild(ParentNode.lastElementChild!);
+                        if (ParentNode && ParentNode.lastElementChild) {
+                            ParentNode.removeChild(ParentNode.lastElementChild);
                             ParentNode.style.width = `${(document.querySelector('.product__slider') as HTMLElement).offsetWidth}px`;
                             ParentNode.style.transition = `all .0s ease-in-out`;
                         }
@@ -80,8 +83,8 @@ class Product implements ModuleInterface {
                     ParentNode.style.transform = `translateX(${-(document.querySelector('.product__slider') as HTMLElement).offsetWidth}px)`;
                     ParentNode.style.animation = ``;
                     setTimeout(function () {
-                        if (ParentNode) {
-                            ParentNode.removeChild(ParentNode.firstElementChild!);
+                        if (ParentNode && ParentNode.firstElementChild) {
+                            ParentNode.removeChild(ParentNode.firstElementChild);
                             ParentNode.style.width = `${(document.querySelector('.product__slider') as HTMLElement).offsetWidth}px`;
                             ParentNode.style.transform = `translateX(0px)`;
                             ParentNode.style.transition = `all .0s ease-in-out`;
@@ -103,6 +106,7 @@ class Product implements ModuleInterface {
         return resultString;
     }
     // filter available product colors and sort from the active color to other colors that we add to the render function() as available product colors
+
     filterAvailableColors = (): Item[] => {
         let filteredArray = items.filter((el) => {
             if (this.selectedProduct) {
@@ -129,56 +133,50 @@ class Product implements ModuleInterface {
                 counter.addEventListener('click', (e: Event) => {
     
                     const target = e.target as HTMLElement;
-                    const closestEl = target.closest('.counter')
-                    const inputEl = closestEl!.querySelector('input')
-                    if (target && target.closest('.counter__button')) {
-                        
-                        if (target.closest('.counter') && target.closest('.counter')!.querySelector('input') && target.closest('.counter')!.querySelector('input')!.value == '' && (target.classList.contains('counter__button-minus') || target.classList.contains('counter__button-plus'))) {
-                            target.closest('.counter')!.querySelector('input')!.value = '1';
-                        }
-                        if (target.closest('.counter') && target.closest('.counter')!.querySelector('input')) {
-                            let value = parseInt(target.closest('.counter')!.querySelector('input')!.value);
-                        
-                            if (target && target.closest('.counter') && target.closest('.counter')!.querySelector('input')
-                                && target.classList.contains('counter__button-plus')) {
+                    const closestCounter = target.closest('.counter')
+                    const closestBtn = target.closest('.counter__button')
+                    const counterMinusBtn = target.classList.contains('counter__button-minus')
+                    const counterPlusBtn = target.classList.contains('counter__button-plus')
+                    const priceSpan = document.querySelector('.price-span')
+                    
+                    if (target && closestCounter && closestBtn) {
+                        const inputEl = closestCounter.querySelector('input')
+                        if (inputEl && priceSpan && this.selectedProduct) {
+                            if (inputEl.value == '' && (counterMinusBtn || counterPlusBtn)) {
+                                inputEl.value = '1';
+                            }
+                            let value = parseInt(inputEl.value);
+                            if (counterPlusBtn) {
                                 value++;
-                                target.closest('.counter')!.querySelector('input')!.value = `${value}`
-                                this.cartProduct.amount = +(target.closest('.counter')!.querySelector('input')!.value)
-                                if (document.querySelector('.price-span') && this.selectedProduct) {
-                                    document.querySelector('.price-span')!.innerHTML = `$${this.selectedProduct.price * value} USD`;
-                                }
+                                inputEl.value = `${value}`
+                                this.cartProduct.amount = +(inputEl.value)
+                                priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`;
                             } else {
                                 value--;
-                                if (target && target.closest('.counter') && target.closest('.counter')!.querySelector('input')) {
-                                    target.closest('.counter')!.querySelector('input')!.value = `${value}`
-                                    this.cartProduct.amount = +(target.closest('.counter')!.querySelector('input')!.value)
-                                    if (document.querySelector('.price-span') && this.selectedProduct) {
-                                        document.querySelector('.price-span')!.innerHTML = `$${this.selectedProduct.price * value} USD`;
-                                    }
+                                inputEl.value = `${value}`
+                                this.cartProduct.amount = +(inputEl.value)
+                                priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`;
+                            }
+                            const minusBtn = closestCounter.querySelector('.counter__button-minus')
+                                if (value <= 1) {
+                                    value = 1;
+                                    if (minusBtn) minusBtn.classList.add('disabled')
+                                } else {
+                                    if (minusBtn) minusBtn.classList.remove('disabled')
                                 }
+                            inputEl.value = `${value}`;
                             }
-
-                            if (value <= 1) {
-                                value = 1;
-                                target.closest('.counter')!.querySelector('.counter__button-minus')!.classList.add('disabled')
-                            } else {
-                                target.closest('.counter')!.querySelector('.counter__button-minus')!.classList.remove('disabled')
-                            }
-
-                            target.closest('.counter')!.querySelector('input')!.value = `${value}`;
-                        }
                     }
                 })
             })	
         }
         document.querySelector('.product-add-btn')?.addEventListener('click', () => {
-            console.log('click');
             this.cartProduct.size = (document.querySelector('.product-sizes') as HTMLInputElement).value;
             const fullCart = localStorage.getItem('fullCart');
-            if (fullCart) {
+            const cartAmount = document.querySelector('.cart-amount')
+            if (cartAmount && fullCart) {
                 let arr: storageItem[] = JSON.parse(fullCart);
                 if (arr.some((el) => el.id === this.cartProduct.id && el.size === this.cartProduct.size)) {
-                    console.log('arr', arr, this.cartProduct);
                     arr.map((el) => {
                         if (el.id === this.cartProduct.id && el.size === this.cartProduct.size ) {
                             el.amount = +el.amount  + this.cartProduct.amount;
@@ -189,8 +187,10 @@ class Product implements ModuleInterface {
                     arr.push(this.cartProduct);
                 }
                 localStorage.setItem('fullCart', JSON.stringify(arr));
+                cartAmount.innerHTML = `${JSON.parse(fullCart).length}`;
             } else {
                 localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
+                if (cartAmount && fullCart) cartAmount.innerHTML = `${JSON.parse(fullCart).length}`;
             }
         })
         document.querySelector('#slides-container')?.addEventListener('click', () => {
@@ -227,35 +227,62 @@ class Product implements ModuleInterface {
                 window.onclick = null;
             }
         })
-        document.querySelectorAll('.product-color-btn').forEach((el) => el.addEventListener('click', () => console.log(1)))
+        document.querySelector('.product-buy-now-btn')?.addEventListener('click', () => {
+            this.cartProduct.size = (document.querySelector('.product-sizes') as HTMLInputElement).value;
+            const fullCart = localStorage.getItem('fullCart');
+             const cartAmount = document.querySelector('.cart-amount')
+            if ( cartAmount && fullCart) {
+                let arr: storageItem[] = JSON.parse(fullCart);
+                if (arr.some((el) => el.id === this.cartProduct.id && el.size === this.cartProduct.size )) {
+                    arr.map((el) => {
+                        if (el.id === this.cartProduct.id && el.size === this.cartProduct.size ) {
+                            el.amount = +el.amount  + this.cartProduct.amount;
+                        }
+                        return el;
+                    })
+                } else {
+                    arr.push(this.cartProduct);
+                }
+                localStorage.setItem('fullCart', JSON.stringify(arr));
+                cartAmount.innerHTML = `${JSON.parse(fullCart).length}`;
+            } else {
+                localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
+                if (cartAmount && fullCart) cartAmount.innerHTML = `${JSON.parse(fullCart).length}`;
+            }
+
+            window.location.href = '/?method=buynow#/cart' ;
+        })
     }
     render = () => {
+        if (!this.selectedProduct) return `Product not found`
         return `
         <div class="product-road">
             <a href="#/category/">Categories</a>
             <span>></span>
-            <a href="#/category/${this.selectedProduct!!.categoryId}">${categories[this.selectedProduct!.categoryId-1].name}</a>
+            <a href="#/category/${this.selectedProduct?.categoryId}">${categories[this.selectedProduct?.categoryId-1].name}</a>
             <span>></span>
-            <a href="#/product/:${this.selectedProduct!.id}">${this.selectedProduct!.name + ' ' + this.selectedProduct!.type + ' ' + this.selectedProduct!.gender + ' ' + this.selectedProduct!.colorHTML}</a>
+            <a href="#/product/:${this.selectedProduct?.id}">${this.selectedProduct.name + ' ' + this.selectedProduct.type + ' ' + this.selectedProduct.gender + ' ' + this.selectedProduct.colorHTML}</a>
+
         </div>
         <div class="product">
         <div class="product__slider">
             <button class="slider-left"><span></span></button>
             <div id="slides-container">
-                <img class="slider-image" src="${this.selectedProduct!.url[this.i]}" alt="card-image">
+                <img class="slider-image" src="${this.selectedProduct.url[this.i]}" alt="card-image">
             </div>
             <button class="slider-right"><span></span></button>
         </div>
         <div class="product__info">
-            <h2 class="product-name">${this.selectedProduct!.name}</h2>
-            <div class="product-brand">${this.selectedProduct!.brand.toUpperCase()}</div>
-            <div class="product-color">COLOR:<p>${this.selectedProduct!.colorHTML}</p></div>
+            <h2 class="product-name">${this.selectedProduct.name}</h2>
+            <div class="product-brand">${this.selectedProduct.brand.toUpperCase()}</div>
+            <div class="product-color">COLOR:<p>${this.selectedProduct.colorHTML}</p></div>
             <div class="product-rating-container">
-                <div class="product-rating-line" style="width:${(this.selectedProduct!.rating*10*2)}%"></div>
+                <div class="product-rating-line" style="width:${(this.selectedProduct.rating*10*2)}%"></div>
                 <img src="${starsImage}" alt="stars-rating-image">
             </div>
-            <div class="product-available-colors">${this.selectedProduct!.availableColors.map((_el, index) => {
+            <div class="product-available-colors">${this.selectedProduct.availableColors.map((_el, index) => {
                 if (index === 0) {
+
                     return `<a href="#/product/${this.filterAvailableColors()[index].id}"><img class="product-color-btn activated" src="${this.filterAvailableColors()[index].url[0]}"></img></a>`
                 }
                 return `<a href="#/product/${this.filterAvailableColors()[index].id}"><img class="product-color-btn" src="${this.filterAvailableColors()[index].url[0]}"></img></a>`
@@ -271,14 +298,22 @@ class Product implements ModuleInterface {
                 <div class="counter__button counter__button-plus">+</div>
             </div>
             <h3 class="product-description-h2">Description:</h3>
-            <div class="product-description">${this.selectedProduct!.description}</div>
+
+            <div class="product-description">${this.selectedProduct.description}</div>
             <button class="product-add-btn">
+
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
                     <g fill="none" fill-rule="evenodd"><path stroke="currentColor" stroke-width="2" d="M3.5 0v13.65h10.182L17.5 4.095h-14"></path><ellipse fill="currentColor" fill-rule="nonzero" cx="4" cy="17.9" rx="1.5" ry="1.575"></ellipse><ellipse fill="currentColor" fill-rule="nonzero" cx="12" cy="17.9" rx="1.5" ry="1.575"></ellipse>
                     </g>
                 </svg>
-                <span class="price-span">$${this.selectedProduct!.price} USD</span>
-            </button>
+
+                <span class="price-span">$${this.selectedProduct.price} USD</span>
+                </button>
+                <button class="product-buy-now-btn">
+                    <span class="price-span">BUY NOW</span>
+                </button>
+            </div>
+
         </div>
     </div>`
     }

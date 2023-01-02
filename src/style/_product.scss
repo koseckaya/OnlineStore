@@ -97,6 +97,30 @@
   }
 }
 
+@keyframes selectedColor {
+  0% {
+    outline: solid 1.5px #ff660000;
+  }
+  100% {
+    outline: solid 1.5px #f47536;;
+  }
+}
+
+@keyframes div-act {
+  0% {
+    
+    background-image: linear-gradient(0deg, #c59100 0%, #f4753600 50%, #f4753600 100%);
+    
+    opacity: 0.0;
+  }
+  100% {
+    
+    background-image: linear-gradient(0deg, #9e02e6 0%, #f4753600 50%, #f4753600 100%);
+
+    opacity: 0.7;
+  }
+}
+
 .product-road {
   user-select: none;
   font-size: 17px;
@@ -250,55 +274,90 @@
       border-radius: 50%;
       position: relative;
       object-fit: cover;
+      box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 10px, rgba(17, 17, 26, 0.1) 0px 0px 10px, rgba(17, 17, 26, 0.1) 0px 4px 10px;
       &.activated {
-        border: 1px solid #f47536;
+        animation: selectedColor .6s linear;
+        animation-fill-mode: forwards;
+        
       }
     }
-    
-    .product-color-btn {
-      &::after {
-        content: "";
-        display: inline-block;
-        background: rgb(78, 77, 77);
-        position: absolute;
-        right: 0;
-        top: 0;
-        color: rgb(63, 61, 61);
-        border-radius: 50%;
-        font-size: 15px;
-        text-align: center;
-        line-height: 20.5px;
-        width: 19px;
-        height: 19px;
-        border: solid 1px rgb(59, 59, 59);
-    }
-    }
-    .product-add-btn {
+
+    .buy-buttons-container {
+      display: flex;
       width: 100%;
-      position: fixed;
-      bottom: 0;
-      font-size: 14px;
-      transition: all .2s ease-in-out;
-      text-decoration: none;
-      background-color: #000000;
-      color: $white;
-      outline: 0;
-      margin-top: 10px;
-      border: 0;
-      display: inline-block;
-      height: 50px;
-      line-height: 50px;
-      text-align: center;
-      position: relative;
-      box-sizing: border-box;
-      cursor: pointer;
-      svg {
-        position: absolute;
-        left: 5%;
-        top: 30%;
+      gap: 2%;
+      .product-add-btn {
+        width: 70%;
+        position: fixed;
+        bottom: 0;
+        font-size: 16px;
+        transition: all .3s ease-in;
+        text-decoration: none;  
+        background-image: linear-gradient(to right, #000000 0%, #212830  51%, #000000  100%);    
+        background-size: 200% auto;
+        color: $white;
+        outline: 0;
+        margin-top: 10px;
+        border: 0;
+        display: inline-block;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        position: relative;
+        box-sizing: border-box;
+        cursor: pointer;
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+        svg {
+          position: absolute;
+          left: 5%;
+          top: 30%;
+        }
+        &:hover {
+          background-position: right center; /* change the direction of the change here */
+          color: #fff;
+          text-decoration: none;
+        }
+        &:focus {
+          background-color: #08c28a;
+          text-shadow: 0px 3px 3px rgba(255,255,255,0.5);
+        }
       }
-      &:hover {
-        background-color: #000000ab;
+      .product-buy-now-btn {
+        width: 28%;
+        position: fixed;
+        bottom: 0;
+        font-size: 16px;
+        transition: all .3s ease-in;
+        text-decoration: none;
+        background-image: linear-gradient(to right, #c07724 0%, #f06a35  51%, #c06a24  100%);
+        background-size: 200% auto;
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+        color: $white;
+        outline: 0;
+        margin-top: 10px;
+        border: 0;
+        display: inline-block;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        position: relative;
+        box-sizing: border-box;
+        cursor: pointer;
+        svg {
+          position: absolute;
+          left: 5%;
+          top: 30%;
+        }
+        &:hover {
+      
+          background-position: right center; /* change the direction of the change here */
+          color: #fff;
+          text-decoration: none;
+        }
+        &:focus {
+          background-color: #08c28a;
+          text-shadow: 0px 3px 3px rgba(255,255,255,0.5);
+        }
       }
     }
   }
@@ -394,14 +453,17 @@
   position: absolute;
   top: 0;
   right: 0;
-  background-color: #f47536;
+  background-image: linear-gradient(to right, #c07724 0%, #f06a35  51%, #c06a24  100%);
+  background-size: 200% auto;
   padding: 7px;
   transition: .25s all ease-in-out;
   pointer-events: none;
 }
 /* Transition */
 .select:hover::after {
-  color: #ffffff;
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
 }
 
 .blackout {
@@ -416,3 +478,28 @@
   animation-fill-mode: forwards;
 }
 
+.add-to-cart {
+  position: absolute;
+  left: 30%;
+  font-size: 13px;
+}
+
+.cart-amount {
+  min-width: 14px;
+  min-height: 14px;
+  background-color: #c06a24;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  position: absolute;
+  left: 19px;
+  top: 10px;
+  border-radius: 50%;
+  border-width: 0;
+  padding: 1.5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: $white;
+  line-height: normal;
+  box-sizing: content-box!important;
+}
