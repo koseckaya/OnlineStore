@@ -300,14 +300,15 @@ class Product implements ModuleInterface {
             <h3 class="product-description-h2">Description:</h3>
 
             <div class="product-description">${this.selectedProduct.description}</div>
-            <button class="product-add-btn">
+            <div class="buy-buttons-container">
+                <button class="product-add-btn">
 
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
-                    <g fill="none" fill-rule="evenodd"><path stroke="currentColor" stroke-width="2" d="M3.5 0v13.65h10.182L17.5 4.095h-14"></path><ellipse fill="currentColor" fill-rule="nonzero" cx="4" cy="17.9" rx="1.5" ry="1.575"></ellipse><ellipse fill="currentColor" fill-rule="nonzero" cx="12" cy="17.9" rx="1.5" ry="1.575"></ellipse>
-                    </g>
-                </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
+                        <g fill="none" fill-rule="evenodd"><path stroke="currentColor" stroke-width="2" d="M3.5 0v13.65h10.182L17.5 4.095h-14"></path><ellipse fill="currentColor" fill-rule="nonzero" cx="4" cy="17.9" rx="1.5" ry="1.575"></ellipse><ellipse fill="currentColor" fill-rule="nonzero" cx="12" cy="17.9" rx="1.5" ry="1.575"></ellipse>
+                        </g>
+                    </svg>
 
-                <span class="price-span">$${this.selectedProduct.price} USD</span>
+                    <span class="price-span">$${this.selectedProduct.price} USD</span>
                 </button>
                 <button class="product-buy-now-btn">
                     <span class="price-span">BUY NOW</span>
