@@ -2,6 +2,9 @@
 import Checkout from "../modules/checkout";
 import { getUrlParams } from '../helpers/utils.ts';
 import { items, categories } from "../data.ts";
+
+
+
 class Cart {
     checkoutModule = null;
     pageNow = 0;
@@ -83,10 +86,8 @@ class Cart {
         }
     }
     bind = () => {
-        const urlParams = getUrlParams();
-        
-        
-        // console.log('urlParams', urlParams, urlParams.get('method'));
+        const urlParams = getUrlParams()
+
         urlParams.has('method')
         if (urlParams.has('method') && urlParams.get('method') === 'buynow') {
              this.openCheckout()

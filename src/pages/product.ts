@@ -222,7 +222,8 @@ class Product {
                 localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
                 document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
             }
-            window.location.href = './#/cart';
+
+            window.location.href = '/?method=buynow#/cart' ;
         })
     }
     render = () => {

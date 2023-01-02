@@ -9,7 +9,6 @@ import Category from './pages/category.ts';
 import Cart from './pages/cart.ts';
 import { parseRequestURL } from './helpers/utils.ts';
 import Header from './modules/header';
-import Checkout from './modules/checkout';
 
 
 function router() {
