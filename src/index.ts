@@ -12,30 +12,28 @@ import Header from './modules/header';
 import Checkout from './modules/checkout';
 
 
-
-const router = () => {
+function router() {
     const routes = {
-    '/': new Main(),
-    '/product/:id': new Product(),
-    '/category/:id': new Category(),
-    '/category': new Category(),
-    '/cart': new Cart(),
-}
+        '/': new Main(),
+        '/product/:id': new Product(),
+        '/category/:id': new Category(),
+        '/category': new Category(),
+        '/cart': new Cart(),
+    };
 
-    const request = parseRequestURL()
-    const parseUrl =
-        (request.resource ? `/${request.resource}` : '/') +
+    const request = parseRequestURL();
+    const parseUrl = (request.resource ? `/${request.resource}` : '/') +
         (request.id ? `/:id` : '') +
         (request.verb ? `/${request.verb}` : '');
     const page = routes[parseUrl] ? routes[parseUrl] : Error404;
 
-    const main = document.getElementById('root')
+    const main = document.getElementById('root');
     main?.innerHTML = page.render();
-    page?.bind()
+    page?.bind();
 
     const HeaderModule = new Header();
     HeaderModule.init();
-    
+
 }
 
 if (localStorage.getItem('fullCart')) {

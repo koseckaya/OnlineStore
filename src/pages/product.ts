@@ -6,12 +6,13 @@ import starsImage from "../img/stars5.png";
 class Product {
     i = 0;
     selectedProduct = null;
+    available = 10;
     cartProduct = {
         id: -1,
         amount: 1,
-        size: '',
+        size: `${items[+(parseRequestURL().id)]['sizes'][0]}`
     };
-
+    
     constructor() {
         const request = parseRequestURL()
         const neededItemId = Number(request.id);
@@ -34,6 +35,7 @@ class Product {
         return this.i;
     }
     sliderLeft = () => {
+        console.log(this.cartProduct)
         let ParentNode = document.getElementById('slides-container');
         let firstChild = ParentNode.firstChild;
         let newSlide = document.createElement('img');
@@ -109,7 +111,6 @@ class Product {
         if (counters) {
             counters.forEach(counter => {
                 counter.addEventListener('click', e => {
-    
                     const target = e.target;
                     if (target.closest('.counter__button')) {
                         if (target.closest('.counter').querySelector('input').value == '' && (target.classList.contains('counter__button-minus') || target.classList.contains('counter__button-plus'))) {
@@ -118,12 +119,12 @@ class Product {
 
                         let value = parseInt(target.closest('.counter').querySelector('input').value);
 
-                        if (target.classList.contains('counter__button-plus')) {
+                        if (target.classList.contains('counter__button-plus') && value < this.available) {
                             value++;
                             target.closest('.counter').querySelector('input').value = value
                             this.cartProduct.amount = +(target.closest('.counter').querySelector('input').value)
                             document.querySelector('.price-span')?.innerHTML = `$${this.selectedProduct.price*value} USD`
-                        } else {
+                        } else if (target.classList.contains('counter__button-minus')) {
                             value--;
                             target.closest('.counter').querySelector('input').value = value
                             this.cartProduct.amount = +(target.closest('.counter').querySelector('input').value)
@@ -136,12 +137,16 @@ class Product {
                         } else {
                             target.closest('.counter').querySelector('.counter__button-minus').classList.remove('disabled')
                         }
-
                         target.closest('.counter').querySelector('input').value = value;
                     }
                 })
             })	
         }
+        document.querySelector('.product-sizes')?.addEventListener('click', (e) => {
+            this.cartProduct.size = e.target?.value;
+            let arr = JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === Number(parseRequestURL().id) && el.size === this.cartProduct.size);
+            console.log(this.cartProduct)
+        })
         document.querySelector('.product-add-btn')?.addEventListener('click', () => {
             this.cartProduct.size = document.querySelector('.product-sizes')?.value;
             if (localStorage.getItem('fullCart')) {
@@ -201,8 +206,10 @@ class Product {
                 let arr = JSON.parse(localStorage.getItem('fullCart'));
                 if (arr.some((el) => el.id === this.cartProduct.id && el.size === this.cartProduct.size )) {
                     arr.map((el) => {
-                        if (el.id === this.cartProduct.id && el.size === this.cartProduct.size ) {
+                        if (el.id === this.cartProduct.id && el.size === this.cartProduct.size && el.amount !== 0) {
                             el.amount += this.cartProduct.amount;
+                        } else if (el.id === this.cartProduct.id && el.size === this.cartProduct.size && el.amount === 0){
+                            el.amount += 1;
                         }
                         return el;
                     })
@@ -255,7 +262,7 @@ class Product {
                 </select>
             </div>
             <div class="counter" data-counter>
-                <div class="counter__button counter__button-minus">-</div>
+                <div class="counter__button counter__button-minus disabled">-</div>
                 <div class="counter__input"><input type="text" disabled placeholder="1" value="1"></div>
                 <div class="counter__button counter__button-plus">+</div>
             </div>

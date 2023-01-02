@@ -1,0 +1,122 @@
+
+.cart-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.available {
+  font-size: 16px;
+}
+
+.counter-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding-top: 30px;
+}
+
+.cart-products {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-height: 80vh;
+  font-size: 115%;
+  .product-cart {
+  display: flex;
+  gap: 3%;
+  align-items: center;
+  background-color: $white;
+  padding: 10px 15px;
+  &__number {
+    width: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__image-div {
+    width: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .product-cart-image {
+      object-fit: cover;
+      background-position: bottom;
+      height: 150px;
+      width: 150px;
+    }
+  }
+  &__card-info {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    .product-cart-name {
+      margin: 0;
+      margin-bottom: 10px;
+    }
+  }
+  &__picked-color {
+    width: 15%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: space-around;
+    .picked-color-image {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      position: relative;
+      object-fit: cover;
+      box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 10px, rgba(17, 17, 26, 0.1) 0px 0px 10px, rgba(17, 17, 26, 0.1) 0px 4px 10px;
+    }
+    .picked-color-name {
+      width: 50%;
+      min-width: 50%;
+    }
+  }
+  &__picked-size {
+    width: 7%;
+  }
+  &__price {
+    width: 10%;
+  }
+  }
+}
+
+.counter-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  margin-top: 1rem;
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    cursor: pointer;
+    background-color: transparent;
+    border: 0px;
+    transition: .1s ease-in-out;
+    &:hover {
+      filter: invert(25%) sepia(1%) saturate(284%) hue-rotate(82deg) brightness(103%) contrast(94%);
+    }
+    &:active {
+      transition: .0s ease-in-out;
+      filter: invert(45%) sepia(61%) saturate(639%) hue-rotate(345deg) brightness(90%) contrast(88%);
+    }
+  }
+  span {
+    font-size: 2rem;
+    padding: 2px 12px;
+    margin-left: 16px;
+    margin-right: 16px;
+    border-radius: 4px;
+    color: rgb(0, 0, 0);
+  }
+}
+
+#left-svg {
+  transform: rotateY(180deg);
+}
