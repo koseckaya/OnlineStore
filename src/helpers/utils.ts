@@ -3,7 +3,7 @@ import { parseRequestURLType, getUrlWithParamsType, setUrlParamsType} from '../t
 
 export const parseRequestURL: parseRequestURLType = () => {
     const url:string = window.location.hash.toLocaleLowerCase();
-    const request:string[] = url.split('/');
+    const request: string[] = url.split('/');
     return {
         resource: request[1],
         id: request[2],

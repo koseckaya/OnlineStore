@@ -1,4 +1,3 @@
-
 import './index.html';
 import './index.scss';
 import Main from './pages/main';
@@ -42,11 +41,6 @@ const router = () => {
     HeaderModule.init();
 }
 
-// const fullCart = localStorage.getItem('fullCart')
-
-// if (document.querySelector('.cart-amount') && fullCart) {
-//     document.querySelector('.cart-amount')!.innerHTML = `${JSON.parse(fullCart).length}`;
-// }
 
 window.addEventListener('load', router)
 window.addEventListener('hashchange', router)

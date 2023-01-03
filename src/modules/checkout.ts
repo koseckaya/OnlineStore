@@ -1,5 +1,6 @@
 
 import { CheckoutInterface, storageItem } from '../pages/types';
+import { isValidCreditCard, isExpireValid  } from '../helpers/validation'
 
 const visa = require('../img/visa-credit-card.svg') as string
 const master = require('../img/mastercard.svg') as string
@@ -82,11 +83,11 @@ class Checkout implements CheckoutInterface {
             this.setInvalid(address) :
             this.setValid(address)
 
-        creditCard.value === "" || !this.isValidCreditCard(creditCard.value) ?
+        creditCard.value === "" || !isValidCreditCard(creditCard.value) ?
             this.setInvalid(creditCard) :
             this.setValid(creditCard);
 
-         (!this.isExpireValid(cardExpiry.value)) ?
+         (!isExpireValid(cardExpiry.value)) ?
             this.setInvalid(cardExpiry) :
             this.setValid(cardExpiry)
                 
@@ -110,47 +111,12 @@ class Checkout implements CheckoutInterface {
         const fullCart = localStorage.getItem('fullCart');
             if (fullCart) {
                 let arr: storageItem[] = JSON.parse(fullCart)
-                console.log('arr', arr, typeof (arr));
-                console.log('arr', arr);
                 setTimeout(() => {
                     res(arr)
                 }, 1000)
             }
         });
         return result;
-    }
-    isExpireValid = (cardExpire: string): boolean => {
-        if (cardExpire === '' || cardExpire.length !== 5) {
-            return false;
-        }
-        const year = +cardExpire.split('/')[1]
-        if (year < 23) {
-            return false;
-        }
-        return /(0[1-9]|1[012])\/(\d\d)/.test(cardExpire);
-    }
-    visaCard = (num: string): boolean => {
-        const cardRe = /^(?:4\d{3}\s\d{4}\s\d{4}\s\d{4})$/;
-        return cardRe.test(num);
-    }
-    masterCard = (num: string): boolean => {
-        const cardRe = /^(?:5\d{3}\s\d{4}\s\d{4}\s\d{4})$/;
-        return cardRe.test(num);
-    }
-    amexCard = (num: string): boolean=> {
-        const cardRe = /^(?:3\d{3}\s\d{4}\s\d{4}\s\d{4})$/;
-        return cardRe.test(num);
-    }
-    isValidCreditCard = (cardNumber: string): string | null => {
-        var cardType = null;
-        if (this.visaCard(cardNumber)) {
-            cardType = visa;
-        } else if (this.masterCard(cardNumber)) {
-            cardType = master;
-        } else if (this.amexCard(cardNumber)) {
-            cardType = americanExpress;
-        }
-        return cardType;
     }
     handlePhone = (e: Event): void => {
         if (e.target) {

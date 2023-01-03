@@ -108,7 +108,10 @@ describe('testing utils', () => {
 
             setUrlParams({ search: 'pants' })
             
-            expect(abc).toHaveBeenCalledWith('search=pants');
+            expect(abc).toHaveBeenCalledWith(expect.objectContaining({
+                x: 2,
+                y: 3
+            }),'search=pants');
         });
         it('should update widow location search width empty string', () => {
         
