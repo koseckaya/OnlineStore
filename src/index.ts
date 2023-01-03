@@ -24,6 +24,7 @@ const router = () => {
     }
 
     const request = parseRequestURL()
+ 
     const parseUrl =
         (request.resource ? `/${request.resource}` : '/') +
         (request.id ? `/:id` : '') +
@@ -41,11 +42,11 @@ const router = () => {
     HeaderModule.init();
 }
 
-const fullCart = localStorage.getItem('fullCart')
+// const fullCart = localStorage.getItem('fullCart')
 
-if (document.querySelector('.cart-amount') && fullCart) {
-    document.querySelector('.cart-amount')!.innerHTML = `${JSON.parse(fullCart).length}`;
-}
+// if (document.querySelector('.cart-amount') && fullCart) {
+//     document.querySelector('.cart-amount')!.innerHTML = `${JSON.parse(fullCart).length}`;
+// }
 
 window.addEventListener('load', router)
 window.addEventListener('hashchange', router)

@@ -2,7 +2,7 @@
 import { parseRequestURLType, getUrlWithParamsType, setUrlParamsType} from '../types'
 
 export const parseRequestURL: parseRequestURLType = () => {
-    const url:string = document.location.hash.toLocaleLowerCase();
+    const url:string = window.location.hash.toLocaleLowerCase();
     const request:string[] = url.split('/');
     return {
         resource: request[1],
@@ -26,6 +26,7 @@ export const getUrlWithParams: getUrlWithParamsType = (params) => {
 
 export const setUrlParams:setUrlParamsType = (params) => {
     const urlParams = getUrlWithParams(params);
+    console.log(urlParams.toString());
     window.location.search = urlParams.toString();
 }
 
