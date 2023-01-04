@@ -1,3 +1,4 @@
+
 @import 'libs/normalize';
 @import 'style/fonts';
 @import 'style/var';
@@ -5,6 +6,8 @@
 @import 'style/error';
 @import 'style/categories';
 @import 'style/product';
+@import 'style/about';
+
 
 body{
     min-height: 100vh;
@@ -26,6 +29,10 @@ header {
         position: absolute;
         left: calc(50% - 80px);
         font-size: 0;
+        img {
+            width: 100px;
+            height: 50px;
+        }
     }
     .settings {
         display: flex;

@@ -6,7 +6,11 @@ class Main implements ModuleInterface {
     bind= () => {}
     render = () => {
         return (`
-        <div class="main-container">
+        <div class="container-main">
+            <video autoplay="true" loop="" playsinline="" webkit-playsinline="true" data-overlay-video="true">
+                <source src="../img/video.mp4" type="video/mp4">
+                Your browser doesnt support HTML5 video tag.
+            </video>
             
             <p>Go to <a href="#/product/1">Product Card</a></p>
             <p>Go to <a href="#/cart">Cart</a></p>

@@ -9,6 +9,7 @@ import { parseRequestURL } from './helpers/utils';
 import Header from './modules/header';
 import { Routes } from './types'
 import { ModuleInterface } from './pages/types';
+import About from './pages/aboutUs';
 
 
 
@@ -20,6 +21,7 @@ const router = () => {
     '/category/:id': new Category(),
     '/category': new Category(),
     '/cart': new Cart(),
+    '/about' : new About(),
     }
 
     const request = parseRequestURL()
