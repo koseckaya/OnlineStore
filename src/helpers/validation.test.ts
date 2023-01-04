@@ -1,4 +1,4 @@
-import { visaCard, masterCard, amexCard, isValidCreditCard, isExpireValid } from './validation'
+import { visaCard, masterCard, amexCard, isValidCreditCard, isExpireValid, phoneNumberFormat, dataFormat } from './validation'
 
 describe('testing validation', () => {
     describe('testing visaCard from helpers', () => {
@@ -94,7 +94,7 @@ describe('testing validation', () => {
         });
     });
     describe('testing isExpireValid from helpers', () => { 
-        it('should return false if expired empty', () => {
+        it('should return false if expired is empty', () => {
             const data = ''
             const result = isExpireValid(data)
             expect(result).toBeFalsy()           
@@ -118,6 +118,49 @@ describe('testing validation', () => {
             const data = '12/23'
             const result = isExpireValid(data)
             expect(result).toBeTruthy()
+        })
+    })
+    describe('testing phoneNumberFormat from helpers', () => { 
+        it('should return false if phone is empty', () => {
+            const phone = ''
+            const numbers = /[^\d]/g
+            const result = phoneNumberFormat(phone)
+            const res = result.replace(numbers, "")
+            expect(res).toBeFalsy()
+        })
+        it('should return correct length', () => {
+            const phone = '2222222222222'
+            const result = phoneNumberFormat(phone)
+            expect(result.length).toEqual(21)
+        })
+        it('should return false if phone is not digits', () => {
+            const phone = 'qweqweqwe';
+            const result = phoneNumberFormat(phone);
+            const numbers = /[^\d]/g;
+            const res = result.replace(numbers, "");
+            expect(res).toBeFalsy();
+        })
+
+    })
+    describe('testing dataFormat from helpers', () => {
+        it('should return false if data is empty', () => {
+            const data = ''
+            const numbers = /[^\d]/g
+            const result = dataFormat(data)
+            const res = result.replace(numbers, "")
+            expect(res).toBeFalsy()
+        })
+        it('should return correct length', () => {
+            const data = '0223'
+            const result = dataFormat(data)
+            expect(result.length).toEqual(5)
+        })
+        it('should return false if data is not digits', () => {
+            const data = 'qweq';
+            const result = dataFormat(data)
+            const numbers = /[^\d]/g
+            const res = result.replace(numbers, "")
+            expect(res).toBeFalsy()
         })
     })
 })
