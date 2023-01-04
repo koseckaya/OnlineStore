@@ -1,6 +1,6 @@
 
 import { CheckoutInterface, storageItem } from '../pages/types';
-import { isValidCreditCard, isExpireValid  } from '../helpers/validation'
+import { isValidCreditCard, isExpireValid, phoneNumberFormat, dataFormat } from '../helpers/validation'
 
 const visa = require('../img/visa-credit-card.svg') as string
 const master = require('../img/mastercard.svg') as string
@@ -121,18 +121,14 @@ class Checkout implements CheckoutInterface {
     handlePhone = (e: Event): void => {
         if (e.target) {
             let x = (e.target as HTMLInputElement).value
-                .replace(/\D/g, "")
-                .match(/(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,4})/);
-            if (x) (e.target as HTMLInputElement).value = `+${x[1]}(${x[2]}) - ${x[3]}` + (!x[4] ? "" : ` - ${x[4]}`);
+            if (x) (e.target as HTMLInputElement).value =  phoneNumberFormat(x)
         }
     }
     handleData = (e: Event): void => {
-        if (e.target) {
-            let x = (e.target as HTMLInputElement).value
-                .replace(/\D/g, "")
-                .match(/(0[1-9]|1[012])(\d\d)/);
-            if (x) (e.target as HTMLInputElement).value = `${x[1]}\/${x[2]}`;
-            
+        const target = e.target as HTMLInputElement;
+        if (target) {
+            let x = dataFormat(target.value);
+            if (x) (e.target as HTMLInputElement).value = x
         }
     }
     handleCardNumber = (e: Event): void => {
