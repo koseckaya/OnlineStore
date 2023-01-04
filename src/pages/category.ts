@@ -1,9 +1,10 @@
 
 import { items, categories, sizes, colors, sortBy } from '../data';
 import { stringsSortBy } from '../helpers/strings';
-import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils';
+import { parseRequestURL, getUrlParams } from '../helpers/utils';
 import { Item, ItemFieldsType, SortByTypes } from '../types';
 import { defaultFiltersInterface, defaultRangeType, ModuleInterface} from './types'
+import { setUrlParams } from './../helpers/url';
 
 const DEFAULT_FILTERS: defaultFiltersInterface = {
     categoryId: '0',

@@ -1,7 +1,5 @@
-import { getUrlParams, getUrlWithParams, parseRequestURL, setUrlParams } from "./utils";
+import { getUrlParams, getUrlWithParams, parseRequestURL } from "./utils";
 
-
-// @ts-nocheck
 const state = require('./utils.ts');
 describe('testing utils', () => {
     let windowSpy: any;
@@ -62,7 +60,6 @@ describe('testing utils', () => {
     describe('testing getUrlParams', () => {
         beforeEach(() => {
             const requestURL = state.getUrlParams()
-            const search = window.location.search = '?size=S&color=black&priceMin=134&productName=Blizzard'
         })
 
         it('should return URLSearchParams Object', () => {
@@ -95,27 +92,5 @@ describe('testing utils', () => {
             expect(result.toString()).toEqual('search=pants&price=1000');
         });
     });
-
-    // describe('testing setUrlParams', () => {
-    //     it('should update widow location search width correct string', () => {
-    //         const abc = jest.fn();
-    //         windowSpy.mockImplementation(() => ({
-    //             set: abc,
-    //             location: {
-    //                 search: '',
-    //             }
-    //         }));
-
-    //         setUrlParams({ search: 'pants' })
-            
-    //         expect(abc).toHaveBeenCalledWith(expect.objectContaining({
-    //             x: 2,
-    //             y: 3
-    //         }),'search=pants');
-    //     });
-    //     it('should update widow location search width empty string', () => {
-        
-    //     });
-    // })
 });
 

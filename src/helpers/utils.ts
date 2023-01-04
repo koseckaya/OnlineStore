@@ -1,5 +1,5 @@
 
-import { parseRequestURLType, getUrlWithParamsType, setUrlParamsType} from '../types'
+import { parseRequestURLType, getUrlWithParamsType} from '../types'
 
 export const parseRequestURL: parseRequestURLType = () => {
     const url:string = window.location.hash.toLocaleLowerCase();
@@ -24,9 +24,4 @@ export const getUrlWithParams: getUrlWithParamsType = (params) => {
     }, new URLSearchParams())
 }
 
-export const setUrlParams:setUrlParamsType = (params) => {
-    const urlParams = getUrlWithParams(params);
-    console.log(urlParams.toString());
-    window.location.search = urlParams.toString();
-}
 
