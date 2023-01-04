@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for utils.ts</title>
+    <title>Code coverage report for validation.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> utils.ts</h1>
+        <h1><a href="index.html">All files</a> validation.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.21% </span>
+                <span class="strong">53.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/19</span>
+                <span class='fraction'>16/30</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/5</span>
+                <span class='fraction'>3/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/15</span>
+                <span class='fraction'>11/25</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -95,71 +95,74 @@
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-import { parseRequestURLType, getUrlWithParamsType, setUrlParamsType} from '../types'
-&nbsp;
-export const parseRequestURL: parseRequestURLType = () =&gt; {
-    const url:string = window.location.hash.toLocaleLowerCase();
-    const request: string[] = url.split('/');
-    return {
-        resource: request[1],
-        id: request[2],
-        action: request[3],
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"> 
+    export const visaCard = (num: string): boolean =&gt; {
+        const cardRe = /^(?:4\d{3}\s\d{4}\s\d{4}\s\d{4})$/;
+        return cardRe.test(num);
     }
-}
-&nbsp;
-export const getUrlParams:() =&gt; URLSearchParams = () =&gt; {
-    return new URLSearchParams(window.location.search);
-}
-&nbsp;
-export const getUrlWithParams: getUrlWithParamsType = (params) =&gt; {
-    return Object.keys(params).reduce((acc, param) =&gt; {
-        if (params[param]) {
-            acc.set(param, params[param]);
+     export const masterCard = (num: string): boolean =&gt; {
+        const cardRe = /^(?:5\d{3}\s\d{4}\s\d{4}\s\d{4})$/;
+        return cardRe.test(num);
+    }
+     export const amexCard = (num: string): boolean=&gt; {
+        const cardRe = /^(?:3\d{3}\s\d{4}\s\d{4}\s\d{4})$/;
+        return cardRe.test(num);
+    }
+     export const  isValidCreditCard = <span class="fstat-no" title="function not covered" >(c</span>ardNumber: string): string | null =&gt; {
+        var cardType = <span class="cstat-no" title="statement not covered" >null;</span>
+<span class="cstat-no" title="statement not covered" >        if (visaCard(cardNumber)) {</span>
+<span class="cstat-no" title="statement not covered" >            cardType = 'visa';</span>
+        } else <span class="cstat-no" title="statement not covered" >if (masterCard(cardNumber)) {</span>
+<span class="cstat-no" title="statement not covered" >            cardType = 'master';</span>
+        } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span>if (amexCard(cardNumber)) {</span>
+<span class="cstat-no" title="statement not covered" >            cardType = 'americanExpress';</span>
         }
-        return acc
-    }, new URLSearchParams())
-}
-&nbsp;
-export const setUrlParams:setUrlParamsType = <span class="fstat-no" title="function not covered" >(p</span>arams) =&gt; {
-    const urlParams = <span class="cstat-no" title="statement not covered" >getUrlWithParams(params);</span>
-<span class="cstat-no" title="statement not covered" >    console.log(urlParams.toString());</span>
-<span class="cstat-no" title="statement not covered" >    window.location.search = urlParams.toString();</span>
-}
-&nbsp;
-&nbsp;</pre></td></tr></table></pre>
+<span class="cstat-no" title="statement not covered" >        return cardType;</span>
+    }
+     export const isExpireValid = <span class="fstat-no" title="function not covered" >(c</span>ardExpire: string): boolean =&gt; {
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (cardExpire === '' || cardExpire.length !== 5) {</span>
+<span class="cstat-no" title="statement not covered" >            return false;</span>
+        }
+        const year = <span class="cstat-no" title="statement not covered" >+cardExpire.split('/')[1]</span>
+<span class="cstat-no" title="statement not covered" >        <span class="missing-if-branch" title="if path not taken" >I</span>if (year &lt; 23) {</span>
+<span class="cstat-no" title="statement not covered" >            return false;</span>
+        }
+<span class="cstat-no" title="statement not covered" >        return /(0[1-9]|1[012])\/(\d\d)/.test(cardExpire);</span>
+    }</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
