@@ -10,18 +10,33 @@ class Product {
     cartProduct = {
         id: -1,
         amount: 1,
-        size: `${items[+(parseRequestURL().id)]['sizes'][0]}`
+        size: null
     };
     
     constructor() {
         const request = parseRequestURL()
         const neededItemId = Number(request.id);
-        if (neededItemId) {
+        if (neededItemId && request.resource === 'product') {
             this.selectedProduct = items[neededItemId];
             this.cartProduct.id = this.selectedProduct.id
-        } else {
+            this.cartProduct.size = items[neededItemId].sizes[0]
+            if (localStorage.getItem('fullCart')) {
+                if (JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length > 0) {
+                    this.itemWeNeedToFind = JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
+                    this.available = 10 - this.itemWeNeedToFind.amount;
+                }
+            }
+            
+        } else if (request.resource === 'product') {
             this.selectedProduct = items[0];
             this.cartProduct.id = this.selectedProduct.id
+            this.cartProduct.size = items[neededItemId].sizes[0]
+            if (localStorage.getItem('fullCart')) {
+                if (JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length > 0) {
+                    this.itemWeNeedToFind = JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
+                    this.available = 10 - this.itemWeNeedToFind.amount;
+                }
+            }
         }
     }
 
@@ -35,7 +50,6 @@ class Product {
         return this.i;
     }
     sliderLeft = () => {
-        console.log(this.cartProduct)
         let ParentNode = document.getElementById('slides-container');
         let firstChild = ParentNode.firstChild;
         let newSlide = document.createElement('img');
@@ -90,7 +104,7 @@ class Product {
         const sizesArrLength = this.selectedProduct.sizes.length;
         let resultString = '';
         for (let i = 0; i < sizesArrLength; i++) {
-            resultString += `<option value='${this.selectedProduct.sizes[i]}'>${this.selectedProduct.sizes[i]}</option>`
+            resultString += `<option class="option" value='${this.selectedProduct.sizes[i]}'>${this.selectedProduct.sizes[i]}</option>`
 
         }
         return resultString;
@@ -105,15 +119,27 @@ class Product {
     //---------------------------------------------------------------------------------
 
     bind = () => {
+        if (localStorage.getItem('fullCart')) {
+            if (JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length > 0) {
+                if (this.available === 0) {
+                    document.querySelector('.product-add-btn')?.innerHTML = `NOT AVAILABLE ANYMORE`;
+                    document.querySelector('.product-add-btn')?.style.background = `grey`;
+                }
+                let availableInCart = document.createElement('div');
+                availableInCart.classList.add('already-in');
+                availableInCart.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
+                document.querySelector('.buy-buttons-container')?.appendChild(availableInCart);
+                availableInCart.style.left = `${(document.querySelector('.buy-buttons-container').offsetWidth/2) - (document.querySelector('.already-in').offsetWidth/2)}px`;
+            }
+        }
         document.querySelector('.slider-left')?.addEventListener('click', this.sliderLeft);
         document.querySelector('.slider-right')?.addEventListener('click', this.sliderRight);
-        const counters = document.querySelectorAll('[data-counter]');
+        const counters = document.querySelector('[data-counter]');
         if (counters) {
-            counters.forEach(counter => {
-                counter.addEventListener('click', e => {
+            counters.addEventListener('click', e => {
                     const target = e.target;
                     if (target.closest('.counter__button')) {
-                        if (target.closest('.counter').querySelector('input').value == '' && (target.classList.contains('counter__button-minus') || target.classList.contains('counter__button-plus'))) {
+                        if (target.closest('.counter').querySelector('input').value == '1' && (target.classList.contains('counter__button-minus') || target.classList.contains('counter__button-plus'))) {
                             target.closest('.counter').querySelector('input').value = 1;
                         }
 
@@ -122,11 +148,13 @@ class Product {
                         if (target.classList.contains('counter__button-plus') && value < this.available) {
                             value++;
                             target.closest('.counter').querySelector('input').value = value
+                            console.log(target.closest('.counter').querySelector('input').value)
                             this.cartProduct.amount = +(target.closest('.counter').querySelector('input').value)
                             document.querySelector('.price-span')?.innerHTML = `$${this.selectedProduct.price*value} USD`
                         } else if (target.classList.contains('counter__button-minus')) {
                             value--;
                             target.closest('.counter').querySelector('input').value = value
+                            console.log(target.closest('.counter').querySelector('input').value)
                             this.cartProduct.amount = +(target.closest('.counter').querySelector('input').value)
                             document.querySelector('.price-span')?.innerHTML = `$${this.selectedProduct.price*value} USD`
                         }
@@ -140,21 +168,70 @@ class Product {
                         target.closest('.counter').querySelector('input').value = value;
                     }
                 })
-            })	
+            
         }
-        document.querySelector('.product-sizes')?.addEventListener('click', (e) => {
+        document.querySelector('.product-sizes')?.addEventListener('change', (e) => {
             this.cartProduct.size = e.target?.value;
-            let arr = JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === Number(parseRequestURL().id) && el.size === this.cartProduct.size);
-            console.log(this.cartProduct)
+            document.querySelector('input').value = 1;
+            document.querySelector('input')?.placeholder = '1';
+            if (localStorage.getItem('fullCart')) {
+                if (JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length > 0) {
+                    this.itemWeNeedToFind = JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
+                    this.available = 10 - this.itemWeNeedToFind.amount;
+                    document.querySelector('.product-add-btn')?.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
+                    <g fill="none" fill-rule="evenodd"><path stroke="currentColor" stroke-width="2" d="M3.5 0v13.65h10.182L17.5 4.095h-14"></path><ellipse fill="currentColor" fill-rule="nonzero" cx="4" cy="17.9" rx="1.5" ry="1.575"></ellipse><ellipse fill="currentColor" fill-rule="nonzero" cx="12" cy="17.9" rx="1.5" ry="1.575"></ellipse>
+                    </g>
+                </svg>
+                <span class="price-span">$${this.selectedProduct.price} USD</span>`
+                    document.querySelector('.product-add-btn')?.removeAttribute('style');
+                    if (this.available === 0) {
+                        document.querySelector('.product-add-btn')?.innerHTML = `NOT AVAILABLE ANYMORE`;
+                        document.querySelector('.product-add-btn')?.style.background = `grey`;
+                    }
+                    if (document.querySelector('.already-in')) {
+                        document.querySelector('.already-in')?.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
+                    } else if (!document.querySelector('.already-in')) {
+                        let availableInCart = document.createElement('div');
+                        availableInCart.classList.add('already-in');
+                        availableInCart.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
+                        document.querySelector('.buy-buttons-container')?.appendChild(availableInCart);
+                        availableInCart.style.left = `${(document.querySelector('.buy-buttons-container').offsetWidth/2) - (document.querySelector('.already-in').offsetWidth/2)}px`;
+                    }
+                } else if (JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length === 0){
+                    document.querySelector('input').value = 1;
+                    document.querySelector('input')?.placeholder = '1';
+                    this.itemWeNeedToFind = JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
+                    console.log('ya nol')
+                    this.available = 10;
+                    this.cartProduct.amount = 1;
+                    document.querySelector('.product-add-btn')?.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
+                    <g fill="none" fill-rule="evenodd"><path stroke="currentColor" stroke-width="2" d="M3.5 0v13.65h10.182L17.5 4.095h-14"></path><ellipse fill="currentColor" fill-rule="nonzero" cx="4" cy="17.9" rx="1.5" ry="1.575"></ellipse><ellipse fill="currentColor" fill-rule="nonzero" cx="12" cy="17.9" rx="1.5" ry="1.575"></ellipse>
+                    </g>
+                </svg>
+                <span class="price-span">$${this.selectedProduct.price} USD</span>`
+                    document.querySelector('.product-add-btn')?.removeAttribute('style');
+                    if (document.querySelector('.already-in')) {
+                        document.querySelector('.buy-buttons-container')?.removeChild(document.querySelector('.already-in'))
+                    } else if (!document.querySelector('.already-in')) {
+                        let availableInCart = document.createElement('div');
+                        availableInCart.classList.add('already-in');
+                        availableInCart.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
+                        document.querySelector('.buy-buttons-container')?.appendChild(availableInCart);
+                        availableInCart.style.left = `${(document.querySelector('.buy-buttons-container').offsetWidth/2) - (document.querySelector('.already-in').offsetWidth/2)}px`;
+                    }
+                }
+            }
         })
         document.querySelector('.product-add-btn')?.addEventListener('click', () => {
+            let counter = document.querySelector('[data-counter]');
+            if (this.available !== 0) {
             this.cartProduct.size = document.querySelector('.product-sizes')?.value;
             if (localStorage.getItem('fullCart')) {
                 let arr = JSON.parse(localStorage.getItem('fullCart'));
                 if (arr.some((el) => el.id === this.cartProduct.id && el.size === this.cartProduct.size )) {
                     arr.map((el) => {
                         if (el.id === this.cartProduct.id && el.size === this.cartProduct.size ) {
-                            el.amount += this.cartProduct.amount;
+                            el.amount += Number(counter?.querySelector('input')?.value);
                         }
                         return el;
                     })
@@ -167,6 +244,43 @@ class Product {
                 localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
                 document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
             }
+            if (localStorage.getItem('fullCart')) {
+                if (JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length > 0) {
+                    this.itemWeNeedToFind = JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
+                    this.available = 10 - this.itemWeNeedToFind.amount;
+                    if (document.querySelector('.already-in')) {
+                        document.querySelector('.already-in')?.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
+                    } else if (!document.querySelector('.already-in')) {
+                        let availableInCart = document.createElement('div');
+                        availableInCart.classList.add('already-in');
+                        availableInCart.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
+                        document.querySelector('.buy-buttons-container')?.appendChild(availableInCart);
+                        availableInCart.style.left = `${(document.querySelector('.buy-buttons-container').offsetWidth/2) - (document.querySelector('.already-in').offsetWidth/2)}px`;
+                    }
+                }
+            }
+            if (this.available === 0) {
+                document.querySelector('.product-add-btn')?.innerHTML = `NOT AVAILABLE ANYMORE`;
+                document.querySelector('.product-add-btn')?.style.background = `grey`;
+            }
+            document.querySelector('.counter__button-minus').style.transition = `0s`;
+            counter?.querySelector('input')?.value = 1;
+            counter?.querySelector('input')?.placeholder = '1';
+            document.querySelector('.counter__button-minus').classList.add('disabled');
+            setTimeout(() => {
+                document.querySelector('.counter__button-minus')?.removeAttribute('style');
+            }, 50)
+        } else {
+            document.querySelector('.counter__button-minus').style.transition = `0s`;
+            document.querySelector('.product-add-btn')?.innerHTML = `NOT AVAILABLE ANYMORE`;
+            document.querySelector('.product-add-btn')?.style.background = `grey`;
+            counter?.querySelector('input')?.value = 1;
+            counter?.querySelector('input')?.placeholder = '1';
+            document.querySelector('.counter__button-minus').classList.add('disabled');
+            setTimeout(() => {
+                document.querySelector('.counter__button-minus')?.removeAttribute('style');
+            }, 50)
+        }
         })
         document.querySelector('#slides-container')?.addEventListener('click', () => {
             let productSlider = document.querySelector('.product__slider');
@@ -278,7 +392,7 @@ class Product {
                 <span class="price-span">$${this.selectedProduct.price} USD</span>
                 </button>
                 <button class="product-buy-now-btn">
-                    <span class="price-span">BUY NOW</span>
+                    <span class="price-span1">BUY NOW</span>
                 </button>
             </div>
         </div>
