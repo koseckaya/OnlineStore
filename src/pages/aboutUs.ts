@@ -1,19 +1,15 @@
 import { ModuleInterface } from "./types"
 
 class About implements ModuleInterface {
-   
-   
+
     bind = () => {
-      
     }
     render = () => {
-
         return `
-        
-            <div class='idea'>
+         <div class='idea'>
             <h1>IT STARTED WITH A SIMPLE IDEA</h1>
             <p>WHAT IF WE MADE EXACTLY WHAT YOU WANTED?</p>
-            </div>
+         </div>
          <div class="container">   
             <div class="rewind">
                 <h2>Let’s rewind</h2>

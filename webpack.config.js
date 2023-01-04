@@ -94,6 +94,7 @@ module.exports = {
         ],
         type: 'asset/resource',
       },
+      { test: /\.mp4$/, type: "asset/resource" },
       // {
       //   test: /\.m?js$/i,
       //   exclude: /(node_modules|bower_components)/,
@@ -109,10 +110,10 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
-      {
-        test: /\.mp4$/,
-        use: 'file-loader?name=videos/[name].[ext]',
-      },
+      // {
+      //   test: /\.mp4$/,
+      //   use: 'file-loader?name=videos/[name].[ext]',
+      // },
     ],
   },
 };
