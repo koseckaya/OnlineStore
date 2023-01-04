@@ -1,8 +1,11 @@
 // @ts-nocheck
 import Checkout from "../modules/checkout";
+
+import { ModuleInterface } from "./types";
 import { getUrlParams } from '../helpers/utils.ts';
 
-class Cart {
+
+class Cart implements ModuleInterface {
     checkoutModule = null;
     constructor () {
         
