@@ -1,8 +1,8 @@
-
+// @ts-nocheck
 import { categories } from '../data';
 import { ModuleInterface } from './types'
 
-//import mp4 from '../img/video.mp4';
+import video from '../img/video.mp4';
 
 class Main implements ModuleInterface {
     bind = () => { }
@@ -10,7 +10,7 @@ class Main implements ModuleInterface {
         return (`
         <div class="container-main">
             <video autoplay="true" loop="" playsinline="" webkit-playsinline="true" data-overlay-video="true">
-                 <source src="" type="video/mp4">
+                 <source src="${video}" type="video/mp4">
                 Your browser doesn't support HTML5 video tag.
             </video>
             

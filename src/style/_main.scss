@@ -1,6 +1,6 @@
 .jackets {
     display: flex;
-    border: 1px solid rgba($main, 0.25);
+    border: 1px solid rgba($main, 0.15);
     margin-bottom: 80px;
     &__annok{
         padding: 200px 0;
@@ -39,8 +39,5 @@
         font-weight: 600;
         font-size: 18px;
         margin-bottom: 15px;
-    }
-    &__text{
-
     }
 }
