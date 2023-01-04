@@ -1,209 +1,182 @@
-// @ts-nocheck
-import visa from '../img/visa-credit-card.svg';
-import master from '../img/mastercard.svg';
-import americanExpress from '../img/american-express.svg';
-import creditCard from '../img/credit.svg';
 
-class Checkout {
+import { CheckoutInterface, storageItem } from '../pages/types';
+import { isValidCreditCard, isExpireValid, phoneNumberFormat, dataFormat } from '../helpers/validation'
+
+const visa = require('../img/visa-credit-card.svg') as string
+const master = require('../img/mastercard.svg') as string
+const americanExpress = require('../img/american-express.svg') as string
+const creditCard = require('../img/credit.svg') as string
+
+class Checkout implements CheckoutInterface {
+    isValid: boolean = true 
+
     constructor () {}
 
-    handleFocus = (e) => {
-        const el = e.target
-        el.parentNode.classList.add("focus");
+    handleFocus = (e: FocusEvent):void => {
+        const target = e.target as HTMLInputElement;
+        if (target && target.parentNode) {
+            (target.parentNode as HTMLElement).classList.add("focus");
+        }
     }
-    handleBlur = (e) => {
-         const el = e.target
-        if (el.value === '') {
-            el.closest('.input-box').classList.remove("focus")
+    handleBlur = (e: FocusEvent): void => {
+         const el = e.target as HTMLInputElement;
+        if (el && el.value === '') {
+            const closestEl = el.closest('.input-box');
+            if (closestEl) {
+                closestEl.classList.remove('focus');
+            }
         } 
     }
-    handleSubmit = (e) => {
+    handleSubmit = (e: Event): void => {
         if (!this.isFormValid(e)) return;
 
         const result = this.sendDataToBack()
-        const button = document.querySelector('.btn-modal')
-        button?.style.backgroundColor = 'rgb(4, 123, 8)';
+        const button = document.querySelector('.btn-modal') as HTMLButtonElement;
+        button.style.backgroundColor = 'rgb(4, 123, 8)';
 
         result.then((res) => {
-            console.log('res', res)
             localStorage.removeItem('fullCart')
-            const container = document.querySelector('.checkout-container')
-            container?.innerHTML = ''
+            const container = document.querySelector('.checkout-container') as HTMLDivElement;
+            container.innerHTML = ''
             container.innerHTML = '<div>Thanks for the order. Our manager will contact you</div>'
             setTimeout(() => {
-                document.querySelector('.modal')?.innerHTML = ''
-                document.querySelector('.modal-container')?.removeEventListener('click', this.closeModal)
-                document.querySelector('.modal-container').classList.remove('show')
+                const modalEl = document.querySelector('.modal')
+                if (modalEl) modalEl.innerHTML = ''
+                const containerEl = document.querySelector('.modal-container');
+                if (containerEl) {
+                    containerEl.removeEventListener('click', this.closeModal)
+                    containerEl.classList.remove('show')
+                }
                 window.location.href = '/'
             }, 1000)
-            
-            
         })
-            .catch(e => console.log('error', e))
-            .finally(() => button?.disabled = false)
+        .catch(e => console.log('error', e))
+        .finally(() => button.disabled = false)
         
-        } 
-    isFormValid = (e) => {
+    } 
+    isFormValid = (e: Event): boolean => {
         e.preventDefault();
-        let isValid = true;
+        this.isValid = true;
         const form = document.getElementById('form')
-        const name = form?.querySelector('#checkout-name')
-        const phone = form?.querySelector('#checkout-phone')
-        const email = form?.querySelector('#checkout-email')
-        const address = form?.querySelector('#checkout-address')
-        const creditCard = form?.querySelector('#card-number')
-        const cvv = form?.querySelector('#card-cvv')
-        const cardExpiry = form?.querySelector('#card-data')        
-        const reEmail = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
-        
-        if (name.value === "" || name.value.split(' ').length < 2 || name.value.split(' ').some(i => i.length < 3)) {
-            name.closest('.input-box').classList.add("error")
-            isValid = false
-        } else {
-            name.closest('.input-box').classList.remove("error")
-        }
-    
-        if (phone.value === "" || phone.value.length < 18) {
-            phone.closest('.input-box').classList.add("error")
-            isValid = false
-        } else {
-            phone.closest('.input-box').classList.remove("error")
-        }
-             
-        if (email.value === "" || !reEmail.test(email.value)) {
-            email.closest('.input-box').classList.add("error")
-            isValid = false
-        } else {
-            email.closest('.input-box').classList.remove("error")
-        }
-                    
-        if (address.value === "" || address.value.split(' ').length < 3 || address.value.split(' ').some(i => i.length < 5)) {
-            address.closest('.input-box').classList.add("error")
-            isValid = false
-        } else {
-            address.closest('.input-box').classList.remove("error")
-        }
+        const name = form?.querySelector('#checkout-name') as HTMLInputElement
+        const phone = form?.querySelector('#checkout-phone') as HTMLInputElement
+        const email = form?.querySelector('#checkout-email') as HTMLInputElement
+        const address = form?.querySelector('#checkout-address') as HTMLInputElement
+        const creditCard = form?.querySelector('#card-number') as HTMLInputElement
+        const cvv = form?.querySelector('#card-cvv') as HTMLInputElement
+        const cardExpiry = form?.querySelector('#card-data') as HTMLInputElement    
+        const reEmail: RegExp = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
 
-        if (creditCard.value === "" || !this.isValidCreditCard(creditCard.value)) {
-            creditCard.closest('.input-box').classList.add("error")
-            isValid = false
-        } else {
-            creditCard.closest('.input-box').classList.remove("error")
-        }
-        if (!this.isExpireValid(cardExpiry.value)) {
-            cardExpiry.closest('.input-box').classList.add("error")
-            isValid = false
-        } else {
-            cardExpiry.closest('.input-box').classList.remove("error")
-        }
-        if (cvv.value === "" || cvv?.value.length !== 3 ) {
-            cvv.closest('.input-box').classList.add("error")
-            isValid = false
-        } else {
-            cvv.closest('.input-box').classList.remove("error")
-        }
-        return isValid;
+        name.value === "" || name.value.split(' ').length < 2 || name.value.split(' ').some(i => i.trim().length < 3) ?
+            this.setInvalid(name) :
+            this.setValid(name)
+        
+        phone.value === "" || phone.value.length < 18 ?
+            this.setInvalid(phone) :
+            this.setValid(phone)
+            
+        email.value === "" || !reEmail.test(email.value) ?
+            this.setInvalid(email) :
+            this.setValid(email)
+                        
+        address.value === "" || address.value.split(' ').length < 3 || address.value.split(' ').some(i => i.length < 5) ?
+            this.setInvalid(address) :
+            this.setValid(address)
+
+        creditCard.value === "" || !isValidCreditCard(creditCard.value) ?
+            this.setInvalid(creditCard) :
+            this.setValid(creditCard);
+
+         (!isExpireValid(cardExpiry.value)) ?
+            this.setInvalid(cardExpiry) :
+            this.setValid(cardExpiry)
+                
+        cvv.value === "" || cvv?.value.length !== 3 ?
+            this.setInvalid(cvv) :
+            this.setValid(cvv)
+        
+        return this.isValid;
     }
-    sendDataToBack = () => {
-        const result = new Promise((res, rej) => {
-            let arr = JSON.parse(localStorage.getItem('fullCart'))
-            setTimeout(() => {
-                res(arr)
-            }, 1000)
-        })
+    setInvalid = (field: HTMLInputElement): void => {
+        const closestEl = field.closest('.input-box')
+        if (closestEl) closestEl.classList.add("error")
+        this.isValid = false
+    }
+    setValid = (field: HTMLInputElement): void => { 
+        const closestEl = field.closest('.input-box')
+        if (closestEl) closestEl.classList.remove("error")
+    }
+    sendDataToBack = (): Promise<storageItem[]> => {
+        const result = new Promise<storageItem[]>((res, rej) => {
+        const fullCart = localStorage.getItem('fullCart');
+            if (fullCart) {
+                let arr: storageItem[] = JSON.parse(fullCart)
+                setTimeout(() => {
+                    res(arr)
+                }, 1000)
+            }
+        });
         return result;
     }
-    isExpireValid = (cardExpire) => {
-        if (cardExpire === '' || cardExpire.length !== 5) {
-            return false;
-        }
-        const year = +cardExpire.split('/')[1]
-        if (year < 22) {
-            return false;
-        }
-        return /(0[1-9]|1[012])\/(\d\d)/.test(cardExpire);
-    }
-    visaCard = (num) => {
-        const cardnum = /^(?:4\d{3}\s\d{4}\s\d{4}\s\d{4})$/;
-        return cardnum.test(num);
-    }
-    masterCard = (num) => {
-        const cardnum = /^(?:5\d{3}\s\d{4}\s\d{4}\s\d{4})$/;
-        return cardnum.test(num);
-    }
-    amexCard = (num) => {
-        const cardnum = /^(?:3\d{3}\s\d{4}\s\d{4}\s\d{4})$/;
-        return cardnum.test(num);
-    }
-    isValidCreditCard = (cardNumber) => {
-        var cardType = null;
-        if (this.visaCard(cardNumber)) {
-            cardType = visa;
-        } else if (this.masterCard(cardNumber)) {
-            cardType = master;
-        } else if (this.amexCard(cardNumber)) {
-            cardType = americanExpress;
-        }
-        return cardType;
-    }
-    handlePhone = (e) => {
-        let x = e.target.value
-          .replace(/\D/g, "")
-          .match(/(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,4})/);
-        e.target.value = !x[3] ? x[2]
-          : `+${x[1]}(${x[2]}) - ${x[3]}` + (!x[4] ? "" : ` - ${x[4]}`);
-    }
-    handleData = (e) => {
-        let x = e.target.value
-          .replace(/\D/g, "")
-          .match(/(0[1-9]|1[012])(\d\d)/);
-        if (x) {
-            e.target.value = `${x[1]}\/${x[2]}`;
+    handlePhone = (e: Event): void => {
+        if (e.target) {
+            let x = (e.target as HTMLInputElement).value
+            if (x) (e.target as HTMLInputElement).value =  phoneNumberFormat(x)
         }
     }
-    handleCardNumber = (e) => {
-        let x = e.target.value
-         .replace(/\D/g, "")
-          .match(/(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})/);
-        e.target.value = `${x[1]} ${x[2]} ${x[3]} ${x[4]}`.trim();
+    handleData = (e: Event): void => {
+        const target = e.target as HTMLInputElement;
+        if (target) {
+            let x = dataFormat(target.value);
+            if (x) (e.target as HTMLInputElement).value = x
+        }
+    }
+    handleCardNumber = (e: Event): void => {
+        let x = (e.target as HTMLInputElement).value
+            .replace(/\D/g, "")
+            .match(/(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})/);
+        if (x) (e.target as HTMLInputElement).value = `${x[1]} ${x[2]} ${x[3]} ${x[4]}`.trim();
         
         const image = document.querySelector('.input-image')
-        
-        switch (e.target.value[0]) {
-            case '4':
-                image?.setAttribute('src', visa);
-                break;
-            case '5':
-                image?.setAttribute('src', master);
-                break;
-            case '3':
-                image?.setAttribute('src', americanExpress);
-                break;
-            default: 
-                image?.setAttribute('src', creditCard);
-                break;
+        if (e.target) {
+            switch ((e.target as HTMLInputElement).value[0]) {
+                case '4':
+                    image?.setAttribute('src', visa);
+                    break;
+                case '5':
+                    image?.setAttribute('src', master);
+                    break;
+                case '3':
+                    image?.setAttribute('src', americanExpress);
+                    break;
+                default:
+                    image?.setAttribute('src', creditCard);
+                    break;
+            }
         }
     }
     
-    closeModal = (e) => {
+    closeModal = (e: Event): void => {
         if (e.target == document.querySelector('.modal-container')) { 
-            document.querySelector('.modal')?.innerHTML = ''
-            e.target.classList.remove('show')
+            (document.querySelector('.modal') as HTMLDivElement).innerHTML = ''
+            if (e.target) (e.target as HTMLElement).classList.remove('show')
         } 
     }
-    unbind = () => {
+    unbind = (): void => {
         document.querySelector('.modal-container')?.removeEventListener('click', this.closeModal)
     }
 
-    bind = () => {
+    bind = (): void => {
         const modalContainer = document.querySelector('.modal-container')
-        modalContainer?.classList.add('show')
-        modalContainer.addEventListener('click', this.closeModal);
-
-        const inputs = document.querySelectorAll('.checkout__input ')
+        if (modalContainer) {
+            modalContainer?.classList.add('show')
+            modalContainer.addEventListener('click', this.closeModal);
+        }
+       const inputs = document.querySelectorAll('.checkout__input ')
         for (let i = 0; i < inputs.length; i++) {
-            inputs[i].addEventListener('focus', this.handleFocus)
-            inputs[i].addEventListener('blur', this.handleBlur)
+            const element = inputs[i] as HTMLSelectElement;
+            element.addEventListener('focus', this.handleFocus)
+            element.addEventListener('blur', this.handleBlur)
         }
 
         const form = document.getElementById('form')
@@ -219,7 +192,7 @@ class Checkout {
     render = () => {
        
         const modal = document.querySelector('.modal')
-        modal?.innerHTML = `
+        if (modal) modal.innerHTML = `
         
             <div class="checkout-container">
                 <h2 class="checkout__title">Personal details</h2>
@@ -278,7 +251,6 @@ class Checkout {
                 </form>
             </div>
         `
-        
     }
     init = () => {
         this.unbind();

@@ -1,8 +1,11 @@
 // @ts-nocheck
 import Checkout from "../modules/checkout";
+
+import { ModuleInterface } from "./types";
 import { getUrlParams } from '../helpers/utils.ts';
 
-class Cart {
+
+class Cart implements ModuleInterface {
     checkoutModule = null;
     constructor () {
         
@@ -16,7 +19,6 @@ class Cart {
     }
     bind = () => {
         const urlParams = getUrlParams()
-        console.log('urlParams', urlParams, urlParams.get('method'));
         urlParams.has('method')
         if (urlParams.has('method') && urlParams.get('method') === 'buynow') {
              this.openCheckout()
