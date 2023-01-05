@@ -1,30 +1,31 @@
-// @ts-nocheck
-import { items, categories, sizes, colors, sortBy } from '../data.ts';
+
+import { items, categories, sizes, colors, sortBy } from '../data';
 import { stringsSortBy } from '../helpers/strings';
-import { setUrlParams } from '../helpers/url';
-import { parseRequestURL, getUrlParams } from '../helpers/utils.ts';
+import { parseRequestURL, getUrlParams } from '../helpers/utils';
+import { Item, ItemFieldsType, SortByTypes } from '../types';
+import { defaultFiltersInterface, defaultRangeType, ModuleInterface } from './types'
 
-const DEFAULT_FILTERS = {
-    categoryId: 0,
+const DEFAULT_FILTERS: defaultFiltersInterface = {
+    categoryId: '0',
 };
-const DEFAULT_PRICES = { min: 0, max: 500 };
-const DEFAULT_RATINGS = { min: 0, max: 5 };
+const DEFAULT_PRICES: defaultRangeType = { min: 0, max: 500 };
+const DEFAULT_RATINGS: defaultRangeType = { min: 0, max: 5 };
 
 
-class Category {
+class Category implements ModuleInterface {
     filters = { ...DEFAULT_FILTERS };
     prices = { ...DEFAULT_PRICES };
     ratings = { ...DEFAULT_RATINGS };
-    filteredSize = new Set()
-    filteredColor = new Set()
-    filteredProductName = new Set()
-    items = [];
+    filteredSize = new Set<string>()
+    filteredColor = new Set<string>()
+    filteredProductName = new Set<string>()
+    items: Item[] = [];
 
     constructor() {
-        let categoryId = this.getCategoryId();
-        this.filters.categoryId = categoryId;
+        let categoryId: number = this.getCategoryId();
+        this.filters.categoryId = `${categoryId}`;
 
-        const urlParams = getUrlParams();
+        const urlParams: URLSearchParams = getUrlParams();
         if (urlParams.has('size')) {
             this.filters.size = urlParams.get('size');
         }
