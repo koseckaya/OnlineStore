@@ -326,7 +326,7 @@ class Category {
 
     render = () => {
         return `
-        <div class="categories">
+        <div class="categories container">
             <div class="bread-crumbs"></div>
 
             <div class="categories-side">

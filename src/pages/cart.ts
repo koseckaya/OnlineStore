@@ -266,6 +266,7 @@ class Cart implements ModuleInterface {
         </div>
         <button class="btn btn-checkout">checkout</button>
         <p>Go to <a href="./">Main</a></p>
+         <div class="container">
         `
     }
 }

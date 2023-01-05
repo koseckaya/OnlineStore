@@ -362,6 +362,7 @@ class Product implements ModuleInterface {
     render = () => {
         if (!this.selectedProduct) return `Product not found`
         return `
+        <div class="container">
         <div class="product-road">
             <a href="#/category/">Categories</a>
             <span>></span>
@@ -416,7 +417,7 @@ class Product implements ModuleInterface {
                 </button>
             </div>
         </div>
-    </div>`
+    </div></div>`
     }
 }
 
