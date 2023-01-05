@@ -1,10 +1,11 @@
+
 // @ts-nocheck
 import { categories } from '../data';
 import { ModuleInterface } from './types'
-
 import video from '../img/video.mp4';
 
 class Main implements ModuleInterface {
+
     bind = () => { }
     render = () => {
         return (`
@@ -29,6 +30,7 @@ class Main implements ModuleInterface {
                     </div>
                    `
         ).join('')}
+
             </div>
 
             <div class="jackets">
