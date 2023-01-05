@@ -9,6 +9,9 @@ export interface CheckoutInterface {
     bind: () => void;
     render: () => void;
 }
+export interface HeaderInterface {
+    bind: () => void;
+}
 
 export interface KeyboardEvent {
     keyCode: number;

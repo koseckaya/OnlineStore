@@ -8,7 +8,6 @@ const creditCard = require('../img/credit.svg') as string
 
 class Checkout implements CheckoutInterface {
     isValid: boolean = true 
-
     constructor () {}
 
     handleFocus = (e: FocusEvent):void => {

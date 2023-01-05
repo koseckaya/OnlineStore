@@ -1,6 +1,7 @@
 import { getUrlWithParams } from '../helpers/utils';
+import { HeaderInterface } from '../pages/types';
 
-class Header {
+class Header implements HeaderInterface {
     search = '';
     isActive = false;
 
@@ -48,7 +49,6 @@ class Header {
             searchInput?.addEventListener('keypress', this.handleSearchInputKeyPress) 
         }
         
-
         document.getElementsByTagName('body')[0].addEventListener('click', (e: Event) => {
             
             if (e.target && !(e.target as HTMLElement).classList.contains('search-input')) {
