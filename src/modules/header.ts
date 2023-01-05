@@ -1,7 +1,4 @@
 
-// @ts-nocheck
-
-import { getUrlWithParams } from '../helpers/utils.ts';
 import { getUrlWithParams } from '../helpers/utils';
 import { HeaderInterface } from '../pages/types';
 
@@ -9,7 +6,7 @@ class Header implements HeaderInterface {
     search = '';
     isActive = false;
 
-    initSearch = () => {
+    initSearch = (): void => {
         const searchInput = document.querySelector('.search-input')
         if (this.isActive) {
             searchInput?.classList.add('visible');
@@ -44,9 +41,9 @@ class Header implements HeaderInterface {
         }
     }
 
-    bind = () => {
+    bind = (): void => {
         const search = document.querySelector('.settings__search .settings__btn')
-        search?.addEventListener('click', this.handleSearch)
+        if (search) search.addEventListener('click', this.handleSearch)
         const searchInput = document.querySelector<HTMLInputElement>('.search-input')
         if (searchInput) {
             searchInput?.addEventListener('input', this.handleSearchInput)
