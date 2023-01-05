@@ -1,7 +1,8 @@
 // @ts-nocheck
 import { items, categories, sizes, colors, sortBy } from '../data.ts';
 import { stringsSortBy } from '../helpers/strings';
-import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts';
+import { setUrlParams } from '../helpers/url';
+import { parseRequestURL, getUrlParams } from '../helpers/utils.ts';
 
 const DEFAULT_FILTERS = {
     categoryId: 0,
@@ -185,15 +186,14 @@ class Category {
 
         this.items = filteredItems;
     }
-
+    updateUrlParams = () => {
+        const { categoryId, ...rest } = this.filters
+        setUrlParams(rest)
+    }
     handleChangeFilters = (e) => {
         const { name, value } = e.target;
         this.filters[name] = value;
         this.updateUrlParams()
-    }
-    updateUrlParams = () => {
-        const { categoryId, ...rest } = this.filters
-        setUrlParams(rest)
     }
     resetFilters = () => {
         this.filters = { ...DEFAULT_FILTERS };

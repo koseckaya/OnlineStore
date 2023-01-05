@@ -94,7 +94,10 @@ module.exports = {
         ],
         type: 'asset/resource',
       },
-      { test: /\.mp4$/, type: "asset/resource" },
+      {
+        test: /\.mp4$/,
+        use: 'file-loader?name=videos/[name].[ext]',
+      },
       // {
       //   test: /\.m?js$/i,
       //   exclude: /(node_modules|bower_components)/,
