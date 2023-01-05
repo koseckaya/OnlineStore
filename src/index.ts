@@ -1,4 +1,3 @@
-
 import './index.html';
 import './index.scss';
 import Main from './pages/main';
@@ -10,6 +9,7 @@ import { parseRequestURL } from './helpers/utils';
 import Header from './modules/header';
 import { Routes } from './types'
 import { ModuleInterface } from './pages/types';
+import About from './pages/aboutUs';
 
 
 
@@ -21,9 +21,11 @@ const router = () => {
     '/category/:id': new Category(),
     '/category': new Category(),
     '/cart': new Cart(),
+    '/about' : new About(),
     }
 
     const request = parseRequestURL()
+ 
     const parseUrl =
         (request.resource ? `/${request.resource}` : '/') +
         (request.id ? `/:id` : '') +
@@ -35,16 +37,9 @@ const router = () => {
         main.innerHTML = page.render();
         page?.bind()
     }
-    
 
     const HeaderModule = new Header();
     HeaderModule.init();
-}
-
-const fullCart = localStorage.getItem('fullCart')
-
-if (document.querySelector('.cart-amount') && fullCart) {
-    document.querySelector('.cart-amount')!.innerHTML = `${JSON.parse(fullCart).length}`;
 }
 
 window.addEventListener('load', router)

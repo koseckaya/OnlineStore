@@ -1,9 +1,8 @@
-
-import { parseRequestURLType, getUrlWithParamsType, setUrlParamsType} from '../types'
+import { parseRequestURLType, getUrlWithParamsType } from '../types'
 
 export const parseRequestURL: parseRequestURLType = () => {
-    const url:string = document.location.hash.toLocaleLowerCase();
-    const request:string[] = url.split('/');
+    const url: string = window.location.hash.toLocaleLowerCase();
+    const request: string[] = url.split('/');
     return {
         resource: request[1],
         id: request[2],
@@ -11,7 +10,7 @@ export const parseRequestURL: parseRequestURLType = () => {
     }
 }
 
-export const getUrlParams:() => URLSearchParams = () => {
+export const getUrlParams: () => URLSearchParams = () => {
     return new URLSearchParams(window.location.search);
 }
 
@@ -23,9 +22,3 @@ export const getUrlWithParams: getUrlWithParamsType = (params) => {
         return acc
     }, new URLSearchParams())
 }
-
-export const setUrlParams:setUrlParamsType = (params) => {
-    const urlParams = getUrlWithParams(params);
-    window.location.search = urlParams.toString();
-}
-

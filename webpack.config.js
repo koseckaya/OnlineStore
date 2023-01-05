@@ -40,7 +40,7 @@ module.exports = {
         test: /\.html$/i,
         loader: 'html-loader',
       },
-      {
+      { // scss
         test: /\.(c|sa|sc)ss$/i,
         use: [
           devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
@@ -60,14 +60,14 @@ module.exports = {
           'sass-loader',
         ],
       },
-      {
+      {// Fonts
         test: /\.woff2?$/i,
         type: 'asset/resource',
         generator: {
           filename: 'fonts/[name][ext]'
         }
       },
-      {
+      { // images / icons
         test: /\.(jpe?g|png|webp|gif|svg)$/i,
         use: devMode ? [] : [
           {
@@ -94,6 +94,10 @@ module.exports = {
         ],
         type: 'asset/resource',
       },
+      {
+        test: /\.mp4$/,
+        use: 'file-loader?name=videos/[name].[ext]',
+      },
       // {
       //   test: /\.m?js$/i,
       //   exclude: /(node_modules|bower_components)/,
@@ -109,6 +113,10 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      // {
+      //   test: /\.mp4$/,
+      //   use: 'file-loader?name=videos/[name].[ext]',
+      // },
     ],
   },
 };
