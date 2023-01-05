@@ -102,7 +102,7 @@
     outline: solid 1.5px #ff660000;
   }
   100% {
-    outline: solid 1.5px #f47536;;
+    outline: solid 1.5px #f47536;
   }
 }
 
@@ -283,7 +283,6 @@
     }
 
     .buy-buttons-container {
-      position: relative;
       display: flex;
       width: 100%;
       gap: 2%;
@@ -318,9 +317,11 @@
           color: #fff;
           text-decoration: none;
         }
-        &:active {
-          transition: all 0s;
-          background: #00553c;
+
+        &:focus {
+          background-color: #08c28a;
+          text-shadow: 0px 3px 3px rgba(255,255,255,0.5);
+
         }
       }
       .product-buy-now-btn {
@@ -511,4 +512,5 @@
   position: absolute;
   font-size: 22px;
   bottom: -30px;
+
 }

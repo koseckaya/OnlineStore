@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { items, categories, sizes, colors , sortBy} from '../data.ts';
+import { items, categories, sizes, colors, sortBy } from '../data.ts';
 import { stringsSortBy } from '../helpers/strings';
 import { parseRequestURL, getUrlParams, setUrlParams } from '../helpers/utils.ts';
 
@@ -14,7 +14,7 @@ class Category {
     filters = { ...DEFAULT_FILTERS };
     prices = { ...DEFAULT_PRICES };
     ratings = { ...DEFAULT_RATINGS };
-    filteredSize = new Set() 
+    filteredSize = new Set()
     filteredColor = new Set()
     filteredProductName = new Set()
     items = [];
@@ -30,20 +30,20 @@ class Category {
         if (urlParams.has('color')) {
             this.filters.color = urlParams.get('color');
         }
-         if (urlParams.has('sortBy')) {
+        if (urlParams.has('sortBy')) {
             this.filters.sortBy = urlParams.get('sortBy');
         }
-         if (urlParams.has('priceMin')) {
+        if (urlParams.has('priceMin')) {
             this.filters.priceMin = urlParams.get('priceMin');
         }
-         if (urlParams.has('priceMax')) {
+        if (urlParams.has('priceMax')) {
             this.filters.priceMax = urlParams.get('priceMax');
         }
-         if (urlParams.has('ratingMin')) {
-             this.filters.ratingMin = urlParams.get('ratingMin');
-             
+        if (urlParams.has('ratingMin')) {
+            this.filters.ratingMin = urlParams.get('ratingMin');
+
         }
-         if (urlParams.has('ratingMax')) {
+        if (urlParams.has('ratingMax')) {
             this.filters.ratingMax = urlParams.get('ratingMax');
         }
         if (urlParams.has('productName')) {
@@ -97,7 +97,7 @@ class Category {
 
         this.initItemsForRangeFilters();
     };
-    
+
     getCategoryId = () => {
         const request = parseRequestURL()
         let categoryId = 0;
@@ -106,12 +106,12 @@ class Category {
                 categoryId = cat.id;
             }
         })
-       return categoryId
+        return categoryId
     }
 
     initItems = () => {
         const { categoryId, color, size, productName, search } = this.filters;
-        
+
         let filteredItems = items;
 
         if (categoryId === 0) {
@@ -128,7 +128,7 @@ class Category {
         if (size) {
             filteredItems = filteredItems.filter(item => item.sizes.includes(size.toUpperCase()));
         }
-        
+
         if (productName) {
             filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(productName.toLowerCase()))
         }
@@ -145,14 +145,14 @@ class Category {
             });
         }
         this.items = filteredItems;
-        filteredItems.forEach(item => this.filteredProductName.add(item.name )) 
-        filteredItems.forEach(item => this.filteredColor.add(item.color )) 
-        filteredItems.forEach(item => item.sizes.forEach(i => this.filteredSize.add(i)) )
+        filteredItems.forEach(item => this.filteredProductName.add(item.name))
+        filteredItems.forEach(item => this.filteredColor.add(item.color))
+        filteredItems.forEach(item => item.sizes.forEach(i => this.filteredSize.add(i)))
     }
 
     sortItems = () => {
         const { sortBy } = this.filters;
-        
+
         if (sortBy) {
             if (sortBy === 'priceAsc') {
                 this.items = this.items.sort((a, b) => a.price > b.price ? 1 : -1)
@@ -185,14 +185,14 @@ class Category {
 
         this.items = filteredItems;
     }
-    
+
     handleChangeFilters = (e) => {
         const { name, value } = e.target;
         this.filters[name] = value;
         this.updateUrlParams()
     }
     updateUrlParams = () => {
-        const { categoryId, ...rest} = this.filters
+        const { categoryId, ...rest } = this.filters
         setUrlParams(rest)
     }
     resetFilters = () => {
@@ -204,15 +204,15 @@ class Category {
         navigator.clipboard.writeText(url);
         const copyBtn = document.querySelector('.btn-copy')
         copyBtn?.innerHTML = 'Copied'
-        setTimeout(()=> copyBtn?.innerHTML = 'Copy Filters', 2000)
+        setTimeout(() => copyBtn?.innerHTML = 'Copy Filters', 2000)
     }
     initRangePrice = () => {
         const that = this
         const lowerSlider = document.querySelector('#price-lower');
         const upperSlider = document.querySelector('#price-upper');
-        
+
         document.querySelector('#price-two').value = that.filters.priceMax || that.prices.max;
-        document.querySelector('#price-one').value = that.filters.priceMin || that.prices.min; 
+        document.querySelector('#price-one').value = that.filters.priceMin || that.prices.min;
         let lowerVal = parseInt(lowerSlider.value);
         let upperVal = parseInt(upperSlider.value);
 
@@ -223,7 +223,7 @@ class Category {
             if (upperVal < lowerVal + 4) {
                 lowerSlider.value = upperVal - 4;
                 if (lowerVal == lowerSlider.min) {
-                upperSlider.value = 4;
+                    upperSlider.value = 4;
                 }
             }
             document.querySelector('#price-two').value = this.value
@@ -240,15 +240,15 @@ class Category {
             }
             document.querySelector('#price-one').value = this.value
             that.filters.priceMin = this.value
-        }; 
+        };
     }
     initRangeRating = () => {
         const that = this
         const lowerSlider = document.querySelector('#rating-lower');
         const upperSlider = document.querySelector('#rating-upper');
-        
-        document.querySelector('#rating-two').value= that.filters.ratingMax || that.ratings.max;
-        document.querySelector('#rating-one').value = that.filters.ratingMin || that.ratings.min; 
+
+        document.querySelector('#rating-two').value = that.filters.ratingMax || that.ratings.max;
+        document.querySelector('#rating-one').value = that.filters.ratingMin || that.ratings.min;
         let lowerVal = parseInt(lowerSlider.value);
         let upperVal = parseInt(upperSlider.value);
 
@@ -259,7 +259,7 @@ class Category {
             if (upperVal < lowerVal + 1) {
                 lowerSlider.value = upperVal - 1;
                 if (lowerVal == lowerSlider.min) {
-                upperSlider.value = 1;
+                    upperSlider.value = 1;
                 }
             }
             document.querySelector('#rating-two').value = this.value
@@ -276,7 +276,7 @@ class Category {
             }
             document.querySelector('#rating-one').value = this.value
             that.filters.ratingMin = this.value
-        }; 
+        };
     }
     handleApply = () => {
         this.updateUrlParams()
@@ -411,7 +411,7 @@ class Category {
              <div class="filters"> 
                 <select name='sortBy' class="filter filter-sortBy" id="filter-sortBy">
                     <option class="filter-sortBy" value="">Sort by</option>
-                     ${sortBy.map((s:SortByTypes)  => `
+                     ${sortBy.map((s: SortByTypes) => `
                             <option class="filter-sortBy" value="${s}"
                             ${this.filters.sortBy === s ? ' selected="selected" ' : ''}
                             >${stringsSortBy[s]}</option>

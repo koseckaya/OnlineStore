@@ -1,8 +1,9 @@
-// @ts-nocheck
-import { categories } from '../data.ts';
+import { categories } from '../data';
+import { ModuleInterface } from './types'
 
-class Main {
-    bind= () => {}
+class Main implements ModuleInterface {
+
+    bind = () => { }
     render = () => {
         return (`
         <div class="main-container">
@@ -23,7 +24,7 @@ class Main {
                         </div>
                     </div>
                    `
-                ).join('')}
+        ).join('')}
             </div>
         </div>
         `)
