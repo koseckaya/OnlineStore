@@ -1,9 +1,9 @@
-
 import { categories } from '../data';
-import { ModuleInterface} from './types'
+import { ModuleInterface } from './types'
 
 class Main implements ModuleInterface {
-    bind= () => {}
+
+    bind = () => { }
     render = () => {
         return (`
         <div class="main-container">
@@ -24,7 +24,7 @@ class Main implements ModuleInterface {
                         </div>
                     </div>
                    `
-                ).join('')}
+        ).join('')}
             </div>
         </div>
         `)

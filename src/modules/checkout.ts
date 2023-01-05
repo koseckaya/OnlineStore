@@ -1,4 +1,3 @@
-
 import { CheckoutInterface, storageItem } from '../pages/types';
 import { isValidCreditCard, isExpireValid, phoneNumberFormat, dataFormat } from '../helpers/validation'
 
@@ -193,7 +192,6 @@ class Checkout implements CheckoutInterface {
        
         const modal = document.querySelector('.modal')
         if (modal) modal.innerHTML = `
-        
             <div class="checkout-container">
                 <h2 class="checkout__title">Personal details</h2>
                 <form class="checkout-form" id="form" autocomplete="off">

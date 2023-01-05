@@ -35,12 +35,10 @@ const router = () => {
         main.innerHTML = page.render();
         page?.bind()
     }
-    
 
     const HeaderModule = new Header();
     HeaderModule.init();
 }
-
 
 window.addEventListener('load', router)
 window.addEventListener('hashchange', router)

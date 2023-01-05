@@ -4,12 +4,11 @@ import { ModuleInterface } from './types'
 class Error404 implements ModuleInterface {
     bind =  () => {}
     render = () => {
-        
+
         return `
         <div class="error-container">
             <div class='error-title'>404</div>
             <div class='error-message'>Page you are trying to find is not available or has been removed.</div>
-
             <div class="categories">
                 ${categories.map((cat) => `
                     <div class="category">
@@ -25,7 +24,6 @@ class Error404 implements ModuleInterface {
                    `
                 ).join('')}
             </div>
-
         </div>
         
         `
