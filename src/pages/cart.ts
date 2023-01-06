@@ -100,6 +100,8 @@ class Cart implements ModuleInterface {
         checkout?.addEventListener('click', this.openCheckout)
 
         this.visibleItems();
+        const card = document.querySelector('.card');
+        card.style.height = `${document.querySelector('.made-up').offsetHeight - 20}px`;
         if (document.querySelectorAll('.product-cart__trash-bin')) {
             let trashBinButtons = document.querySelectorAll('.product-cart__trash-bin');
             trashBinButtons.forEach((el) => el.addEventListener('click', (e) => {
@@ -257,16 +259,24 @@ class Cart implements ModuleInterface {
                 let elementLi = document.createElement('li');
                 elementLi.classList.add('discount-li');
                 elementLi.setAttribute('discount', promoValue[promoField.value]);
-                elementLi.innerHTML = `${promoField.value}<span style="margin-left: auto;">-${promoValue[promoField.value]}%</span><span style="display: flex;
+                elementLi.innerHTML = `<svg width="24px" height="24px" viewBox="0 0 24.00 24.00" id="magicoon-Regular" xmlns="http://www.w3.org/2000/svg" fill="#ffa200" stroke="#ffa200">
+
+                <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+                
+                <g id="SVGRepo_iconCarrier"> <defs> <style>.cls-1{fill:#ffa200;}</style> </defs> <title>discount</title> <g id="discount-Regular"> <path id="discount-Regular-2" data-name="discount-Regular" class="cls-1" d="M20.8,9.7l-.579-.579a1.25,1.25,0,0,1-.368-.889V7.412a3.263,3.263,0,0,0-3.26-3.26h-.815a1.25,1.25,0,0,1-.889-.368l-.579-.579a3.263,3.263,0,0,0-4.61,0l-.579.579a1.25,1.25,0,0,1-.889.368H7.412a3.263,3.263,0,0,0-3.26,3.26v.815a1.25,1.25,0,0,1-.368.889L3.205,9.7a3.263,3.263,0,0,0,0,4.61l.579.579a1.25,1.25,0,0,1,.368.889v.815a3.263,3.263,0,0,0,3.26,3.26h.815a1.25,1.25,0,0,1,.889.368L9.7,20.8a3.262,3.262,0,0,0,4.61,0l.579-.579a1.25,1.25,0,0,1,.889-.368h.815a3.263,3.263,0,0,0,3.26-3.26v-.815a1.25,1.25,0,0,1,.368-.889l.579-.579A3.263,3.263,0,0,0,20.8,9.7Zm-1.061,3.55-.578.578a2.741,2.741,0,0,0-.808,1.95v.815a1.761,1.761,0,0,1-1.76,1.76h-.815a2.741,2.741,0,0,0-1.95.808l-.578.578a1.762,1.762,0,0,1-2.49,0l-.578-.578a2.741,2.741,0,0,0-1.95-.808H7.412a1.761,1.761,0,0,1-1.76-1.76v-.815a2.741,2.741,0,0,0-.808-1.95l-.578-.578a1.764,1.764,0,0,1,0-2.49l.578-.578a2.741,2.741,0,0,0,.808-1.95V7.412a1.761,1.761,0,0,1,1.76-1.76h.815a2.741,2.741,0,0,0,1.95-.808l.578-.578a1.762,1.762,0,0,1,2.49,0l.578.578a2.741,2.741,0,0,0,1.95.808h.815a1.761,1.761,0,0,1,1.76,1.76v.815a2.741,2.741,0,0,0,.808,1.95l.578.578A1.764,1.764,0,0,1,19.734,13.245ZM15.53,8.47a.749.749,0,0,1,0,1.06l-6,6a.75.75,0,0,1-1.06-1.06l6-6A.749.749,0,0,1,15.53,8.47ZM15.5,14.5a1,1,0,1,1-1-1A1,1,0,0,1,15.5,14.5Zm-7-5a1,1,0,1,1,1,1A1,1,0,0,1,8.5,9.5Z"/> </g> </g>
+                
+                </svg>${promoField.value}<span style="margin-left: auto;">-${promoValue[promoField.value]}%</span><span style="display: flex;
                 justify-content: center;
                 align-items: center;
-                padding-left: 5px; cursor: pointer;"><svg class="delete-discount" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16"> <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"></path> </svg></span>`
+                padding-left: 10px; cursor: pointer;"><svg class="delete-discount" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16"> <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"></path> </svg></span>`
                 let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
                 arrOfAddedPromo.push(promoValue[promoField.value]);
                 let discount;
                 if (arrOfAddedPromo.length > 0 ) {
                   discount = arrOfAddedPromo.reduce((a,b) => a + b)/100 * total;
                 } else discount = 0;
+                let discountSpan = document.querySelector('.cart-span-discount');
+                discountSpan?.innerHTML = `$${Math.round(discount)} USD`;
                 let newValue = Math.round(total - discount);
                 let spanTotal = document.querySelector('.cart-span-total');
                 spanTotal?.innerHTML = `<span style='color: green;'>$${newValue} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`
@@ -374,12 +384,6 @@ class Cart implements ModuleInterface {
                 ${this.createProductDiv()}
             </div>
             <div class="cart-total"> 
-                <div class="cart-total__cash">
-                    <span>Total:</span><span class="cart-span-total">$${total} USD</span>
-                </div>
-                <div class="cart-total__amount">
-                    <span>Products in cart:</span><span class="cart-span-amount">${amount}</span>
-                </div>
                 <div class="form__group field">
                     <input type="input" class="form__field" placeholder="Promo" name="Promo" id='Promo' required />
                     <label for="Promo" class="form__label">Discount code</label>
@@ -387,11 +391,23 @@ class Cart implements ModuleInterface {
                 </div>
                 <fieldset class="made-up">
                     <legend>Discounts:</legend>
+                    <div class="cardWrap">
+                    <div class="card cardRight">
+                    </div>
+                    </div>
                     <ul class="discounts-ul">
                     </ul>
                 </fieldset>
+                <div class="cart-total__cash">
+                    <span>Total:</span><span class="cart-span-total">$${total} USD</span>
+                </div>
+                <div class="cart-total__discount">
+                    <span>Discount: </span><span class="cart-span-discount">$0 USD</span>
+                </div>
+                <div class="cart-total__amount">
+                    <span>Products in cart:</span><span class="cart-span-amount">${amount}</span>
+                </div>
                 <button class="btn btn-checkout">checkout</button>
-                <p>Go to <a href="./">Main</a></p>
             </div>
         </div>
         `

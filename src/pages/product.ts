@@ -9,6 +9,7 @@ class Product implements ModuleInterface {
     i: number = 0;
     selectedProduct: Item | null = null;
     available = 10;
+    itemWeNeedToFind = null;
     cartProduct: cartProductType = {
         id: -1,
         amount: 1,
