@@ -8,6 +8,7 @@ export interface ModuleInterface {
 export interface CheckoutInterface {
     bind: () => void;
     render: () => void;
+    init: () => void;
 }
 export interface HeaderInterface {
     bind: () => void;

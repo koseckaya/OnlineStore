@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 import { parseRequestURL } from "../helpers/utils";
 import { items, categories } from "../data";
 const starsImage = require('../img/stars5.png') as string
@@ -22,8 +22,8 @@ class Product implements ModuleInterface {
             this.cartProduct.id = this.selectedProduct.id
             this.cartProduct.size = items[neededItemId].sizes[0]
             if (localStorage.getItem('fullCart')) {
-                if (JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length > 0) {
-                    this.itemWeNeedToFind = JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
+                if (JSON.parse(localStorage.getItem('fullCart') || '').filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length > 0) {
+                    this.itemWeNeedToFind = JSON.parse(localStorage.getItem('fullCart') || '').filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
                     this.available = 10 - this.itemWeNeedToFind.amount;
                 }
             }
