@@ -99,11 +99,7 @@ class Cart implements ModuleInterface {
         const checkout = document.querySelector('.btn-checkout')
         checkout?.addEventListener('click', this.openCheckout)
 
-        document.querySelectorAll('.product-cart').forEach((el, index) => {
-            if (!(index < (this.pageNow * 2 + this.itemsPerPage))) {
-                el.style.display = `none`;
-            } else el.style = ``;
-        });
+        this.visibleItems();
         if (document.querySelectorAll('.product-cart__trash-bin')) {
             let trashBinButtons = document.querySelectorAll('.product-cart__trash-bin');
             trashBinButtons.forEach((el) => el.addEventListener('click', (e) => {
@@ -217,12 +213,12 @@ class Cart implements ModuleInterface {
             )
         }
 
-        let add = document.querySelector("#add");
-        let subract = document.querySelector("#subtract");
+        let nextPage = document.querySelector("#add");
+        let previousPage = document.querySelector("#subtract");
 
-        add.addEventListener("click", () => {
+        nextPage.addEventListener("click", () => {
             let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart'));
-            let pages = Math.ceil(productsInLocalStorage.length / 4);
+            let pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
             if (this.pageNow < pages - 1) {
                 this.pageNow += 1
                 add?.classList.remove('disabled');
@@ -234,7 +230,7 @@ class Cart implements ModuleInterface {
             this.visibleItems()
         });
 
-        subract.addEventListener("click", () => {
+        previousPage.addEventListener("click", () => {
             if (this.pageNow >= 1) {
                 this.pageNow -= 1
                 add?.classList.add('disabled');
@@ -337,6 +333,19 @@ class Cart implements ModuleInterface {
                 }, 175)
             }
         })
+
+        const limitSelect = document.querySelector('.cart-limit');
+        const productCart = document.querySelectorAll('.product-cart');
+        limitSelect.addEventListener('change', (e) => {
+            let limitValue = +(e.target.value)
+            this.itemsPerPage = limitValue;
+            this.visibleItems();
+            if (limitValue === 3) {
+                productCart.forEach((el) => el.classList.add('padding'));
+            } else {
+                productCart.forEach((el) => el.classList.remove('padding'));
+            }
+        })
     }
     render = () => {
         let amount = JSON.parse(localStorage.getItem('fullCart')).length;
@@ -348,6 +357,15 @@ class Cart implements ModuleInterface {
                     <button id="subtract"><svg id="left-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.028 0v6.425l5.549 5.575-5.549 5.575v6.425l11.944-12z"/></svg></button>
                         <span id="output">1</span>
                     <button id="add"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.028 0v6.425l5.549 5.575-5.549 5.575v6.425l11.944-12z"/></svg></button>
+                </div>
+            </div>
+            <div class="visible-items">
+                <span>Visible items per page: </span>
+                <div class="cart-limit-select">
+                    <select class="cart-limit">
+                        <option class="limit-option">4</option>
+                        <option class="limit-option">3</option>
+                    </select>
                 </div>
             </div>
         </div>

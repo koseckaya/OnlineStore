@@ -44,7 +44,7 @@ $white: #fff;
   margin: 1rem auto;
   width: 95%;
   display: flex;
-  justify-content: space-between;
+  gap: 5%
 }
 
 .available {
@@ -129,8 +129,8 @@ $white: #fff;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  min-height: 80vh;
   font-size: 115%;
+  min-height: 725px;
   .product-cart {
   display: flex;
   gap: 2%;
@@ -478,4 +478,62 @@ $white: #fff;
       border: 1px solid white;
       box-sizing: border-box;
     }
+}
+
+.cart-limit {
+  appearance: none;
+  outline: 0;
+  border: 0;
+  box-shadow: none;
+  flex: 1;
+  padding: 3px 0px 0px 7px;
+  color: #fff;
+  background-color: #252525;
+  background-image: none;
+  cursor: pointer;
+}
+/* Remove IE arrow */
+.cart-limit::-ms-expand {
+  display: none;
+}
+/* Custom Select wrapper */
+.cart-limit-select {
+  font-size: 20px;
+  position: relative;
+  display: flex;
+  width: 109px;
+  height: 42px;
+  border-radius: 0.25em;
+  overflow: hidden;
+}
+/* Arrow */
+.cart-limit-select::after {
+  content: "▼";
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-image: linear-gradient(to right, #c07724 0%, #f06a35 51%, #c06a24 100%);
+  background-size: 200% auto;
+  padding: 13px;
+  transition: 0.25s all ease-in-out;
+  pointer-events: none;
+}
+/* Transition */
+.cart-limit-select:hover::after {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
+}
+
+.visible-items {
+  display: flex;
+  gap: 2%;
+  width: 45%;
+  span {
+    font-size: 35px;
+  }
+}
+
+.padding {
+  padding: 43px 15px !important;
 }
