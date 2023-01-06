@@ -255,16 +255,86 @@ class Cart implements ModuleInterface {
         const promoBtn = document.querySelector('.promo-btn');
         const arrOfAddedPromo = [];
         promoBtn?.addEventListener('click', () => {
-            if (promoField.value in promoValue) {
+            if (promoField.value in promoValue && !arrOfAddedPromo.includes(promoValue[promoField.value]) ) {
                 promoBtn.style.background = `green`;
-                promoLabel.style.color = `green`;
+                promoLabel.style.color = `green`; 
                 let elementLi = document.createElement('li');
                 elementLi.classList.add('discount-li');
-                elementLi.innerHTML = `${promoField.value}<span>-${promoValue[promoField.value]}%</span>`
+                elementLi.setAttribute('discount', promoValue[promoField.value]);
+                elementLi.innerHTML = `${promoField.value}<span style="margin-left: auto;">-${promoValue[promoField.value]}%</span><span style="display: flex;
+                justify-content: center;
+                align-items: center;
+                padding-left: 5px; cursor: pointer;"><svg class="delete-discount" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16"> <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"></path> </svg></span>`
                 let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-                let discount = total 
-                console.log(total)
+                arrOfAddedPromo.push(promoValue[promoField.value]);
+                let discount;
+                if (arrOfAddedPromo.length > 0 ) {
+                  discount = arrOfAddedPromo.reduce((a,b) => a + b)/100 * total;
+                } else discount = 0;
+                let newValue = Math.round(total - discount);
+                let spanTotal = document.querySelector('.cart-span-total');
+                spanTotal?.innerHTML = `<span style='color: green;'>$${newValue} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`
                 discountsUl?.appendChild(elementLi);
+                elementLi.addEventListener('click', (e) => {
+                    if (e.target.closest('.delete-discount')) {
+                        let discount = Number(e.target.closest('.discount-li').getAttribute('discount'));
+                        let indexOfDiscount = arrOfAddedPromo.indexOf(discount);
+        
+                        if (arrOfAddedPromo.length > 1 ) {
+                            arrOfAddedPromo.splice(indexOfDiscount, 1);
+                            discount = arrOfAddedPromo.reduce((a,b) => a + b)/100 * total;
+                            newValue = Math.round(total - discount);
+                            spanTotal?.innerHTML = `<span style='color: green;'>$${newValue} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`
+                            discountsUl?.removeChild(elementLi);
+                        } else {
+                            discount = 0;
+                            arrOfAddedPromo.splice(indexOfDiscount, 1);
+                            newValue = Math.round(total - discount);
+                            spanTotal?.innerHTML = `<span>$${total} USD</span>`
+                            discountsUl?.removeChild(elementLi);
+                        }
+            
+                    }
+                })
+                let deletedValue = setInterval(() => {
+                    if (promoField.value.length === 0) {
+                        clearInterval(deletedValue);
+                        promoBtn.removeAttribute('style');
+                        promoLabel?.removeAttribute('style');
+                    }
+                    promoField.value = promoField.value.slice(0, promoField.value.length - 1);
+                }, 175)
+            } else if (arrOfAddedPromo.includes(promoValue[promoField.value])){
+                let neededItem = Array.from(document.querySelectorAll('.discount-li'));
+                let filteredItemIndex = neededItem.filter((el) => +(el.getAttribute('discount')) === +(promoValue[promoField.value]));
+                let indexOf = neededItem.indexOf(filteredItemIndex[0]);
+                if (filteredItemIndex.length > 0) {
+                    promoBtn.style.pointerEvents = 'none';
+                    document.querySelectorAll('.discount-li')[indexOf].style.animationName = 'horizontal';
+                    document.querySelectorAll('.discount-li')[indexOf].style.animationDuration = '1.5s';
+                    setTimeout(() => {
+                        document.querySelectorAll('.discount-li')[indexOf].removeAttribute('style');
+                        promoBtn.removeAttribute('style');
+                    }, 700)
+                }
+            } else {
+                promoBtn.style.background = `red`;
+                promoLabel.style.color = `red`;  
+                let formLabel = document.querySelector('.form__field');
+                let deletedValue = setInterval(() => {
+                    if (promoField.value.length === 0) {
+                        formLabel?.removeAttribute('style');
+                        clearInterval(deletedValue);
+                        promoBtn.removeAttribute('style');
+                        promoLabel?.removeAttribute('style');
+                    }
+                    if (promoField.value.length > 0) {
+                        formLabel.style = `border-image: linear-gradient(to right, red, #ffd199) 100% / 1 / 0 stretch;
+                    border-width: 3px;
+                    border-image-slice: 1;`
+                    }
+                    promoField.value = promoField.value.slice(0, promoField.value.length - 1);
+                }, 175)
             }
         })
     }

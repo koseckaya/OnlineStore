@@ -160,13 +160,11 @@ class Product implements ModuleInterface {
                     if (target.classList.contains('counter__button-plus') && value < this.available) {
                         value++;
                         target.closest('.counter').querySelector('input').value = value
-                        console.log(target.closest('.counter').querySelector('input').value)
                         this.cartProduct.amount = +(target.closest('.counter').querySelector('input').value)
                         document.querySelector('.price-span')?.innerHTML = `$${this.selectedProduct.price * value} USD`
                     } else if (target.classList.contains('counter__button-minus')) {
                         value--;
                         target.closest('.counter').querySelector('input').value = value
-                        console.log(target.closest('.counter').querySelector('input').value)
                         this.cartProduct.amount = +(target.closest('.counter').querySelector('input').value)
                         document.querySelector('.price-span')?.innerHTML = `$${this.selectedProduct.price * value} USD`
                     }
@@ -213,7 +211,6 @@ class Product implements ModuleInterface {
                     document.querySelector('input').value = 1;
                     document.querySelector('input')?.placeholder = '1';
                     this.itemWeNeedToFind = JSON.parse(localStorage.getItem('fullCart')).filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
-                    console.log('ya nol')
                     this.available = 10;
                     this.cartProduct.amount = 1;
                     document.querySelector('.product-add-btn')?.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
