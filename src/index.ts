@@ -40,6 +40,11 @@ const router = () => {
 
     const HeaderModule = new Header();
     HeaderModule.init();
+
+    const amount = document.querySelector('.cart-amount') as HTMLElement;
+    if (amount && localStorage.getItem('fullCart')) {
+        amount.textContent = `${JSON.parse(localStorage.getItem('fullCart')!)?.length}`;
+    }
 }
 
 window.addEventListener('load', router)

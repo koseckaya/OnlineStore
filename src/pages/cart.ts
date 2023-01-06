@@ -52,7 +52,10 @@ class Cart implements ModuleInterface {
                             <span class="span-price-cart">$${amount * items[id].price} </span>
                         </div>
                         <div class="product-cart__trash-bin">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/></svg>
+                        <span class="trash">
+                                <span></span>
+                                <i></i>
+                        </span>
                         </div>
                       </div>`
                 array1.push(string);
@@ -114,8 +117,8 @@ class Cart implements ModuleInterface {
                 localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
                 let amount = JSON.parse(localStorage.getItem('fullCart')).length;
                 let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-                document.querySelector('.cart-total__cash')?.innerHTML = `Total: $${total} USD`;
-                document.querySelector('.cart-total__amount')?.innerHTML = `Products in cart: ${amount}`;
+                document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`;
+                document.querySelector('.cart-span-amount')?.innerHTML = `${amount}`;
                 document.querySelector('.cart-products')?.removeChild(parent);
                 document.querySelector('.cart-amount')?.innerHTML = `${productsInLocalStorage.length}`;
                 document.querySelectorAll('.product-cart__number').forEach((el, index) => el.innerHTML = `${index + 1}`);
@@ -156,8 +159,8 @@ class Cart implements ModuleInterface {
                             localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
                             let amount = JSON.parse(localStorage.getItem('fullCart')).length;
                             let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-                            document.querySelector('.cart-total__cash')?.innerHTML = `Total: $${total} USD`;
-                            document.querySelector('.cart-total__amount')?.innerHTML = `Products in cart: ${amount}`;
+                            document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`;
+                            document.querySelector('.cart-total-amount')?.innerHTML = `${amount}`;
                             target.closest('.counter').querySelector('input').value = value;
                             parent.querySelector('.span-price-cart').innerHTML = `$${items[parentId].price * value}`;
                             let available = parent.querySelector('.available');
@@ -172,8 +175,8 @@ class Cart implements ModuleInterface {
                             document.querySelector('.cart-products')?.removeChild(parent);
                             let amount = JSON.parse(localStorage.getItem('fullCart')).length;
                             let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-                            document.querySelector('.cart-total__cash')?.innerHTML = `Total: $${total} USD`;
-                            document.querySelector('.cart-total__amount')?.innerHTML = `Products in cart: ${amount}`;
+                            document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`;
+                            document.querySelector('.cart-span-amount')?.innerHTML = `${amount}`;
                         } else if (target.classList.contains('counter__button-minus') && value > 1) {
                             let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart'));
                             value--;
@@ -185,8 +188,8 @@ class Cart implements ModuleInterface {
                             localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
                             let amount = JSON.parse(localStorage.getItem('fullCart')).length;
                             let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-                            document.querySelector('.cart-total__cash')?.innerHTML = `Total: $${total} USD`;
-                            document.querySelector('.cart-total__amount')?.innerHTML = `Products in cart: ${amount}`;
+                            document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`;
+                            document.querySelector('.cart-span-amount')?.innerHTML = `${amount}`;
                             target.closest('.counter').querySelector('input').value = value;
                             parent.querySelector('.span-price-cart').innerHTML = `$${items[parentId].price * value}`;
                             let available = parent.querySelector('.available');
@@ -240,33 +243,69 @@ class Cart implements ModuleInterface {
                 this.visibleItems()
             }
         });
+
+        const promoField = document.querySelector('.form__field');
+        const promoLabel = document.querySelector('.form__label');
+        const discountsUl = document.querySelector('.discounts-ul');
+        const promoValue = {
+            dope1: 5,
+            dope2: 10,
+            dope3: 15,
+        }
+        const promoBtn = document.querySelector('.promo-btn');
+        const arrOfAddedPromo = [];
+        promoBtn?.addEventListener('click', () => {
+            if (promoField.value in promoValue) {
+                promoBtn.style.background = `green`;
+                promoLabel.style.color = `green`;
+                let elementLi = document.createElement('li');
+                elementLi.classList.add('discount-li');
+                elementLi.innerHTML = `${promoField.value}<span>-${promoValue[promoField.value]}%</span>`
+                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                let discount = total 
+                console.log(total)
+                discountsUl?.appendChild(elementLi);
+            }
+        })
     }
     render = () => {
         let amount = JSON.parse(localStorage.getItem('fullCart')).length;
         let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
         return `<div class="cart-header">
             <div class="pages">
+                <span>Pages: </span>
                 <div class="counter-pagination">
                     <button id="subtract"><svg id="left-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.028 0v6.425l5.549 5.575-5.549 5.575v6.425l11.944-12z"/></svg></button>
                         <span id="output">1</span>
                     <button id="add"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.028 0v6.425l5.549 5.575-5.549 5.575v6.425l11.944-12z"/></svg></button>
                 </div>
             </div>
-            <div class="cart-total">
+        </div>
+        <div class="cart-products-container">
+            <div class="cart-products">
+                ${this.createProductDiv()}
+            </div>
+            <div class="cart-total"> 
                 <div class="cart-total__cash">
-                    Total: $${total} USD
+                    <span>Total:</span><span class="cart-span-total">$${total} USD</span>
                 </div>
                 <div class="cart-total__amount">
-                    Products in cart: ${amount}
+                    <span>Products in cart:</span><span class="cart-span-amount">${amount}</span>
                 </div>
+                <div class="form__group field">
+                    <input type="input" class="form__field" placeholder="Promo" name="Promo" id='Promo' required />
+                    <label for="Promo" class="form__label">Discount code</label>
+                    <button class="promo-btn"><svg style="color: white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" zoomAndPan="magnify" viewBox="0 0 30 30.000001" height="24" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><clipPath id="id1"><path d="M 2.328125 4.222656 L 27.734375 4.222656 L 27.734375 24.542969 L 2.328125 24.542969 Z M 2.328125 4.222656 " clip-rule="nonzero" fill="white"></path></clipPath></defs><g clip-path="url(#id1)"><path fill="white" d="M 27.5 7.53125 L 24.464844 4.542969 C 24.15625 4.238281 23.65625 4.238281 23.347656 4.542969 L 11.035156 16.667969 L 6.824219 12.523438 C 6.527344 12.230469 6 12.230469 5.703125 12.523438 L 2.640625 15.539062 C 2.332031 15.84375 2.332031 16.335938 2.640625 16.640625 L 10.445312 24.324219 C 10.59375 24.472656 10.796875 24.554688 11.007812 24.554688 C 11.214844 24.554688 11.417969 24.472656 11.566406 24.324219 L 27.5 8.632812 C 27.648438 8.488281 27.734375 8.289062 27.734375 8.082031 C 27.734375 7.875 27.648438 7.679688 27.5 7.53125 Z M 27.5 7.53125 " fill-opacity="1" fill-rule="nonzero"></path></g></svg></button>
+                </div>
+                <fieldset class="made-up">
+                    <legend>Discounts:</legend>
+                    <ul class="discounts-ul">
+                    </ul>
+                </fieldset>
+                <button class="btn btn-checkout">checkout</button>
+                <p>Go to <a href="./">Main</a></p>
             </div>
         </div>
-        <div class="cart-products">
-            ${this.createProductDiv()}
-        </div>
-        <button class="btn btn-checkout">checkout</button>
-        <p>Go to <a href="./">Main</a></p>
-         <div class="container">
         `
     }
 }
