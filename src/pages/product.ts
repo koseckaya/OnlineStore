@@ -330,10 +330,8 @@ class Product implements ModuleInterface {
                 let arr = JSON.parse(localStorage.getItem('fullCart'));
                 if (arr.some((el) => el.id === this.cartProduct.id && el.size === this.cartProduct.size)) {
                     arr.map((el) => {
-                        if (el.id === this.cartProduct.id && el.size === this.cartProduct.size && el.amount !== 0) {
+                        if (el.id === this.cartProduct.id && el.size === this.cartProduct.size && el.amount === 0) {
                             el.amount += this.cartProduct.amount;
-                        } else if (el.id === this.cartProduct.id && el.size === this.cartProduct.size && el.amount === 0) {
-                            el.amount += 1;
                         }
                         return el;
                     })
