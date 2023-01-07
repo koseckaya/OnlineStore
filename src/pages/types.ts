@@ -18,10 +18,10 @@ export interface KeyboardEvent {
     keyCode: number;
 }
 export type HTMLElementEvent<T extends HTMLElement> = Event & {
-  target: T;
+    target: T;
 }
 export interface defaultFiltersInterface {
-    [key: string]: string 
+    [key: string]: string
 }
 export type defaultRangeType = {
     min: number;
@@ -30,10 +30,9 @@ export type defaultRangeType = {
 export type filterParamType = string | null
 
 export interface cartProductType {
-    [key: string]: string | number;
     "id": number;
     "amount": number;
-    "size": string;
+    "size": string | null;
 }
 
 export interface storageItem {
