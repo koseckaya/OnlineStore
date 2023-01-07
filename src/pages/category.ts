@@ -1,67 +1,54 @@
-// @ts-nocheck
-import { items, categories, sizes, colors, sortBy } from '../data.ts';
+
+import { items, categories, sizes, colors, sortBy } from '../data';
 import { stringsSortBy } from '../helpers/strings';
 import { setUrlParams } from '../helpers/url';
-import { parseRequestURL, getUrlParams } from '../helpers/utils.ts';
+import { parseRequestURL, getUrlParams } from '../helpers/utils';
+import { Item, ItemFieldsType, SortByTypes } from '../types';
+import { defaultFiltersInterface, defaultRangeType, ModuleInterface } from './types'
 
-const DEFAULT_FILTERS = {
-    categoryId: 0,
+const DEFAULT_FILTERS: defaultFiltersInterface = {
+    categoryId: '0',
 };
-const DEFAULT_PRICES = { min: 0, max: 500 };
-const DEFAULT_RATINGS = { min: 0, max: 5 };
+const DEFAULT_PRICES: defaultRangeType = { min: 0, max: 500 };
+const DEFAULT_RATINGS: defaultRangeType = { min: 0, max: 5 };
 
 
-class Category {
+class Category implements ModuleInterface {
     filters = { ...DEFAULT_FILTERS };
     prices = { ...DEFAULT_PRICES };
     ratings = { ...DEFAULT_RATINGS };
-    filteredSize = new Set()
-    filteredColor = new Set()
-    filteredProductName = new Set()
-    items = [];
+    filteredSize = new Set<string>()
+    filteredColor = new Set<string>()
+    filteredProductName = new Set<string>()
+    items: Item[] = [];
 
     constructor() {
-        let categoryId = this.getCategoryId();
-        this.filters.categoryId = categoryId;
+        let categoryId: number = this.getCategoryId();
+        this.filters.categoryId = `${categoryId}`;
+        this.prepareFilters()
 
-        const urlParams = getUrlParams();
-        if (urlParams.has('size')) {
-            this.filters.size = urlParams.get('size');
-        }
-        if (urlParams.has('color')) {
-            this.filters.color = urlParams.get('color');
-        }
-        if (urlParams.has('sortBy')) {
-            this.filters.sortBy = urlParams.get('sortBy');
-        }
-        if (urlParams.has('priceMin')) {
-            this.filters.priceMin = urlParams.get('priceMin');
-        }
-        if (urlParams.has('priceMax')) {
-            this.filters.priceMax = urlParams.get('priceMax');
-        }
-        if (urlParams.has('ratingMin')) {
-            this.filters.ratingMin = urlParams.get('ratingMin');
-
-        }
-        if (urlParams.has('ratingMax')) {
-            this.filters.ratingMax = urlParams.get('ratingMax');
-        }
-        if (urlParams.has('productName')) {
-            this.filters.productName = urlParams.get('productName');
-        }
-
+        const urlParams: URLSearchParams = getUrlParams();
         this.filters.view = urlParams.has('view') ? 'grid' : '';
-        if (urlParams.has('search')) {
-            this.filters.search = urlParams.get('search');
-        }
 
         this.initItems();
         this.initRangeFilters();
         this.sortItems();
     }
 
-    initRangeFilters = () => {
+    prepareFilters = (): void => {
+        const filtersName: string[] = ['size', 'color', 'sortBy', 'priceMin', 'priceMax', 'ratingMin', 'ratingMax', 'productName', 'search']
+        filtersName.forEach(name => this.getUrlParam(name))
+    }
+
+    getUrlParam = (name: string): void => {
+        const urlParams: URLSearchParams = getUrlParams();
+        if (urlParams.has(name)) {
+            const param = urlParams.get(name)
+            if (param) this.filters[name] = param
+        }
+    }
+
+    initRangeFilters = (): void => {
         let min = 0, max = 0, minR = 0, maxR = 0;
         this.items.forEach(i => {
             if (min === 0) {
@@ -89,6 +76,7 @@ class Category {
             }
         });
 
+
         this.prices = { min, max };
 
         this.ratings = {
@@ -99,7 +87,7 @@ class Category {
         this.initItemsForRangeFilters();
     };
 
-    getCategoryId = () => {
+    getCategoryId = (): number => {
         const request = parseRequestURL()
         let categoryId = 0;
         categories.forEach(cat => {
@@ -110,26 +98,23 @@ class Category {
         return categoryId
     }
 
-    initItems = () => {
+    initItems = (): void => {
         const { categoryId, color, size, productName, search } = this.filters;
 
         let filteredItems = items;
-
-        if (categoryId === 0) {
+        const catId = +categoryId
+        if (catId === 0) {
             filteredItems = items;
         }
-
-        if (categoryId !== 0) {
-            filteredItems = items.filter(item => item.categoryId === categoryId);
+        if (catId !== 0) {
+            filteredItems = items.filter(item => item.categoryId === catId);
         }
         if (color) {
             filteredItems = filteredItems.filter(item => item.color.toLowerCase() === color.toLowerCase());
         }
-
         if (size) {
             filteredItems = filteredItems.filter(item => item.sizes.includes(size.toUpperCase()));
         }
-
         if (productName) {
             filteredItems = filteredItems.filter(item => item.name.toLowerCase().includes(productName.toLowerCase()))
         }
@@ -138,7 +123,7 @@ class Category {
             const fields = ['brand', 'name', 'colorHTML', 'type', 'description']
             filteredItems = filteredItems.filter(item => {
                 const searchFields = fields.reduce((acc, field) => {
-                    acc += ' ' + item[field];
+                    acc += ' ' + item[field as ItemFieldsType];
                     return acc;
                 }, '');
 
@@ -151,7 +136,7 @@ class Category {
         filteredItems.forEach(item => item.sizes.forEach(i => this.filteredSize.add(i)))
     }
 
-    sortItems = () => {
+    sortItems = (): void => {
         const { sortBy } = this.filters;
 
         if (sortBy) {
@@ -167,123 +152,135 @@ class Category {
         }
     };
 
-    initItemsForRangeFilters = () => {
+    initItemsForRangeFilters = (): void => {
         const { priceMin, priceMax, ratingMin, ratingMax } = this.filters;
         let filteredItems = this.items;
 
         if (priceMin) {
-            filteredItems = filteredItems.filter(item => item.price >= priceMin)
+            filteredItems = filteredItems.filter(item => item.price >= +priceMin)
         }
         if (priceMax) {
-            filteredItems = filteredItems.filter(item => item.price <= priceMax)
+            filteredItems = filteredItems.filter(item => item.price <= +priceMax)
         }
         if (ratingMin) {
-            filteredItems = filteredItems.filter(item => item.rating >= ratingMin)
+            filteredItems = filteredItems.filter(item => item.rating >= +ratingMin)
         }
         if (ratingMax) {
-            filteredItems = filteredItems.filter(item => item.rating <= ratingMax)
+            filteredItems = filteredItems.filter(item => item.rating <= +ratingMax)
         }
-
         this.items = filteredItems;
     }
-    updateUrlParams = () => {
+    handleChangeFilters = (e: Event): void => {
+        const { name, value } = e.target as HTMLInputElement;
+        this.filters[name] = value;
+       
+        this.updateUrlParams()
+    }
+    updateUrlParams = (): void => {
         const { categoryId, ...rest } = this.filters
         setUrlParams(rest)
     }
-    handleChangeFilters = (e) => {
-        const { name, value } = e.target;
-        this.filters[name] = value;
-        this.updateUrlParams()
-    }
-    resetFilters = () => {
+   
+    resetFilters = (): void => {
         this.filters = { ...DEFAULT_FILTERS };
         this.updateUrlParams()
     }
-    copyFilters = () => {
+    copyFilters = (): void => {
         const url = document.location.href;
         navigator.clipboard.writeText(url);
         const copyBtn = document.querySelector('.btn-copy')
-        copyBtn?.innerHTML = 'Copied'
-        setTimeout(() => copyBtn?.innerHTML = 'Copy Filters', 2000)
+        if (copyBtn) {
+            copyBtn.innerHTML = 'Copied'
+            setTimeout(() => copyBtn.innerHTML = 'Copy Filters', 2000)
+        }
     }
-    initRangePrice = () => {
+    initRangePrice = (): void => {
+        const that: this = this
+        const lowerSlider = <HTMLInputElement>document.querySelector('#price-lower');
+        const upperSlider = <HTMLInputElement>document.querySelector('#price-upper');
+        const priceTwo = <HTMLInputElement>document.querySelector('#price-two')
+        const priceOne = <HTMLInputElement>document.querySelector('#price-one')
+
+        if (priceTwo && priceOne && lowerSlider && upperSlider) {
+            priceTwo.value = String(that.filters.priceMax || that.prices.max);
+            priceOne.value = String(that.filters.priceMin || that.prices.min);
+            let lowerVal = parseInt(lowerSlider.value);
+            let upperVal = parseInt(upperSlider.value);
+
+            upperSlider.oninput = function (this: GlobalEventHandlers, e: Event): void {
+                lowerVal = parseInt(lowerSlider.value);
+                upperVal = parseInt(upperSlider.value);
+
+                if (upperVal < lowerVal + 4) {
+                    lowerSlider.value = String(upperVal - 4);
+                    if (lowerVal == +lowerSlider.min) {
+                        upperSlider.value = '4';
+                    }
+                }
+                priceTwo.value = (e.target as HTMLInputElement).value
+                that.filters.priceMax = (e.target as HTMLInputElement).value
+            }
+
+            lowerSlider.oninput = function (e: Event) {
+                lowerVal = parseInt(lowerSlider.value);
+                upperVal = parseInt(upperSlider.value);
+                if (lowerVal > upperVal - 4) {
+                    upperSlider.value = String(lowerVal + 4);
+                    if (upperVal == +upperSlider.max) {
+                        lowerSlider.value = `${parseInt(upperSlider.max) - 4}`;
+                    }
+                }
+                priceOne.value = (e.target as HTMLInputElement).value
+                that.filters.priceMin = (e.target as HTMLInputElement).value
+            };
+        }
+    }
+    initRangeRating = (): void => {
         const that = this
-        const lowerSlider = document.querySelector('#price-lower');
-        const upperSlider = document.querySelector('#price-upper');
+        const lowerSlider = <HTMLInputElement>document.querySelector('#rating-lower');
+        const upperSlider = <HTMLInputElement>document.querySelector('#rating-upper');
+        const ratingTwo = <HTMLInputElement>document.querySelector('#rating-two')
+        const ratingOne = <HTMLInputElement>document.querySelector('#rating-one')
 
-        document.querySelector('#price-two').value = that.filters.priceMax || that.prices.max;
-        document.querySelector('#price-one').value = that.filters.priceMin || that.prices.min;
-        let lowerVal = parseInt(lowerSlider.value);
-        let upperVal = parseInt(upperSlider.value);
+        if (ratingTwo && ratingOne && lowerSlider && upperSlider) {
+            ratingTwo.value = String(that.filters.ratingMax || that.ratings.max);
+            ratingOne.value = String(that.filters.ratingMin || that.ratings.min);
+            let lowerVal = parseInt(lowerSlider.value);
+            let upperVal = parseInt(upperSlider.value);
 
-        upperSlider.oninput = function () {
-            lowerVal = parseInt(lowerSlider.value);
-            upperVal = parseInt(upperSlider.value);
+            upperSlider.oninput = function (this: GlobalEventHandlers, e: Event): void {
+                lowerVal = parseInt(lowerSlider.value);
+                upperVal = parseInt(upperSlider.value);
 
-            if (upperVal < lowerVal + 4) {
-                lowerSlider.value = upperVal - 4;
-                if (lowerVal == lowerSlider.min) {
-                    upperSlider.value = 4;
+                if (upperVal < lowerVal + 1) {
+                    lowerSlider.value = String(upperVal - 1);
+                    if (lowerVal == +lowerSlider.min) {
+                        upperSlider.value = '1';
+                    }
                 }
-            }
-            document.querySelector('#price-two').value = this.value
-            that.filters.priceMax = this.value
-        };
-        lowerSlider.oninput = function () {
-            lowerVal = parseInt(lowerSlider.value);
-            upperVal = parseInt(upperSlider.value);
-            if (lowerVal > upperVal - 4) {
-                upperSlider.value = lowerVal + 4;
-                if (upperVal == upperSlider.max) {
-                    lowerSlider.value = parseInt(upperSlider.max) - 4;
+                ratingTwo.value = (e.target as HTMLInputElement).value
+                that.filters.ratingMax = (e.target as HTMLInputElement).value
+            };
+            lowerSlider.oninput = function (e: Event) {
+                lowerVal = parseInt(lowerSlider.value);
+                upperVal = parseInt(upperSlider.value);
+                if (lowerVal > upperVal - 1) {
+                    upperSlider.value = String(lowerVal + 1);
+                    if (upperVal == +upperSlider.max) {
+                        lowerSlider.value = `${parseInt(upperSlider.max) - 1}`;
+                    }
                 }
-            }
-            document.querySelector('#price-one').value = this.value
-            that.filters.priceMin = this.value
-        };
+                ratingOne.value = (e.target as HTMLInputElement).value
+                that.filters.ratingMin = (e.target as HTMLInputElement).value
+            };
+        }
     }
-    initRangeRating = () => {
-        const that = this
-        const lowerSlider = document.querySelector('#rating-lower');
-        const upperSlider = document.querySelector('#rating-upper');
-
-        document.querySelector('#rating-two').value = that.filters.ratingMax || that.ratings.max;
-        document.querySelector('#rating-one').value = that.filters.ratingMin || that.ratings.min;
-        let lowerVal = parseInt(lowerSlider.value);
-        let upperVal = parseInt(upperSlider.value);
-
-        upperSlider.oninput = function () {
-            lowerVal = parseInt(lowerSlider.value);
-            upperVal = parseInt(upperSlider.value);
-
-            if (upperVal < lowerVal + 1) {
-                lowerSlider.value = upperVal - 1;
-                if (lowerVal == lowerSlider.min) {
-                    upperSlider.value = 1;
-                }
-            }
-            document.querySelector('#rating-two').value = this.value
-            that.filters.ratingMax = this.value
-        };
-        lowerSlider.oninput = function () {
-            lowerVal = parseInt(lowerSlider.value);
-            upperVal = parseInt(upperSlider.value);
-            if (lowerVal > upperVal - 1) {
-                upperSlider.value = lowerVal + 1;
-                if (upperVal == upperSlider.max) {
-                    lowerSlider.value = parseInt(upperSlider.max) - 1;
-                }
-            }
-            document.querySelector('#rating-one').value = this.value
-            that.filters.ratingMin = this.value
-        };
-    }
-    handleApply = () => {
+    handleApply = (): void => {
         this.updateUrlParams()
     }
 
-    handleProductView = (e) => {
-        if (e.target.value === 'four') {
+    handleProductView = (e: Event): void => {
+        if ((e.target as HTMLInputElement).value === 'four') {
             document.querySelector('.product-list')?.classList.add('four')
             this.filters.view = 'grid'
         } else {
@@ -296,7 +293,8 @@ class Category {
     bind = () => {
         const lists = document.querySelectorAll(".filters select");
         for (let i = 0; i < lists.length; i++) {
-            lists[i].addEventListener('change', this.handleChangeFilters)
+            const element = lists[i] as HTMLSelectElement;
+            element.addEventListener('change', this.handleChangeFilters)
         }
 
         const resetBtn = document.querySelector('.btn-reset')
@@ -310,19 +308,19 @@ class Category {
         const applyRatingBtn = document.querySelector('.btn-applyRating')
         applyRatingBtn?.addEventListener('click', this.handleApply)
 
-        const productViewBtn = document.querySelector('#filter-products-view')
-        productViewBtn?.addEventListener('change', this.handleProductView)
+        const productViewBtn = <HTMLInputElement>document.querySelector('#filter-products-view')
+        productViewBtn.addEventListener('change', this.handleProductView)
 
-        const searchInput = document.querySelector('.search-input')
+        const searchInput = <HTMLInputElement>document.querySelector('.search-input')
         searchInput.value = this.filters.search
 
         this.initRangePrice()
         this.initRangeRating()
     }
-
-    isGridView = () => {
+    isGridView = (): boolean => {
         return this.filters.view === 'grid';
     }
+
 
     render = () => {
         return `
