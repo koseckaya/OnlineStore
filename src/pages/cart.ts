@@ -89,6 +89,16 @@ class Cart implements ModuleInterface {
         }
     }
     bind = () => {
+        const promoField = document.querySelector('.form__field');
+        const promoLabel = document.querySelector('.form__label');
+        const discountsUl = document.querySelector('.discounts-ul');
+        const promoValue = {
+            dope1: 5,
+            dope2: 10,
+            dope3: 15,
+        }
+        const promoBtn = document.querySelector('.promo-btn');
+        const arrOfAddedPromo = [];
         const urlParams = getUrlParams()
 
         urlParams.has('method')
@@ -114,8 +124,6 @@ class Cart implements ModuleInterface {
                 let deletedItem = productsInLocalStorage.splice(idOfNeededItem, 1);
                 localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
                 let amount = JSON.parse(localStorage.getItem('fullCart')).length;
-                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-                document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`;
                 document.querySelector('.cart-span-amount')?.innerHTML = `${amount}`;
                 document.querySelector('.cart-products')?.removeChild(parent);
                 document.querySelector('.cart-amount')?.innerHTML = `${productsInLocalStorage.length}`;
@@ -129,6 +137,17 @@ class Cart implements ModuleInterface {
                     };
                     this.visibleItems()
                 });
+                if (arrOfAddedPromo.length === 0) {
+                    let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                    document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`
+                } else if (arrOfAddedPromo.length > 0) {
+                    let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                    let discount = arrOfAddedPromo.reduce((a,b) => a + b)/100 * total;
+                    let newValue = Math.round(total - (total - discount));
+                    document.querySelector('.cart-span-total')?.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
+                    let discountSpan = document.querySelector('.cart-span-discount');
+                    discountSpan?.innerHTML = `$${Math.round(newValue)} USD`;
+                }
             }))
         }
         let counters = document.querySelectorAll('[data-counter1]');
@@ -156,14 +175,22 @@ class Cart implements ModuleInterface {
                             })
                             localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
                             let amount = JSON.parse(localStorage.getItem('fullCart')).length;
-                            let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-                            document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`;
                             document.querySelector('.cart-total-amount')?.innerHTML = `${amount}`;
                             target.closest('.counter').querySelector('input').value = value;
                             parent.querySelector('.span-price-cart').innerHTML = `$${items[parentId].price * value}`;
                             let available = parent.querySelector('.available');
                             available.innerHTML = `Available: ${this.available - value}`
-
+                            if (arrOfAddedPromo.length === 0) {
+                                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                                document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`
+                            } else if (arrOfAddedPromo.length > 0) {
+                                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                                let discount = arrOfAddedPromo.reduce((a,b) => a + b)/100 * total;
+                                let newValue = Math.round(total - (total - discount));
+                                document.querySelector('.cart-span-total')?.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
+                                let discountSpan = document.querySelector('.cart-span-discount');
+                                discountSpan?.innerHTML = `$${Math.round(newValue)} USD`;
+                            }
                         } else if (target.classList.contains('counter__button-minus') && value === 1) {
                             let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart'));
                             let neededItem = productsInLocalStorage.filter((el, _index) => +(el.id) === +(parentId) && el.size === parentSize);
@@ -172,9 +199,18 @@ class Cart implements ModuleInterface {
                             localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
                             document.querySelector('.cart-products')?.removeChild(parent);
                             let amount = JSON.parse(localStorage.getItem('fullCart')).length;
-                            let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-                            document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`;
                             document.querySelector('.cart-span-amount')?.innerHTML = `${amount}`;
+                            if (arrOfAddedPromo.length === 0) {
+                                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                                document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`
+                            } else if (arrOfAddedPromo.length > 0) {
+                                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                                let discount = arrOfAddedPromo.reduce((a,b) => a + b)/100 * total;
+                                let newValue = Math.round(total - (total - discount));
+                                document.querySelector('.cart-span-total')?.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
+                                let discountSpan = document.querySelector('.cart-span-discount');
+                                discountSpan?.innerHTML = `$${Math.round(newValue)} USD`;
+                            }
                         } else if (target.classList.contains('counter__button-minus') && value > 1) {
                             let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart'));
                             value--;
@@ -185,13 +221,22 @@ class Cart implements ModuleInterface {
                             })
                             localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
                             let amount = JSON.parse(localStorage.getItem('fullCart')).length;
-                            let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-                            document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`;
                             document.querySelector('.cart-span-amount')?.innerHTML = `${amount}`;
                             target.closest('.counter').querySelector('input').value = value;
                             parent.querySelector('.span-price-cart').innerHTML = `$${items[parentId].price * value}`;
                             let available = parent.querySelector('.available');
                             available.innerHTML = `Available: ${this.available - value}`
+                            if (arrOfAddedPromo.length === 0) {
+                                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                                document.querySelector('.cart-span-total')?.innerHTML = `$${total} USD`
+                            } else if (arrOfAddedPromo.length > 0) {
+                                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                                let discount = arrOfAddedPromo.reduce((a,b) => a + b)/100 * total;
+                                let newValue = Math.round(total - (total - discount));
+                                document.querySelector('.cart-span-total')?.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
+                                let discountSpan = document.querySelector('.cart-span-discount');
+                                discountSpan?.innerHTML = `$${Math.round(newValue)} USD`;
+                            }
 
                         }
                         if (localStorage.getItem('fullCart')) {
@@ -242,16 +287,6 @@ class Cart implements ModuleInterface {
             }
         });
 
-        const promoField = document.querySelector('.form__field');
-        const promoLabel = document.querySelector('.form__label');
-        const discountsUl = document.querySelector('.discounts-ul');
-        const promoValue = {
-            dope1: 5,
-            dope2: 10,
-            dope3: 15,
-        }
-        const promoBtn = document.querySelector('.promo-btn');
-        const arrOfAddedPromo = [];
         promoBtn?.addEventListener('click', () => {
             if (promoField.value in promoValue && !arrOfAddedPromo.includes(promoValue[promoField.value]) ) {
                 promoBtn.style.background = `green`;
@@ -259,7 +294,7 @@ class Cart implements ModuleInterface {
                 let elementLi = document.createElement('li');
                 elementLi.classList.add('discount-li');
                 elementLi.setAttribute('discount', promoValue[promoField.value]);
-                elementLi.innerHTML = `<svg width="24px" height="24px" viewBox="0 0 24.00 24.00" id="magicoon-Regular" xmlns="http://www.w3.org/2000/svg" fill="#ffa200" stroke="#ffa200">
+                elementLi.innerHTML = `<svg class="percent-svg" width="24px" height="24px" viewBox="0 0 24.00 24.00" id="magicoon-Regular" xmlns="http://www.w3.org/2000/svg" fill="#ffa200" stroke="#ffa200">
 
                 <g id="SVGRepo_bgCarrier" stroke-width="0"/>
                 
@@ -275,27 +310,32 @@ class Cart implements ModuleInterface {
                 if (arrOfAddedPromo.length > 0 ) {
                   discount = arrOfAddedPromo.reduce((a,b) => a + b)/100 * total;
                 } else discount = 0;
+                console.log(discount)
                 let discountSpan = document.querySelector('.cart-span-discount');
-                discountSpan?.innerHTML = `$${Math.round(discount)} USD`;
-                let newValue = Math.round(total - discount);
+                let newValue = Math.round(total - (total - discount));
+                discountSpan?.innerHTML = `$${Math.round(newValue)} USD`;
                 let spanTotal = document.querySelector('.cart-span-total');
-                spanTotal?.innerHTML = `<span style='color: green;'>$${newValue} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`
+                spanTotal?.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`
                 discountsUl?.appendChild(elementLi);
                 elementLi.addEventListener('click', (e) => {
                     if (e.target.closest('.delete-discount')) {
                         let discount = Number(e.target.closest('.discount-li').getAttribute('discount'));
                         let indexOfDiscount = arrOfAddedPromo.indexOf(discount);
-        
                         if (arrOfAddedPromo.length > 1 ) {
                             arrOfAddedPromo.splice(indexOfDiscount, 1);
+                            total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
                             discount = arrOfAddedPromo.reduce((a,b) => a + b)/100 * total;
-                            newValue = Math.round(total - discount);
-                            spanTotal?.innerHTML = `<span style='color: green;'>$${newValue} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`
+                            newValue = Math.round(total - (total - discount));
+                            spanTotal?.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
+                            discountSpan?.innerHTML = `$${Math.round(newValue)} USD`;
                             discountsUl?.removeChild(elementLi);
                         } else {
                             discount = 0;
                             arrOfAddedPromo.splice(indexOfDiscount, 1);
-                            newValue = Math.round(total - discount);
+                            total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                            discount = arrOfAddedPromo.reduce((a,b) => a + b)/100 * total;
+                            newValue = Math.round(total - (total - discount));
+                            discountSpan?.innerHTML = `$${Math.round(newValue)} USD`;
                             spanTotal?.innerHTML = `<span>$${total} USD</span>`
                             discountsUl?.removeChild(elementLi);
                         }
