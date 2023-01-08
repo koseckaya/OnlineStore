@@ -291,6 +291,11 @@ class Product implements ModuleInterface {
                     document.querySelector('.counter__button-minus')?.removeAttribute('style');
                 }, 50)
             }
+            if (localStorage.getItem('fullCart')) {
+                const totalMoneyHeader = document.querySelector('.total-money');
+                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                totalMoneyHeader.innerHTML = `$${total}`
+            }
         })
         document.querySelector('#slides-container')?.addEventListener('click', () => {
             let productSlider = document.querySelector('.product__slider');
@@ -344,7 +349,15 @@ class Product implements ModuleInterface {
                 localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
                 document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
             }
-
+            if (localStorage.getItem('fullCart') && JSON.parse(localStorage.getItem('fullCart')).length > 0) {
+                const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                let arr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
+                let total = arr.reduce((acc : number, curr : storageItem) => acc + items[curr.id].price * curr.amount, 0);
+                totalMoneyHeader.innerHTML = `$${total}`
+            } else {
+                const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                totalMoneyHeader.innerHTML = `$0`
+            }
             window.location.href = '/?method=buynow#/cart';
         })
     }

@@ -110,8 +110,10 @@ class Cart implements ModuleInterface {
         checkout?.addEventListener('click', this.openCheckout)
 
         this.visibleItems();
-        const card = document.querySelector('.card');
-        card.style.height = `${document.querySelector('.made-up').offsetHeight - 20}px`;
+        if (document.querySelector('.card')) {
+            const card = document.querySelector('.card');
+            card.style.height = `${document.querySelector('.made-up').offsetHeight - 20}px`;
+        }
         if (document.querySelectorAll('.product-cart__trash-bin')) {
             let trashBinButtons = document.querySelectorAll('.product-cart__trash-bin');
             trashBinButtons.forEach((el) => el.addEventListener('click', (e) => {
@@ -148,6 +150,16 @@ class Cart implements ModuleInterface {
                     let discountSpan = document.querySelector('.cart-span-discount');
                     discountSpan?.innerHTML = `$${Math.round(newValue)} USD`;
                 }
+                if (localStorage.getItem('fullCart') && JSON.parse(localStorage.getItem('fullCart')).length > 0) {
+                    const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                    let arr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
+                    let total = arr.reduce((acc : number, curr : storageItem) => acc + items[curr.id].price * curr.amount, 0);
+                    totalMoneyHeader.innerHTML = `$${total}`
+                } else {
+                    const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                    totalMoneyHeader.innerHTML = `$0`
+                }
+                if (productsInLocalStorage.length === 0) return location.reload()
             }))
         }
         let counters = document.querySelectorAll('[data-counter1]');
@@ -254,14 +266,24 @@ class Cart implements ModuleInterface {
                             };
                             this.visibleItems()
                         });
+                        if (localStorage.getItem('fullCart') && JSON.parse(localStorage.getItem('fullCart')).length > 0) {
+                            const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                            let arr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
+                            let total = arr.reduce((acc : number, curr : storageItem) => acc + items[curr.id].price * curr.amount, 0);
+                            totalMoneyHeader.innerHTML = `$${total}`
+                        } else {
+                            const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                            totalMoneyHeader.innerHTML = `$0`
+                        }
+                        let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart'));
+                        if (productsInLocalStorage.length === 0 || !productsInLocalStorage) return location.reload()
                     }
                 })
             }
             )
         }
-
+        if (document.querySelector("#add")) {
         let nextPage = document.querySelector("#add");
-        let previousPage = document.querySelector("#subtract");
 
         nextPage.addEventListener("click", () => {
             let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart'));
@@ -276,7 +298,9 @@ class Cart implements ModuleInterface {
             output.innerText = this.pageNow + 1;
             this.visibleItems()
         });
-
+        }   
+        if (document.querySelector("#subtract")) {
+        let previousPage = document.querySelector("#subtract");
         previousPage.addEventListener("click", () => {
             if (this.pageNow >= 1) {
                 this.pageNow -= 1
@@ -286,7 +310,7 @@ class Cart implements ModuleInterface {
                 this.visibleItems()
             }
         });
-
+        }
         promoBtn?.addEventListener('click', () => {
             if (promoField.value in promoValue && !arrOfAddedPromo.includes(promoValue[promoField.value]) ) {
                 promoBtn.style.background = `green`;
@@ -383,7 +407,7 @@ class Cart implements ModuleInterface {
                 }, 175)
             }
         })
-
+        if (document.querySelector('.cart-limit')) {
         const limitSelect = document.querySelector('.cart-limit');
         const productCart = document.querySelectorAll('.product-cart');
         limitSelect.addEventListener('change', (e) => {
@@ -396,61 +420,69 @@ class Cart implements ModuleInterface {
                 productCart.forEach((el) => el.classList.remove('padding'));
             }
         })
+        }
     }
     render = () => {
-        let amount = JSON.parse(localStorage.getItem('fullCart')).length;
-        let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-        return `<div class="cart-header">
-            <div class="pages">
-                <span>Pages: </span>
-                <div class="counter-pagination">
-                    <button id="subtract"><svg id="left-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.028 0v6.425l5.549 5.575-5.549 5.575v6.425l11.944-12z"/></svg></button>
-                        <span id="output">1</span>
-                    <button id="add"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.028 0v6.425l5.549 5.575-5.549 5.575v6.425l11.944-12z"/></svg></button>
-                </div>
-            </div>
-            <div class="visible-items">
-                <span>Visible items per page: </span>
-                <div class="cart-limit-select">
-                    <select class="cart-limit">
-                        <option class="limit-option">4</option>
-                        <option class="limit-option">3</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="cart-products-container">
-            <div class="cart-products">
-                ${this.createProductDiv()}
-            </div>
-            <div class="cart-total"> 
-                <div class="form__group field">
-                    <input type="input" class="form__field" placeholder="Promo" name="Promo" id='Promo' required />
-                    <label for="Promo" class="form__label">Discount code</label>
-                    <button class="promo-btn"><svg style="color: white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" zoomAndPan="magnify" viewBox="0 0 30 30.000001" height="24" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><clipPath id="id1"><path d="M 2.328125 4.222656 L 27.734375 4.222656 L 27.734375 24.542969 L 2.328125 24.542969 Z M 2.328125 4.222656 " clip-rule="nonzero" fill="white"></path></clipPath></defs><g clip-path="url(#id1)"><path fill="white" d="M 27.5 7.53125 L 24.464844 4.542969 C 24.15625 4.238281 23.65625 4.238281 23.347656 4.542969 L 11.035156 16.667969 L 6.824219 12.523438 C 6.527344 12.230469 6 12.230469 5.703125 12.523438 L 2.640625 15.539062 C 2.332031 15.84375 2.332031 16.335938 2.640625 16.640625 L 10.445312 24.324219 C 10.59375 24.472656 10.796875 24.554688 11.007812 24.554688 C 11.214844 24.554688 11.417969 24.472656 11.566406 24.324219 L 27.5 8.632812 C 27.648438 8.488281 27.734375 8.289062 27.734375 8.082031 C 27.734375 7.875 27.648438 7.679688 27.5 7.53125 Z M 27.5 7.53125 " fill-opacity="1" fill-rule="nonzero"></path></g></svg></button>
-                </div>
-                <fieldset class="made-up">
-                    <legend>Discounts:</legend>
-                    <div class="cardWrap">
-                    <div class="card cardRight">
+        if (localStorage.getItem('fullCart')) {
+            if (JSON.parse(localStorage.getItem('fullCart')).length === 0) {
+                return `<div class="empty-cart"><span>Sorry, but cart is empty. You need to add products.</span><svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 231.523 231.523" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M107.415,145.798c0.399,3.858,3.656,6.73,7.451,6.73c0.258,0,0.518-0.013,0.78-0.04c4.12-0.426,7.115-4.111,6.689-8.231 l-3.459-33.468c-0.426-4.12-4.113-7.111-8.231-6.689c-4.12,0.426-7.115,4.111-6.689,8.231L107.415,145.798z"></path> <path d="M154.351,152.488c0.262,0.027,0.522,0.04,0.78,0.04c3.796,0,7.052-2.872,7.451-6.73l3.458-33.468 c0.426-4.121-2.569-7.806-6.689-8.231c-4.123-0.421-7.806,2.57-8.232,6.689l-3.458,33.468 C147.235,148.377,150.23,152.062,154.351,152.488z"></path> <path d="M96.278,185.088c-12.801,0-23.215,10.414-23.215,23.215c0,12.804,10.414,23.221,23.215,23.221 c12.801,0,23.216-10.417,23.216-23.221C119.494,195.502,109.079,185.088,96.278,185.088z M96.278,216.523 c-4.53,0-8.215-3.688-8.215-8.221c0-4.53,3.685-8.215,8.215-8.215c4.53,0,8.216,3.685,8.216,8.215 C104.494,212.835,100.808,216.523,96.278,216.523z"></path> <path d="M173.719,185.088c-12.801,0-23.216,10.414-23.216,23.215c0,12.804,10.414,23.221,23.216,23.221 c12.802,0,23.218-10.417,23.218-23.221C196.937,195.502,186.521,185.088,173.719,185.088z M173.719,216.523 c-4.53,0-8.216-3.688-8.216-8.221c0-4.53,3.686-8.215,8.216-8.215c4.531,0,8.218,3.685,8.218,8.215 C181.937,212.835,178.251,216.523,173.719,216.523z"></path> <path d="M218.58,79.08c-1.42-1.837-3.611-2.913-5.933-2.913H63.152l-6.278-24.141c-0.86-3.305-3.844-5.612-7.259-5.612H18.876 c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h24.94l6.227,23.946c0.031,0.134,0.066,0.267,0.104,0.398l23.157,89.046 c0.86,3.305,3.844,5.612,7.259,5.612h108.874c3.415,0,6.399-2.307,7.259-5.612l23.21-89.25C220.49,83.309,220,80.918,218.58,79.08z M183.638,165.418H86.362l-19.309-74.25h135.895L183.638,165.418z"></path> <path d="M105.556,52.851c1.464,1.463,3.383,2.195,5.302,2.195c1.92,0,3.84-0.733,5.305-2.198c2.928-2.93,2.927-7.679-0.003-10.607 L92.573,18.665c-2.93-2.928-7.678-2.927-10.607,0.002c-2.928,2.93-2.927,7.679,0.002,10.607L105.556,52.851z"></path> <path d="M159.174,55.045c1.92,0,3.841-0.733,5.306-2.199l23.552-23.573c2.928-2.93,2.925-7.679-0.005-10.606 c-2.93-2.928-7.679-2.925-10.606,0.005l-23.552,23.573c-2.928,2.93-2.925,7.679,0.005,10.607 C155.338,54.314,157.256,55.045,159.174,55.045z"></path> <path d="M135.006,48.311c0.001,0,0.001,0,0.002,0c4.141,0,7.499-3.357,7.5-7.498l0.008-33.311c0.001-4.142-3.356-7.501-7.498-7.502 c-0.001,0-0.001,0-0.001,0c-4.142,0-7.5,3.357-7.501,7.498l-0.008,33.311C127.507,44.951,130.864,48.31,135.006,48.311z"></path> </g> </g></svg></div>`
+            }
+            let amount = JSON.parse(localStorage.getItem('fullCart')).length;
+            let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+            return `<div class="cart-header">
+                <div class="pages">
+                    <span>Pages: </span>
+                    <div class="counter-pagination">
+                        <button id="subtract"><svg id="left-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.028 0v6.425l5.549 5.575-5.549 5.575v6.425l11.944-12z"/></svg></button>
+                            <span id="output">1</span>
+                        <button id="add"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.028 0v6.425l5.549 5.575-5.549 5.575v6.425l11.944-12z"/></svg></button>
                     </div>
+                </div>
+                <div class="visible-items">
+                    <span>Visible items per page: </span>
+                    <div class="cart-limit-select">
+                        <select class="cart-limit">
+                            <option class="limit-option">4</option>
+                            <option class="limit-option">3</option>
+                        </select>
                     </div>
-                    <ul class="discounts-ul">
-                    </ul>
-                </fieldset>
-                <div class="cart-total__cash">
-                    <span>Total:</span><span class="cart-span-total">$${total} USD</span>
                 </div>
-                <div class="cart-total__discount">
-                    <span>Discount: </span><span class="cart-span-discount">$0 USD</span>
-                </div>
-                <div class="cart-total__amount">
-                    <span>Products in cart:</span><span class="cart-span-amount">${amount}</span>
-                </div>
-                <button class="btn btn-checkout">checkout</button>
             </div>
-        </div>
-        `
+            <div class="cart-products-container">
+                <div class="cart-products">
+                    ${this.createProductDiv()}
+                </div>
+                <div class="cart-total"> 
+                    <div class="form__group field">
+                        <input type="input" class="form__field" placeholder="Promo" name="Promo" id='Promo' required />
+                        <label for="Promo" class="form__label">Discount code</label>
+                        <button class="promo-btn"><svg style="color: white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" zoomAndPan="magnify" viewBox="0 0 30 30.000001" height="24" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><clipPath id="id1"><path d="M 2.328125 4.222656 L 27.734375 4.222656 L 27.734375 24.542969 L 2.328125 24.542969 Z M 2.328125 4.222656 " clip-rule="nonzero" fill="white"></path></clipPath></defs><g clip-path="url(#id1)"><path fill="white" d="M 27.5 7.53125 L 24.464844 4.542969 C 24.15625 4.238281 23.65625 4.238281 23.347656 4.542969 L 11.035156 16.667969 L 6.824219 12.523438 C 6.527344 12.230469 6 12.230469 5.703125 12.523438 L 2.640625 15.539062 C 2.332031 15.84375 2.332031 16.335938 2.640625 16.640625 L 10.445312 24.324219 C 10.59375 24.472656 10.796875 24.554688 11.007812 24.554688 C 11.214844 24.554688 11.417969 24.472656 11.566406 24.324219 L 27.5 8.632812 C 27.648438 8.488281 27.734375 8.289062 27.734375 8.082031 C 27.734375 7.875 27.648438 7.679688 27.5 7.53125 Z M 27.5 7.53125 " fill-opacity="1" fill-rule="nonzero"></path></g></svg></button>
+                    </div>
+                    <fieldset class="made-up">
+                        <legend>Discounts:</legend>
+                        <div class="cardWrap">
+                        <div class="card cardRight">
+                        </div>
+                        </div>
+                        <ul class="discounts-ul">
+                        </ul>
+                    </fieldset>
+                    <div class="cart-total__cash">
+                        <span>Total:</span><span class="cart-span-total">$${total} USD</span>
+                    </div>
+                    <div class="cart-total__discount">
+                        <span>Discount: </span><span class="cart-span-discount">$0 USD</span>
+                    </div>
+                    <div class="cart-total__amount">
+                        <span>Products in cart:</span><span class="cart-span-amount">${amount}</span>
+                    </div>
+                    <button class="btn btn-checkout">checkout</button>
+                </div>
+            </div>
+            `
+        } else {
+            return `<div class="empty-cart"><span>Sorry, but cart is empty. You need to add products.</span><svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 231.523 231.523" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M107.415,145.798c0.399,3.858,3.656,6.73,7.451,6.73c0.258,0,0.518-0.013,0.78-0.04c4.12-0.426,7.115-4.111,6.689-8.231 l-3.459-33.468c-0.426-4.12-4.113-7.111-8.231-6.689c-4.12,0.426-7.115,4.111-6.689,8.231L107.415,145.798z"></path> <path d="M154.351,152.488c0.262,0.027,0.522,0.04,0.78,0.04c3.796,0,7.052-2.872,7.451-6.73l3.458-33.468 c0.426-4.121-2.569-7.806-6.689-8.231c-4.123-0.421-7.806,2.57-8.232,6.689l-3.458,33.468 C147.235,148.377,150.23,152.062,154.351,152.488z"></path> <path d="M96.278,185.088c-12.801,0-23.215,10.414-23.215,23.215c0,12.804,10.414,23.221,23.215,23.221 c12.801,0,23.216-10.417,23.216-23.221C119.494,195.502,109.079,185.088,96.278,185.088z M96.278,216.523 c-4.53,0-8.215-3.688-8.215-8.221c0-4.53,3.685-8.215,8.215-8.215c4.53,0,8.216,3.685,8.216,8.215 C104.494,212.835,100.808,216.523,96.278,216.523z"></path> <path d="M173.719,185.088c-12.801,0-23.216,10.414-23.216,23.215c0,12.804,10.414,23.221,23.216,23.221 c12.802,0,23.218-10.417,23.218-23.221C196.937,195.502,186.521,185.088,173.719,185.088z M173.719,216.523 c-4.53,0-8.216-3.688-8.216-8.221c0-4.53,3.686-8.215,8.216-8.215c4.531,0,8.218,3.685,8.218,8.215 C181.937,212.835,178.251,216.523,173.719,216.523z"></path> <path d="M218.58,79.08c-1.42-1.837-3.611-2.913-5.933-2.913H63.152l-6.278-24.141c-0.86-3.305-3.844-5.612-7.259-5.612H18.876 c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h24.94l6.227,23.946c0.031,0.134,0.066,0.267,0.104,0.398l23.157,89.046 c0.86,3.305,3.844,5.612,7.259,5.612h108.874c3.415,0,6.399-2.307,7.259-5.612l23.21-89.25C220.49,83.309,220,80.918,218.58,79.08z M183.638,165.418H86.362l-19.309-74.25h135.895L183.638,165.418z"></path> <path d="M105.556,52.851c1.464,1.463,3.383,2.195,5.302,2.195c1.92,0,3.84-0.733,5.305-2.198c2.928-2.93,2.927-7.679-0.003-10.607 L92.573,18.665c-2.93-2.928-7.678-2.927-10.607,0.002c-2.928,2.93-2.927,7.679,0.002,10.607L105.556,52.851z"></path> <path d="M159.174,55.045c1.92,0,3.841-0.733,5.306-2.199l23.552-23.573c2.928-2.93,2.925-7.679-0.005-10.606 c-2.93-2.928-7.679-2.925-10.606,0.005l-23.552,23.573c-2.928,2.93-2.925,7.679,0.005,10.607 C155.338,54.314,157.256,55.045,159.174,55.045z"></path> <path d="M135.006,48.311c0.001,0,0.001,0,0.002,0c4.141,0,7.499-3.357,7.5-7.498l0.008-33.311c0.001-4.142-3.356-7.501-7.498-7.502 c-0.001,0-0.001,0-0.001,0c-4.142,0-7.5,3.357-7.501,7.498l-0.008,33.311C127.507,44.951,130.864,48.31,135.006,48.311z"></path> </g> </g></svg></div>`
+        }
     }
 }
 

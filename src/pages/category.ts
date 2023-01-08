@@ -318,6 +318,34 @@ class Category {
 
         this.initRangePrice()
         this.initRangeRating()
+        
+        const btnsCategory = document.querySelectorAll('.btn-category');
+        btnsCategory.forEach((el) => {
+            let idOfButton = el.getAttribute('data-id');
+            let smallestSize = items[+(idOfButton)]['sizes'][0];
+            if (JSON.parse(localStorage.getItem('fullCart')).filter(el => +(el.id) === +(idOfButton) && el.size === smallestSize).length > 0) {
+            let neededItem = JSON.parse(localStorage.getItem('fullCart')).filter(el => +(el.id) === +(idOfButton) && el.size === smallestSize)[0];
+                if (neededItem) {
+                    el.style.background = `green`;
+                    el.innerHTML = `ALREADY IN CART`;
+                    el.style.pointerEvents = `none`;
+                } 
+            } else {
+                el.addEventListener('click', (e) => {
+                    let arr = JSON.parse(localStorage.getItem('fullCart'));
+                    arr.push({id: +(idOfButton), amount: 1, size: smallestSize});
+                    localStorage.setItem('fullCart', JSON.stringify(arr))
+                    e.target.style.background = `green`;
+                    e.target.innerHTML = `ALREADY IN CART`;
+                    e.target.style.pointerEvents = `none`;
+                    document.querySelector('.cart-amount')?.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')).length}`;
+                    const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                    arr = JSON.parse(localStorage.getItem('fullCart'));
+                    let total = arr.reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                    totalMoneyHeader.innerHTML = `$${total}`
+                })
+            }
+        })
     }
 
     isGridView = () => {
@@ -446,7 +474,7 @@ class Category {
                     <a href="/#/product/${prod.id}">
                         <img src="${prod.url}" alt="${prod.name}">
                     </a>
-                    <button class="btn btn-category">Add to cart</button>
+                    <button class="btn btn-category" data-id="${prod.id}">Add to cart</button>
                 </div>
                 <div class="product-name">
                     <a href="/#/product/1">

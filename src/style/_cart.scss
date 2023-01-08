@@ -611,3 +611,22 @@ $black: #343434;
   margin-right: 4px;
   bottom: -3px;
 }
+
+.empty-cart {
+  display: flex;
+  height: 100%;
+  min-height: 70vh;
+  gap: 4rem;
+  width: 100%;
+  font-size: 40px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  flex-direction: column;
+  padding: 1rem;
+  svg {
+    width: 200px;
+    height: 200px;
+  }
+}
