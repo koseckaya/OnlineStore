@@ -432,6 +432,7 @@ class Category implements ModuleInterface {
                 <option class="filter-products-view" value="three">:::</option>
                 <option class="filter-products-view" value="four" ${this.filters.view ? 'selected="selected"' : ''}}>
                     ::::</option>
+                    ::::</option>
             </select>
             
         </div>

@@ -93,7 +93,7 @@ class Cart implements ModuleInterface {
         }
     }
     bind = () => {
-        const urlParams = getUrlParams()
+        const urlParams: URLSearchParams = getUrlParams()
 
         urlParams.has('method')
         if (urlParams.has('method') && urlParams.get('method') === 'buynow') {
