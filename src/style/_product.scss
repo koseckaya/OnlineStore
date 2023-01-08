@@ -283,6 +283,7 @@
     }
 
     .buy-buttons-container {
+      position: relative;
       display: flex;
       width: 100%;
       gap: 2%;
@@ -512,5 +513,11 @@
   position: absolute;
   font-size: 22px;
   bottom: -30px;
+}
 
+.total-money { 
+  position: relative;
+  text-align: center;
+  right: 20px;
+  width: 4rem;
 }

@@ -9,7 +9,9 @@ class Product implements ModuleInterface {
     i: number = 0;
     selectedProduct: Item | null = null;
     available = 10;
+
     itemWeNeedToFind: storageItem | null = null;
+
     cartProduct: cartProductType = {
         id: -1,
         amount: 1,
@@ -128,13 +130,6 @@ class Product implements ModuleInterface {
                 return el.name === this.selectedProduct.name && el.categoryId === this.selectedProduct.categoryId;
             }
         })
-        filteredArray.sort(el => {
-            if (this.selectedProduct && el.colorHTML === this.selectedProduct.colorHTML) {
-                return -1;
-            } else {
-                return 1;
-            }
-        });
         return filteredArray;
     }
     bind = () => {
@@ -178,11 +173,18 @@ class Product implements ModuleInterface {
                                 value++;
                                 closestCounterInput.value = `${value}`
 
-                                this.cartProduct.amount = +(closestCounterInput.value)
-                                priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`
-                            } else if (target.classList.contains('counter__button-minus')) {
-                                value--;
-                                closestCounterInput.value = `${value}`
+                    if (target.classList.contains('counter__button-plus') && value < this.available) {
+                        value++;
+                        target.closest('.counter').querySelector('input').value = value
+                        this.cartProduct.amount = +(target.closest('.counter').querySelector('input').value)
+                        document.querySelector('.price-span')?.innerHTML = `$${this.selectedProduct.price * value} USD`
+                    } else if (target.classList.contains('counter__button-minus')) {
+                        value--;
+                        target.closest('.counter').querySelector('input').value = value
+                        this.cartProduct.amount = +(target.closest('.counter').querySelector('input').value)
+                        document.querySelector('.price-span')?.innerHTML = `$${this.selectedProduct.price * value} USD`
+                    }
+
 
                                 this.cartProduct.amount = +closestCounterInput.value
                                 priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`
@@ -237,11 +239,12 @@ class Product implements ModuleInterface {
                             availableInCart.style.left = `${(btnsContainer.offsetWidth / 2) - ((alreadyIn as HTMLDivElement).offsetWidth / 2)}px`;
                         }
                     }
+
                 } else if (input && this.selectedProduct && storageGetItem.filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length === 0) {
                     input.value = '1';
                     input.placeholder = '1';
                     this.itemWeNeedToFind = storageGetItem.filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
-                    console.log('ya nol')
+
                     this.available = 10;
                     this.cartProduct.amount = 1;
                     productAddBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
@@ -329,6 +332,11 @@ class Product implements ModuleInterface {
                     }
                 }
             }
+            if (localStorage.getItem('fullCart')) {
+                const totalMoneyHeader = document.querySelector('.total-money');
+                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
+                totalMoneyHeader.innerHTML = `$${total}`
+            }
         })
         document.querySelector('#slides-container')?.addEventListener('click', () => {
             let productSlider = document.querySelector('.product__slider') as HTMLDivElement;
@@ -365,6 +373,7 @@ class Product implements ModuleInterface {
             }
         })
         document.querySelector('.product-buy-now-btn')?.addEventListener('click', () => {
+
             const cartAmount = document.querySelector('.cart-amount');
             const productSize = document.querySelector('.product-sizes') as HTMLSelectElement
             if (cartAmount) {
@@ -373,23 +382,35 @@ class Product implements ModuleInterface {
                     let arr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
                     if (arr.some((el) => el.id === this.cartProduct.id && el.size === this.cartProduct.size)) {
                         arr.map((el) => {
-                            if (el.id === this.cartProduct.id && el.size === this.cartProduct.size && el.amount !== 0) {
-                                el.amount = +el.amount + this.cartProduct.amount;
-                            } else if (el.id === this.cartProduct.id && el.size === this.cartProduct.size && el.amount === 0) {
-                                el.amount += 1;
-                            }
-                            return el;
+                            arr.map((el) => {
+                        if (el.id === this.cartProduct.id && el.size === this.cartProduct.size && el.amount === 0) {
+                            el.amount += this.cartProduct.amount;
+                        }
+                        return el;
+                    })
                         })
                     } else {
                         arr.push((this.cartProduct as unknown) as storageItem);
                     }
                     localStorage.setItem('fullCart', JSON.stringify(arr));
                     cartAmount.innerHTML = `${storageGetItem.length}`;
+
                 } else {
                     localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
                     cartAmount.innerHTML = `${storageGetItem.length}`;
                 }
             }
+
+            if (localStorage.getItem('fullCart') && JSON.parse(localStorage.getItem('fullCart')).length > 0) {
+                const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                let arr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
+                let total = arr.reduce((acc : number, curr : storageItem) => acc + items[curr.id].price * curr.amount, 0);
+                totalMoneyHeader.innerHTML = `$${total}`
+            } else {
+                const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                totalMoneyHeader.innerHTML = `$0`
+            }
+
             window.location.href = '/?method=buynow#/cart';
         })
     }
@@ -397,61 +418,63 @@ class Product implements ModuleInterface {
         if (!this.selectedProduct) return `Product not found`
         return `
         <div class="container">
-        <div class="product-road">
-            <a href="#/category/">Categories</a>
-            <span>></span>
-            <a href="#/category/${categories[this.selectedProduct.categoryId - 1].name}">${categories[this.selectedProduct.categoryId - 1].name}</a>
-            <span>></span>
-            <span>${this.selectedProduct.name + ' ' + this.selectedProduct.type + ' ' + this.selectedProduct.gender + ' ' + this.selectedProduct.colorHTML}</span>
-        </div>
-        <div class="product">
-        <div class="product__slider">
-            <button class="slider-left"><span></span></button>
-            <div id="slides-container">
-                <img class="slider-image" src="${this.selectedProduct.url[this.i]}" alt="card-image">
+            <div class="product-road">
+                <a href="#/category/">Categories</a>
+                <span>></span>
+                <a href="#/category/${categories[this.selectedProduct.categoryId - 1].name}">${categories[this.selectedProduct.categoryId - 1].name}</a>
+                <span>></span>
+                <span>${this.selectedProduct.name + ' ' + this.selectedProduct.type + ' ' + this.selectedProduct.gender + ' ' + this.selectedProduct.colorHTML}</span>
             </div>
-            <button class="slider-right"><span></span></button>
-        </div>
-        <div class="product__info">
-            <h2 class="product-name">${this.selectedProduct.name}</h2>
-            <div class="product-brand">${this.selectedProduct.brand.toUpperCase()}</div>
-            <div class="product-color">COLOR:<p>${this.selectedProduct.colorHTML}</p></div>
-            <div class="product-rating-container">
-                <div class="product-rating-line" style="width:${(this.selectedProduct.rating * 10 * 2)}%"></div>
-                <img src="${starsImage}" alt="stars-rating-image">
+            <div class="product">
+            <div class="product__slider">
+                <button class="slider-left"><span></span></button>
+                <div id="slides-container">
+                    <img class="slider-image" src="${this.selectedProduct.url[this.i]}" alt="card-image">
+                </div>
+                <button class="slider-right"><span></span></button>
             </div>
-            <div class="product-available-colors">${this.selectedProduct.availableColors.map((_el, index) => {
-                if (this.selectedProduct && this.selectedProduct.id === this.filterAvailableColors()[index].id) {
-                return `<a href="#/product/${this.filterAvailableColors()[index].id}"><img class="product-color-btn activated" src="${this.filterAvailableColors()[index].url[0]}"></img></a>`
-            }
-            return `<a href="#/product/${this.filterAvailableColors()[index].id}"><img class="product-color-btn" src="${this.filterAvailableColors()[index].url[0]}"></img></a>`
-        }).join('')}</div>
-            <div class="select">
-                <select class="product-sizes">
-                    ${this.sizesString()}
-                </select>
+
+            <div class="product__info">
+                <h2 class="product-name">${this.selectedProduct.name}</h2>
+                <div class="product-brand">${this.selectedProduct.brand.toUpperCase()}</div>
+                <div class="product-color">COLOR:<p>${this.selectedProduct.colorHTML}</p></div>
+                <div class="product-rating-container">
+                    <div class="product-rating-line" style="width:${(this.selectedProduct.rating * 10 * 2)}%"></div>
+                    <img src="${starsImage}" alt="stars-rating-image">
+                </div>
+                <div class="product-available-colors">${this.selectedProduct.availableColors.map((_el, index) => {
+                if (this.selectedProduct.id === this.filterAvailableColors()[index].id) {
+                    return `<a href="#/product/${this.filterAvailableColors()[index].id}"><img class="product-color-btn activated" src="${this.filterAvailableColors()[index].url[0]}"></img></a>`
+                }
+                return `<a href="#/product/${this.filterAvailableColors()[index].id}"><img class="product-color-btn" src="${this.filterAvailableColors()[index].url[0]}"></img></a>`
+            }).join('')}</div>
+                <div class="select">
+                    <select class="product-sizes">
+                        ${this.sizesString()}
+                    </select>
+                </div>
+                <div class="counter" data-counter>
+                    <div class="counter__button counter__button-minus disabled">-</div>
+                    <div class="counter__input"><input type="text" disabled placeholder="1" value="1"></div>
+                    <div class="counter__button counter__button-plus">+</div>
+                </div>
+                <h3 class="product-description-h2">Description:</h3>
+                <div class="product-description">${this.selectedProduct.description}</div>
+                <div class="buy-buttons-container">
+                    <button class="product-add-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
+                        <g fill="none" fill-rule="evenodd"><path stroke="currentColor" stroke-width="2" d="M3.5 0v13.65h10.182L17.5 4.095h-14"></path><ellipse fill="currentColor" fill-rule="nonzero" cx="4" cy="17.9" rx="1.5" ry="1.575"></ellipse><ellipse fill="currentColor" fill-rule="nonzero" cx="12" cy="17.9" rx="1.5" ry="1.575"></ellipse>
+                        </g>
+                    </svg>
+                    <span class="price-span">$${this.selectedProduct.price} USD</span>
+                    </button>
+                    <button class="product-buy-now-btn">
+                        <span class="price-span1">BUY NOW</span>
+                    </button>
+                </div>
+
             </div>
-            <div class="counter" data-counter>
-                <div class="counter__button counter__button-minus disabled">-</div>
-                <div class="counter__input"><input type="text" disabled placeholder="1" value="1"></div>
-                <div class="counter__button counter__button-plus">+</div>
-            </div>
-            <h3 class="product-description-h2">Description:</h3>
-            <div class="product-description">${this.selectedProduct.description}</div>
-            <div class="buy-buttons-container">
-                <button class="product-add-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
-                    <g fill="none" fill-rule="evenodd"><path stroke="currentColor" stroke-width="2" d="M3.5 0v13.65h10.182L17.5 4.095h-14"></path><ellipse fill="currentColor" fill-rule="nonzero" cx="4" cy="17.9" rx="1.5" ry="1.575"></ellipse><ellipse fill="currentColor" fill-rule="nonzero" cx="12" cy="17.9" rx="1.5" ry="1.575"></ellipse>
-                    </g>
-                </svg>
-                <span class="price-span">$${this.selectedProduct.price} USD</span>
-                </button>
-                <button class="product-buy-now-btn">
-                    <span class="price-span1">BUY NOW</span>
-                </button>
-            </div>
-        </div>
-    </div></div>`
+        </div>`
     }
 }
 
