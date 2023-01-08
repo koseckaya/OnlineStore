@@ -42,7 +42,10 @@ const router = () => {
 
     const HeaderModule = new Header();
     HeaderModule.init();
-
+    
+    if (!localStorage.getItem('fullCart')) {
+        localStorage.setItem('fullCart', JSON.stringify([]))
+    } 
     const amount = document.querySelector('.cart-amount') as HTMLElement;
     if (amount && localStorage.getItem('fullCart')) {
         amount.textContent = `${JSON.parse(localStorage.getItem('fullCart'))?.length}`;

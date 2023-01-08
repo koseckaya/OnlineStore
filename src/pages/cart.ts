@@ -23,7 +23,7 @@ class Cart implements ModuleInterface {
                 string = `<div class="product-cart" id="${id}" size="${size}">
                         <div class="product-cart__number">${index + 1}</div>
                         <div class="product-cart__image-div">
-                            <img class="product-cart-image" src="${items[id].url[0]}" alt="product-image">
+                            <a href="#/product/${id}"><img class="product-cart-image" src="${items[id].url[0]}" alt="product-image"></a>
                         </div>
                         <div class="product-cart__card-info">
                             <h2 class="product-cart-name">${items[id].name}</h2>
