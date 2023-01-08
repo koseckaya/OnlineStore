@@ -52,3 +52,7 @@ type UrlParams = {
 };
 export type getUrlWithParamsType = (params: UrlParams) => URLSearchParams
 export type setUrlParamsType = (params: UrlParams) => void
+
+export interface storageItem {
+  [key: string]: string | number
+}
