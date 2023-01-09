@@ -48,7 +48,6 @@ class Cart implements ModuleInterface {
         if (urlParams.has('page')) {
             const getPages = Number(urlParams.get('page'));
             const pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
-            console.log(getPages, pages);
 
             if (getPages >= 1 && getPages <= pages) {
                 this.pageNow = Number(urlParams.get('page'))
@@ -123,12 +122,10 @@ class Cart implements ModuleInterface {
     }
     visibleItems = (): void => {
         const productCart: NodeListOf<HTMLElement> = document.querySelectorAll('.product-cart')
-        console.log(this.pageNow)
         if (this.pageNow !== 1) {
             productCart.forEach((el, index) => {
                 let start = (this.pageNow - 1) * this.itemsPerPage;
                 let end = start + this.itemsPerPage;
-                console.log(start, end, index);
                 if (!(index > start - 1 && index < end)) {
                     el.style.display = `none`;
                 } else {
@@ -218,11 +215,12 @@ class Cart implements ModuleInterface {
                 const cartSpanTotal = document.querySelector('.cart-span-total')
                 if (arrOfAddedPromo.length === 0 && cartSpanTotal) {
                     let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+
                     cartSpanTotal.innerHTML = `$${total} USD`
                 } else if (arrOfAddedPromo.length > 0 && cartSpanTotal) {
 
-
                     let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+
                     let discount: number = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
                     let newValue = Math.round(total - (total - discount));
                     cartSpanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
@@ -293,6 +291,7 @@ class Cart implements ModuleInterface {
                                                 let discount = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
                                                 let newValue = Math.round(total - (total - discount));
                                                 cartSpanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
+
                                                 let discountSpan = document.querySelector('.cart-span-discount');
                                                 if (discountSpan) discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
                                             }
@@ -339,7 +338,7 @@ class Cart implements ModuleInterface {
                                             if (cartSpanTotal) cartSpanTotal.innerHTML = `$${total} USD`
                                         } else if (arrOfAddedPromo.length > 0) {
                                             let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                                            let discount = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
+                                            let discount = +arrOfAddedPromo.reduce((a, b) => a + Number(b), 0) / 100 * total;
                                             let newValue = Math.round(total - (total - discount));
                                             if (cartSpanTotal) cartSpanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
                                             let discountSpan = document.querySelector('.cart-span-discount');
@@ -388,11 +387,7 @@ class Cart implements ModuleInterface {
         if (nextPage) nextPage.addEventListener("click", () => {
             let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
             let pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
-            console.log('0----21-3-21-3-123');
-            console.log(productsInLocalStorage.length, this.itemsPerPage)
-            console.log(this.pageNow, pages);
             if (this.pageNow <= pages) {
-                console.log(555);
                 this.pageNow += 1
 
                 setUrlParams(this.getCartParams(this.pageNow))
@@ -442,12 +437,14 @@ class Cart implements ModuleInterface {
 
                     let discount;
                     if (arrOfAddedPromo.length > 0) {
-                        discount = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
+                        discount = +arrOfAddedPromo.reduce((a, b) => a + Number(b), 0) / 100 * total;
+
                     } else discount = 0;
 
                     let discountSpan = document.querySelector('.cart-span-discount');
                     let spanTotal = document.querySelector('.cart-span-total');
                     let newValue = Math.round(total - (total - discount));
+
                     if (discountSpan && spanTotal) {
                         discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
 
@@ -455,7 +452,6 @@ class Cart implements ModuleInterface {
                         discountsUl?.appendChild(elementLi);
                         elementLi.addEventListener('click', (e: Event) => {
                             const target = e.target as HTMLElement
-                            console.log('arrOfAddedPromo', arrOfAddedPromo, target);
                             let discountLi = target.closest('.discount-li')
                             if (target.closest('.delete-discount') && discountLi) {
                                 let discount = discountLi.getAttribute('discount');
@@ -463,7 +459,7 @@ class Cart implements ModuleInterface {
                                 if (arrOfAddedPromo.length > 1) {
                                     arrOfAddedPromo.splice(indexOfDiscount, 1);
                                     total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                                    discount = `${+(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total}`;
+                                    discount = `${+arrOfAddedPromo.reduce((a, b) => a + Number(b), 0) / 100 * total}`;
                                     newValue = Math.round(total - (total - +discount));
                                     if (spanTotal) spanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
                                     if (discountSpan) discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
@@ -471,11 +467,9 @@ class Cart implements ModuleInterface {
                                 } else {
                                     discount = '0';
 
-                                    console.log(arrOfAddedPromo);
-
                                     arrOfAddedPromo.splice(indexOfDiscount, 1);
                                     total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                                    discount = `${+(arrOfAddedPromo.reduce((a, b) => a + Number(b), 0)) / 100 * total}`;
+                                    discount = `${+arrOfAddedPromo.reduce((a, b) => a + Number(b), 0) / 100 * total}`;
                                     newValue = Math.round(total - (total - +discount));
                                     if (discountSpan) discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
                                     if (spanTotal) spanTotal.innerHTML = `<span>$${total} USD</span>`
