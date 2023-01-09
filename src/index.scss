@@ -226,6 +226,9 @@ a {
     overflow-x: hidden;
     overflow-y: auto;
 }
+body .modal-container.show {
+    background-color: rgba(#000, 0.8);
+}
 .checkout {
     &-container {
        position: absolute;

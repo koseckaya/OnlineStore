@@ -76,7 +76,9 @@ class Cart implements ModuleInterface {
                 let end = start + this.itemsPerPage;
                 if (!(index > start - 1 && index < end)) {
                     el.style.display = `none`;
-                } el.setAttribute('style', '');
+                } else {
+                    el.setAttribute('style', '');
+                }
             });
         } else {
             productCart.forEach((el, index) => {
@@ -84,7 +86,9 @@ class Cart implements ModuleInterface {
                 let end = this.itemsPerPage;
                 if (!(index > start - 1 && index < end)) {
                     el.style.display = `none`;
-                } el.setAttribute('style', '');
+                } else {
+                    el.setAttribute('style', '');
+                }
             });
         }
     }
