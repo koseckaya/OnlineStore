@@ -630,6 +630,9 @@ $black: #343434;
 }
 
 @include for-max-1599px() {
+  .made-up {
+    height: 35%;
+  }
   .cart-header {
     margin: 2rem auto;
     align-items: center;
@@ -686,6 +689,12 @@ $black: #343434;
 }
 
 @include for-max-1155px() {
+  .made-up {
+    height: 35%;
+  }
+  .cartRight {
+    height: 193px;
+  }
   .cart-products-container {
     padding: 1.5rem 0rem;
   }
