@@ -385,7 +385,6 @@ class Cart implements ModuleInterface {
         }
         let nextPage = document.querySelector("#add") as HTMLButtonElement;
         if (nextPage) nextPage.addEventListener("click", () => {
-            console.log('this.pageNownext', this.pageNow);
             let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
             let pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
             if (this.pageNow == pages) nextPage.disabled = true;
@@ -399,7 +398,7 @@ class Cart implements ModuleInterface {
 
         let previousPage = document.querySelector("#subtract") as HTMLButtonElement;
         if (previousPage) previousPage.addEventListener("click", () => {
-            console.log('this.pageNow', this.pageNow);
+            
             if (this.pageNow > 1) {
                 this.pageNow -= 1
                 setUrlParams(this.getCartParams(this.pageNow))

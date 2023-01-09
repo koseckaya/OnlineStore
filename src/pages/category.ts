@@ -173,14 +173,14 @@ class Category implements ModuleInterface {
     handleChangeFilters = (e: Event): void => {
         const { name, value } = e.target as HTMLInputElement;
         this.filters[name] = value;
-       
+
         this.updateUrlParams()
     }
     updateUrlParams = (): void => {
         const { categoryId, ...rest } = this.filters
         setUrlParams(rest)
     }
-   
+
     resetFilters = (): void => {
         this.filters = { ...DEFAULT_FILTERS };
         this.updateUrlParams()
@@ -316,37 +316,37 @@ class Category implements ModuleInterface {
 
         this.initRangePrice()
         this.initRangeRating()
-        
+
         const btnsCategory = document.querySelectorAll('.btn-category');
         btnsCategory.forEach((el) => {
             let idOfButton = el.getAttribute('data-id');
             if (idOfButton) {
                 let smallestSize = items[+(idOfButton)]['sizes'][0];
                 const storageArr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
-                if (storageArr.filter(el => idOfButton  && +(el.id) === +(idOfButton) && el.size === smallestSize).length > 0) {
-                    let neededItem = storageArr.filter(el => idOfButton  && +(el.id) === +(idOfButton) && el.size === smallestSize)[0];
-                        if (neededItem) {
-                            el.setAttribute("style", "background-color: green;")
-                            el.innerHTML = `ALREADY IN CART`;
-                            el.setAttribute("style", "pointerEvents: none;")
-                        } 
-                    } else {
-                        el.addEventListener('click', (e: Event) => {
-                            let arr = JSON.parse(localStorage.getItem('fullCart')|| '');
-                            if (idOfButton)  arr.push({id: +(idOfButton), amount: 1, size: smallestSize});
-                            localStorage.setItem('fullCart', JSON.stringify(arr))
-                            const target = e.target as HTMLElement
-                            target.style.background = `green`;
-                            target.innerHTML = `ALREADY IN CART`;
-                            target.style.pointerEvents = `none`;
-                            const cartAmount = document.querySelector('.cart-amount')
-                            if (cartAmount) cartAmount.innerHTML = `${JSON.parse(localStorage.getItem('fullCart')|| '').length}`;
-                            const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
-                            arr = JSON.parse(localStorage.getItem('fullCart')|| '');
-                            let total = arr.reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                            totalMoneyHeader.innerHTML = `$${total}`
-                        })
+                if (storageArr.filter(el => idOfButton && +(el.id) === +(idOfButton) && el.size === smallestSize).length > 0) {
+                    let neededItem = storageArr.filter(el => idOfButton && +(el.id) === +(idOfButton) && el.size === smallestSize)[0];
+                    if (neededItem) {
+                        el.setAttribute("style", "background-color: green;")
+                        el.innerHTML = `ALREADY IN CART`;
+                        el.setAttribute("style", "pointerEvents: none;")
                     }
+                } else {
+                    el.addEventListener('click', (e: Event) => {
+                        let arr = JSON.parse(localStorage.getItem('fullCart') || '');
+                        if (idOfButton) arr.push({ id: +(idOfButton), amount: 1, size: smallestSize });
+                        localStorage.setItem('fullCart', JSON.stringify(arr))
+                        const target = e.target as HTMLElement
+                        target.style.background = `green`;
+                        target.innerHTML = `ALREADY IN CART`;
+                        target.style.pointerEvents = `none`;
+                        const cartAmount = document.querySelector('.cart-amount')
+                        if (cartAmount) cartAmount.innerHTML = `${JSON.parse(localStorage.getItem('fullCart') || '').length}`;
+                        const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                        arr = JSON.parse(localStorage.getItem('fullCart') || '');
+                        let total = arr.reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+                        totalMoneyHeader.innerHTML = `$${total}`
+                    })
+                }
             }
         })
     }
@@ -456,7 +456,7 @@ class Category implements ModuleInterface {
                 <li class="categ-item"><a href="/#/category">All</a></li>
                 ${categories.map(cat => `
                     <li class="categ-item">
-                        <a href="/#/category/${cat.name.toLowerCase()}">
+                        <a href="index.html#/category/${cat.name.toLowerCase()}">
                             ${cat.name}</a></li>
                 `).join('')}
             </ul>
@@ -469,13 +469,12 @@ class Category implements ModuleInterface {
             </select>
             
         </div>
-
         <ul class="product-list ${this.isGridView() ? 'four' : ''}">
         ${this.items.length === 0 ? '<div class="no-products">Sorry, we have no products in this category right now</div>' : ''}
         ${this.items.map((prod) => `
              <li class="product-card">
                 <div class="card__image">
-                    <a href="/#/product/${prod.id}">
+                    <a href="index.html#/product/${prod.id}">
                         <img src="${prod.url}" alt="${prod.name}">
                     </a>
                     <button class="btn btn-category" data-id="${prod.id}">Add to cart</button>

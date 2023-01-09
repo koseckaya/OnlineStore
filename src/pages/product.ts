@@ -415,7 +415,7 @@ class Product implements ModuleInterface {
                 totalMoneyHeader.innerHTML = `$0`
             }
 
-            window.location.href = '/?method=buynow#/cart';
+            window.location.href = 'index.html?method=buynow#/cart';
         })
     }
     render = (): string => {
