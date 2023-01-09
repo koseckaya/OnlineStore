@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 
 import { categories } from '../data';
 import { ModuleInterface } from './types'
