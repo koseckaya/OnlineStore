@@ -320,7 +320,7 @@ class Category implements ModuleInterface {
         const btnsCategory = document.querySelectorAll('.btn-category');
         btnsCategory.forEach((el) => {
             let idOfButton = el.getAttribute('data-id');
-            if (idOfButton) {
+            if (!idOfButton) return;
                 let smallestSize = items[+(idOfButton)]['sizes'][0];
                 if (JSON.parse(localStorage.getItem('fullCart') || '').filter(el => +(el.id) === +(idOfButton) && el.size === smallestSize).length > 0)
                  
@@ -349,7 +349,7 @@ class Category implements ModuleInterface {
                         totalMoneyHeader.innerHTML = `$${total}`
                     })
                 }
-            }
+            
         })
     }
     isGridView = (): boolean => {
