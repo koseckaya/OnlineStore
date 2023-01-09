@@ -1,5 +1,9 @@
 
-import { ModuleInterface } from "./pages/types";
+import Main from "./pages/main";
+import Product from './pages/product';
+import Cart from './pages/cart';
+import About from './pages/aboutUs';
+import { default as CategoryClass } from './pages/category';
 
 export interface Item {
   "id": number;
@@ -37,7 +41,7 @@ export type StringsSortByType = {
 };
 
 export interface Routes {
-  [key: string]: ModuleInterface;
+  [key: string]: typeof Main | typeof Product | typeof CategoryClass | typeof Cart | typeof About;
 }
 
 type parseRequestURLResultType = {

@@ -203,6 +203,7 @@ class Product implements ModuleInterface {
         document.querySelector('.product-sizes')?.addEventListener('change', (e: Event) => {
             const target = e.target as HTMLSelectElement;
             const input = document.querySelector('input') as HTMLInputElement
+            const btnsContainer = document.querySelector('.buy-buttons-container') as HTMLButtonElement
             this.cartProduct.size = target.value;
             if (input) {
                 input.value = '1';
@@ -210,6 +211,7 @@ class Product implements ModuleInterface {
                 if (storageGetItem.filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length > 0) {
                     this.itemWeNeedToFind = storageGetItem.filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
                     this.available = 10 - +this.itemWeNeedToFind.amount;
+
                     const productAddBtn = document.querySelector('.product-add-btn') as HTMLButtonElement
                     if (productAddBtn && this.selectedProduct) {
                         productAddBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
@@ -230,8 +232,8 @@ class Product implements ModuleInterface {
                             let availableInCart = document.createElement('div');
                             availableInCart.classList.add('already-in');
                             availableInCart.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
-                            const btnsContainer = document.querySelector('.buy-buttons-container') as HTMLButtonElement
                             btnsContainer.appendChild(availableInCart);
+                            const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
                             availableInCart.style.left = `${(btnsContainer.offsetWidth / 2) - ((alreadyIn as HTMLDivElement).offsetWidth / 2)}px`;
                         }
                     }
@@ -252,7 +254,7 @@ class Product implements ModuleInterface {
                     const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
                     if (alreadyIn) {
                         btnsContainer.removeChild(alreadyIn)
-                    } else if (!alreadyIn) {
+                    } else if (!alreadyIn && this.itemWeNeedToFind) {
                         let availableInCart = document.createElement('div');
                         availableInCart.classList.add('already-in');
                         availableInCart.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
@@ -264,10 +266,11 @@ class Product implements ModuleInterface {
         })
         productAddBtn.addEventListener('click', () => {
             const counterBtnMinus = document.querySelector('.counter__button-minus') as HTMLDivElement
+            const counter = document.querySelector('[data-counter]');
+            let storageGetItem: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '')
             if (counter) {
                 const counterInput = counter.querySelector('input')
                 if (this.available !== 0) {
-                    console.log('available !== 0');
                     this.cartProduct.size = (document.querySelector('.product-sizes') as HTMLSelectElement).value;
                     const cartAmount = document.querySelector('.cart-amount') as HTMLElement
                     if (localStorage.getItem('fullCart')) {
@@ -290,6 +293,9 @@ class Product implements ModuleInterface {
                         localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
                         cartAmount.innerHTML = `${storageGetItem.length}`;
                     }
+
+
+                    storageGetItem = JSON.parse(localStorage.getItem('fullCart') || '')
                     if (storageGetItem.filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length > 0) {
                         this.itemWeNeedToFind = storageGetItem.filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
                         this.available = 10 - +this.itemWeNeedToFind.amount;
@@ -317,7 +323,7 @@ class Product implements ModuleInterface {
                             document.querySelector('.counter__button-minus')?.removeAttribute('style');
                         }, 50)
                     }
-                }else {
+                } else {
                     if (counterBtnMinus && counterInput) {
                         counterBtnMinus.style.transition = `0s`;
                         productAddBtn.innerHTML = `NOT AVAILABLE ANYMORE`;

@@ -29,8 +29,6 @@ class Cart implements ModuleInterface {
 
             if (urlParams.has('method') && urlParams.get('method') === 'buynow') {
                 params.method = 'buynow';
-            } else {
-                params.method = ''
             }
             setUrlParams(params);
             return;
@@ -146,6 +144,7 @@ class Cart implements ModuleInterface {
         }
     }
     bind = (): void => {
+        console.log('Промокоды: dope1, dope2, dope3, dope4');
         const promoField = document.querySelector('.form__field') as HTMLInputElement;
         const promoLabel = document.querySelector('.form__label');
         const discountsUl = document.querySelector('.discounts-ul');
@@ -262,7 +261,7 @@ class Cart implements ModuleInterface {
                                     }
 
                                     let value = parseInt(counterElInput.value);
-                                    const cartTotalAmount = document.querySelector('.cart-total-amount')
+                                    const cartTotalAmount = document.querySelector('.cart-total__amount')
                                     let available = parent.querySelector('.available');
                                     const spanPriceCart = parent.querySelector('.span-price-cart')
                                     const cartSpanTotal = document.querySelector('.cart-span-total')
@@ -394,7 +393,7 @@ class Cart implements ModuleInterface {
                 this.pageNow += 1
                 setUrlParams(this.getCartParams(this.pageNow))
                 if (nextPage) nextPage.disabled = false;
-            } 
+            }
             this.visibleItems()
         });
 
