@@ -132,6 +132,8 @@ class Product implements ModuleInterface {
         })
         return filteredArray;
     }
+    //addAlreadyInCArt = ()
+
     bind = () => {
         const productAddBtn = document.querySelector('.product-add-btn') as HTMLButtonElement
         const btnsContainer = document.querySelector('.buy-buttons-container') as HTMLButtonElement
