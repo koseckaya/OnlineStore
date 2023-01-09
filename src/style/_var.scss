@@ -6,6 +6,25 @@ $red: rgb(199, 10, 10);
 $main: #252525;
 $background: #E5E5E5;
 $text: #252525;
+$primary: #11998e;
+$secondary: #38ef7d;
 
+@mixin for-max-1599px {
+  @media (max-width: 1599px) { @content; }
+}
 
+@mixin for-max-1155px {
+  @media (max-width: 1155px) { @content; }
+}
 
+@mixin for-max-769px {
+  @media (max-width: 769px) { @content; }
+}
+
+@mixin for-max-586px {
+  @media (max-width: 586px) { @content; }
+}
+
+@mixin for-max-524px {
+  @media (max-width: 524px) { @content; }
+}
