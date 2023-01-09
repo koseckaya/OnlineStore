@@ -38,3 +38,6 @@ export interface cartProductType {
 export interface storageItem {
     [key: string]: string | number
 }
+export interface promoCode {
+    [key: string]: number;
+}

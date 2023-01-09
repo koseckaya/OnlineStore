@@ -1,5 +1,5 @@
 
-// @ts-nocheck
+
 import { categories } from '../data';
 import { ModuleInterface } from './types'
 import video from '../img/video.mp4';

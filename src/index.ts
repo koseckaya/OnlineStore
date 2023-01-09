@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import './index.html';
 import './index.scss';
 import Main from './pages/main';
@@ -48,12 +48,12 @@ const router = () => {
     } 
     const amount = document.querySelector('.cart-amount') as HTMLElement;
     if (amount && localStorage.getItem('fullCart')) {
-        amount.textContent = `${JSON.parse(localStorage.getItem('fullCart'))?.length}`;
+        amount.textContent = `${JSON.parse(localStorage.getItem('fullCart') || '')?.length}`;
     }
-    if (localStorage.getItem('fullCart') && JSON.parse(localStorage.getItem('fullCart')).length > 0) {
+    if (localStorage.getItem('fullCart') && JSON.parse(localStorage.getItem('fullCart') || '').length > 0) {
         const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
         let arr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
-        let total = arr.reduce((acc : number, curr : storageItem) => acc + items[curr.id].price * curr.amount, 0);
+        let total = arr.reduce((acc : number, curr : storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
         totalMoneyHeader.innerHTML = `$${total}`
     } else {
         const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
