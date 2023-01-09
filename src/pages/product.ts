@@ -414,7 +414,7 @@ class Product implements ModuleInterface {
             window.location.href = '/?method=buynow#/cart';
         })
     }
-    render = () => {
+    render = (): string => {
         if (!this.selectedProduct) return `Product not found`
         return `
             <div class="container">

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import './index.html';
 import './index.scss';
 import Main from './pages/main';
@@ -18,12 +18,12 @@ import { items } from './data';
 
 const router = () => {
     const routes: Routes = {
-        '/': Main,
-        '/product/:id': Product,
-        '/category/:id': Category,
-        '/category': Category,
-        '/cart': Cart,
-        '/about': About,
+        '/': new Main,
+        '/product/:id':  new Product,
+        '/category/:id':  new Category,
+        '/category': new Category,
+        '/cart': new Cart,
+        '/about': new About,
     }
 
     const request = parseRequestURL()
@@ -32,7 +32,7 @@ const router = () => {
         (request.resource ? `/${request.resource}` : '/') +
         (request.id ? `/:id` : '') +
         (request.action ? `/${request.action}` : '');
-    const page: ModuleInterface = routes[parseUrl] ? new routes[parseUrl]() : new Error404();
+    const page: ModuleInterface = routes[parseUrl] ?  routes[parseUrl] : new Error404();
 
     const main = document.getElementById('root') as HTMLInputElement | null
     if (main !== null) {
