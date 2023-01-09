@@ -29,8 +29,9 @@ class Cart implements ModuleInterface {
 
             if (urlParams.has('method') && urlParams.get('method') === 'buynow') {
                 params.method = 'buynow';
+            } else {
+                params.method = ''
             }
-
             setUrlParams(params);
             return;
         }
@@ -383,33 +384,32 @@ class Cart implements ModuleInterface {
             }
             )
         }
-        let nextPage = document.querySelector("#add");
+        let nextPage = document.querySelector("#add") as HTMLButtonElement;
         if (nextPage) nextPage.addEventListener("click", () => {
+            console.log('this.pageNownext', this.pageNow);
             let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
             let pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
-            if (this.pageNow <= pages) {
+            if (this.pageNow == pages) nextPage.disabled = true;
+            if (this.pageNow < pages) {
                 this.pageNow += 1
-
                 setUrlParams(this.getCartParams(this.pageNow))
-                if (nextPage) nextPage.classList.remove('disabled');
-            } else {
-                if (nextPage) nextPage.classList.add('disabled');
-            }
-
-            // let output = document.querySelector("#output") as HTMLSpanElement;
-            // if (output) output.innerText = `${this.pageNow + 1}`;
+                if (nextPage) nextPage.disabled = false;
+            } 
             this.visibleItems()
         });
 
-        let previousPage = document.querySelector("#subtract");
+        let previousPage = document.querySelector("#subtract") as HTMLButtonElement;
         if (previousPage) previousPage.addEventListener("click", () => {
+            console.log('this.pageNow', this.pageNow);
             if (this.pageNow > 1) {
                 this.pageNow -= 1
                 setUrlParams(this.getCartParams(this.pageNow))
-                if (nextPage) nextPage.classList.add('disabled');
+                if (previousPage) previousPage.disabled = false;
                 let output = document.querySelector("#output") as HTMLSpanElement;
                 if (output) output.innerText = `${this.pageNow + 1}`;
                 this.visibleItems()
+            } else {
+                previousPage.disabled = true;
             }
         });
         if (promoField && promoLabel) {

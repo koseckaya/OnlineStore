@@ -193,9 +193,6 @@ class Product implements ModuleInterface {
                                 }
                             }
                             closestCounterInput.value = `${value}`;
-
-                            //this.cartProduct.amount = +closestCounterInput.value
-                            //priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`
                         }
 
                     }
@@ -270,6 +267,7 @@ class Product implements ModuleInterface {
             if (counter) {
                 const counterInput = counter.querySelector('input')
                 if (this.available !== 0) {
+                    console.log('available !== 0');
                     this.cartProduct.size = (document.querySelector('.product-sizes') as HTMLSelectElement).value;
                     const cartAmount = document.querySelector('.cart-amount') as HTMLElement
                     if (localStorage.getItem('fullCart')) {
@@ -319,7 +317,7 @@ class Product implements ModuleInterface {
                             document.querySelector('.counter__button-minus')?.removeAttribute('style');
                         }, 50)
                     }
-                } else {
+                }else {
                     if (counterBtnMinus && counterInput) {
                         counterBtnMinus.style.transition = `0s`;
                         productAddBtn.innerHTML = `NOT AVAILABLE ANYMORE`;

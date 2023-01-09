@@ -1,5 +1,6 @@
 import { CheckoutInterface, storageItem } from '../pages/types';
 import { isValidCreditCard, isExpireValid, phoneNumberFormat, dataFormat } from '../helpers/validation'
+import { setUrlParams } from '../helpers/url';
 
 const visa = require('../img/visa-credit-card.svg') as string
 const master = require('../img/mastercard.svg') as string
@@ -7,23 +8,23 @@ const americanExpress = require('../img/american-express.svg') as string
 const creditCard = require('../img/credit.svg') as string
 
 class Checkout implements CheckoutInterface {
-    isValid: boolean = true 
-    constructor () {}
+    isValid: boolean = true
+    constructor() { }
 
-    handleFocus = (e: FocusEvent):void => {
+    handleFocus = (e: FocusEvent): void => {
         const target = e.target as HTMLInputElement;
         if (target && target.parentNode) {
             (target.parentNode as HTMLElement).classList.add("focus");
         }
     }
     handleBlur = (e: FocusEvent): void => {
-         const el = e.target as HTMLInputElement;
+        const el = e.target as HTMLInputElement;
         if (el && el.value === '') {
             const closestEl = el.closest('.input-box');
             if (closestEl) {
                 closestEl.classList.remove('focus');
             }
-        } 
+        }
     }
     handleSubmit = (e: Event): void => {
         if (!this.isFormValid(e)) return;
@@ -44,14 +45,15 @@ class Checkout implements CheckoutInterface {
                 if (containerEl) {
                     containerEl.removeEventListener('click', this.closeModal)
                     containerEl.classList.remove('show')
+
                 }
                 window.location.href = '/'
             }, 1000)
         })
-        .catch(e => console.log('error', e))
-        .finally(() => button.disabled = false)
-        
-    } 
+            .catch(e => console.log('error', e))
+            .finally(() => button.disabled = false)
+
+    }
     isFormValid = (e: Event): boolean => {
         e.preventDefault();
         this.isValid = true;
@@ -62,21 +64,21 @@ class Checkout implements CheckoutInterface {
         const address = form?.querySelector('#checkout-address') as HTMLInputElement
         const creditCard = form?.querySelector('#card-number') as HTMLInputElement
         const cvv = form?.querySelector('#card-cvv') as HTMLInputElement
-        const cardExpiry = form?.querySelector('#card-data') as HTMLInputElement    
+        const cardExpiry = form?.querySelector('#card-data') as HTMLInputElement
         const reEmail: RegExp = /^[\w-\.]+@[\w-]+\.[a-z]{2,4}$/i;
 
         name.value === "" || name.value.split(' ').length < 2 || name.value.split(' ').some(i => i.trim().length < 3) ?
             this.setInvalid(name) :
             this.setValid(name)
-        
+
         phone.value === "" || phone.value.length < 18 ?
             this.setInvalid(phone) :
             this.setValid(phone)
-            
+
         email.value === "" || !reEmail.test(email.value) ?
             this.setInvalid(email) :
             this.setValid(email)
-                        
+
         address.value === "" || address.value.split(' ').length < 3 || address.value.split(' ').some(i => i.length < 5) ?
             this.setInvalid(address) :
             this.setValid(address)
@@ -85,14 +87,14 @@ class Checkout implements CheckoutInterface {
             this.setInvalid(creditCard) :
             this.setValid(creditCard);
 
-         (!isExpireValid(cardExpiry.value)) ?
+        (!isExpireValid(cardExpiry.value)) ?
             this.setInvalid(cardExpiry) :
             this.setValid(cardExpiry)
-                
+
         cvv.value === "" || cvv?.value.length !== 3 ?
             this.setInvalid(cvv) :
             this.setValid(cvv)
-        
+
         return this.isValid;
     }
     setInvalid = (field: HTMLInputElement): void => {
@@ -100,13 +102,13 @@ class Checkout implements CheckoutInterface {
         if (closestEl) closestEl.classList.add("error")
         this.isValid = false
     }
-    setValid = (field: HTMLInputElement): void => { 
+    setValid = (field: HTMLInputElement): void => {
         const closestEl = field.closest('.input-box')
         if (closestEl) closestEl.classList.remove("error")
     }
     sendDataToBack = (): Promise<storageItem[]> => {
         const result = new Promise<storageItem[]>((res, rej) => {
-        const fullCart = localStorage.getItem('fullCart');
+            const fullCart = localStorage.getItem('fullCart');
             if (fullCart) {
                 let arr: storageItem[] = JSON.parse(fullCart)
                 setTimeout(() => {
@@ -119,7 +121,7 @@ class Checkout implements CheckoutInterface {
     handlePhone = (e: Event): void => {
         if (e.target) {
             let x = (e.target as HTMLInputElement).value
-            if (x) (e.target as HTMLInputElement).value =  phoneNumberFormat(x)
+            if (x) (e.target as HTMLInputElement).value = phoneNumberFormat(x)
         }
     }
     handleData = (e: Event): void => {
@@ -134,7 +136,7 @@ class Checkout implements CheckoutInterface {
             .replace(/\D/g, "")
             .match(/(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})/);
         if (x) (e.target as HTMLInputElement).value = `${x[1]} ${x[2]} ${x[3]} ${x[4]}`.trim();
-        
+
         const image = document.querySelector('.input-image')
         if (e.target) {
             switch ((e.target as HTMLInputElement).value[0]) {
@@ -153,12 +155,13 @@ class Checkout implements CheckoutInterface {
             }
         }
     }
-    
+
     closeModal = (e: Event): void => {
-        if (e.target == document.querySelector('.modal-container')) { 
+        if (e.target == document.querySelector('.modal-container')) {
             (document.querySelector('.modal') as HTMLDivElement).innerHTML = ''
             if (e.target) (e.target as HTMLElement).classList.remove('show')
-        } 
+            setUrlParams({});
+        }
     }
     unbind = (): void => {
         document.querySelector('.modal-container')?.removeEventListener('click', this.closeModal)
@@ -170,7 +173,7 @@ class Checkout implements CheckoutInterface {
             modalContainer?.classList.add('show')
             modalContainer.addEventListener('click', this.closeModal);
         }
-       const inputs = document.querySelectorAll('.checkout__input ')
+        const inputs = document.querySelectorAll('.checkout__input ')
         for (let i = 0; i < inputs.length; i++) {
             const element = inputs[i] as HTMLSelectElement;
             element.addEventListener('focus', this.handleFocus)
@@ -188,7 +191,7 @@ class Checkout implements CheckoutInterface {
         cardNumber?.addEventListener('input', this.handleCardNumber)
     }
     render = () => {
-       
+
         const modal = document.querySelector('.modal')
         if (modal) modal.innerHTML = `
             <div class="checkout-container">
