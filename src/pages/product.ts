@@ -132,9 +132,8 @@ class Product implements ModuleInterface {
         })
         return filteredArray;
     }
-    //addAlreadyInCArt = ()
 
-    bind = () => {
+    bind = (): void => {
         const productAddBtn = document.querySelector('.product-add-btn') as HTMLButtonElement
         const btnsContainer = document.querySelector('.buy-buttons-container') as HTMLButtonElement
         const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
@@ -145,11 +144,12 @@ class Product implements ModuleInterface {
                 productAddBtn.innerHTML = `NOT AVAILABLE ANYMORE`;
                 productAddBtn.style.background = `grey`;
             }
-            if (this.itemWeNeedToFind && btnsContainer && alreadyIn) {
+            if (this.itemWeNeedToFind && btnsContainer && !alreadyIn) {
                 let availableInCart = document.createElement('div');
                 availableInCart.classList.add('already-in');
                 availableInCart.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
                 btnsContainer.appendChild(availableInCart);
+                const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
                 availableInCart.style.left = `${(btnsContainer.offsetWidth / 2) - (alreadyIn.offsetWidth / 2)}px`;
             }
         }
@@ -171,14 +171,10 @@ class Product implements ModuleInterface {
                         let value = parseInt(closestCounterInput.value);
                         const priceSpan = document.querySelector('.price-span')
                         if (priceSpan && this.selectedProduct) {
+
                             if (target.classList.contains('counter__button-plus') && value < this.available) {
                                 value++;
                                 closestCounterInput.value = `${value}`
-                                //if (target.classList.contains('counter__button-plus') && value < this.available)
-
-                                console.log('12');
-                                //value++;
-                                //closestCounterInput.value = `${value}`
                                 this.cartProduct.amount = +(closestCounterInput.value)
                                 priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`
                             } else if (target.classList.contains('counter__button-minus')) {
@@ -187,22 +183,24 @@ class Product implements ModuleInterface {
                                 this.cartProduct.amount = +(closestCounterInput.value)
                                 priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`
                             }
-                            this.cartProduct.amount = +closestCounterInput.value
-                            priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`
-                        }
-                        const counterBtnMinus = closestCounter.querySelector('.counter__button-minus')
-                        if (counterBtnMinus) {
-                            if (value <= 1) {
-                                value = 1;
-                                counterBtnMinus.classList.add('disabled')
-                            } else {
-                                counterBtnMinus.classList.remove('disabled')
+                            const counterBtnMinus = closestCounter.querySelector('.counter__button-minus')
+                            if (counterBtnMinus) {
+                                if (value <= 1) {
+                                    value = 1;
+                                    counterBtnMinus.classList.add('disabled')
+                                } else {
+                                    counterBtnMinus.classList.remove('disabled')
+                                }
                             }
+                            closestCounterInput.value = `${value}`;
+
+                            //this.cartProduct.amount = +closestCounterInput.value
+                            //priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`
                         }
-                        closestCounterInput.value = `${value}`;
+
                     }
                 }
-                //}
+
             })
         }
         document.querySelector('.product-sizes')?.addEventListener('change', (e: Event) => {
@@ -228,6 +226,7 @@ class Product implements ModuleInterface {
                             productAddBtn.style.background = `grey`;
                         }
 
+                        const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
                         if (alreadyIn) {
                             alreadyIn.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
                         } else if (!alreadyIn) {
@@ -253,6 +252,7 @@ class Product implements ModuleInterface {
                         </svg>
                         <span class="price-span">$${this.selectedProduct.price} USD</span>`
                     document.querySelector('.product-add-btn')?.removeAttribute('style');
+                    const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
                     if (alreadyIn) {
                         btnsContainer.removeChild(alreadyIn)
                     } else if (!alreadyIn) {
@@ -295,6 +295,7 @@ class Product implements ModuleInterface {
                     if (storageGetItem.filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size).length > 0) {
                         this.itemWeNeedToFind = storageGetItem.filter(el => el.id === this.cartProduct.id && el.size === this.cartProduct.size)[0];
                         this.available = 10 - +this.itemWeNeedToFind.amount;
+                        const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
                         if (alreadyIn) {
                             alreadyIn.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
                         } else if (!alreadyIn) {
@@ -413,7 +414,7 @@ class Product implements ModuleInterface {
             window.location.href = '/?method=buynow#/cart';
         })
     }
-    render = () => {
+    render = (): string => {
         if (!this.selectedProduct) return `Product not found`
         return `
             <div class="container">
