@@ -57,7 +57,12 @@ module.exports = {
           {
             loader: "resolve-url-loader"
           },
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true
+            }
+          }
         ],
       },
       {// Fonts
