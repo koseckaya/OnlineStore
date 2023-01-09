@@ -63,7 +63,6 @@ class Header implements HeaderInterface {
         if (burgerIcon) {
         const nav = document.querySelector('.nav');
         window.addEventListener('click', (e) => {
-                console.log(e.target)
                 if (e.target === burgerIcon) {
                     burgerIcon.classList.remove('open');
                     nav?.classList.remove('openMenu');
