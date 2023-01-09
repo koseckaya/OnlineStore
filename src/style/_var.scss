@@ -28,3 +28,7 @@ $secondary: #38ef7d;
 @mixin for-max-524px {
   @media (max-width: 524px) { @content; }
 }
+
+@mixin for-max-922px {
+  @media (max-width: 922px) { @content; }
+}
