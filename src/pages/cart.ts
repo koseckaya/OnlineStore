@@ -3,14 +3,67 @@ import Checkout from "../modules/checkout";
 import { getUrlParams } from '../helpers/utils';
 import { items, categories } from "../data";
 import { CheckoutInterface, ModuleInterface, promoCode, storageItem } from "./types";
+import { setUrlParams } from './../helpers/url';
+import { url } from "inspector";
 
 
 class Cart implements ModuleInterface {
     checkoutModule: CheckoutInterface | null = null;
-    pageNow = 0;
+    pageNow = 1;
     itemsPerPage = 4;
     available = 10;
-    constructor() { }
+    constructor() {
+        let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
+
+
+        const urlParams: URLSearchParams = getUrlParams();
+
+        if (!urlParams.has('page') || !urlParams.has('limit')) {
+            const params: {
+                page: string,
+                limit: string,
+                method?: string,
+            } = {
+                ...this.getCartParams()
+            };
+
+            if (urlParams.has('method') && urlParams.get('method') === 'buynow') {
+                params.method = 'buynow';
+            }
+
+            setUrlParams(params);
+            return;
+        }
+
+        if (urlParams.has('limit')) {
+            const getLimit = Number(urlParams.get('limit'));
+
+            if (getLimit == 3 || getLimit == 4) {
+                this.itemsPerPage = getLimit;
+            } else {
+                setUrlParams(this.getCartParams())
+            }
+        }
+
+        if (urlParams.has('page')) {
+            const getPages = Number(urlParams.get('page'));
+            const pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
+            console.log(getPages, pages);
+
+            if (getPages >= 1 && getPages <= pages) {
+                this.pageNow = Number(urlParams.get('page'))
+            } else {
+                setUrlParams(this.getCartParams())
+            }
+        }
+    }
+
+    getCartParams = (newPage: number | string | null = null, newLimit: number | string | null = null) => {
+        return {
+            page: String(newPage || this.pageNow),
+            limit: String(newLimit || this.itemsPerPage)
+        };
+    }
 
     createProductDiv = (): string => {
         let string: string = ``;
@@ -70,10 +123,12 @@ class Cart implements ModuleInterface {
     }
     visibleItems = (): void => {
         const productCart: NodeListOf<HTMLElement> = document.querySelectorAll('.product-cart')
-        if (this.pageNow !== 0) {
+        console.log(this.pageNow)
+        if (this.pageNow !== 1) {
             productCart.forEach((el, index) => {
-                let start = this.pageNow * this.itemsPerPage;
+                let start = (this.pageNow - 1) * this.itemsPerPage;
                 let end = start + this.itemsPerPage;
+                console.log(start, end, index);
                 if (!(index > start - 1 && index < end)) {
                     el.style.display = `none`;
                 } else {
@@ -333,21 +388,29 @@ class Cart implements ModuleInterface {
         if (nextPage) nextPage.addEventListener("click", () => {
             let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
             let pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
-            if (this.pageNow < pages - 1) {
+            console.log('0----21-3-21-3-123');
+            console.log(productsInLocalStorage.length, this.itemsPerPage)
+            console.log(this.pageNow, pages);
+            if (this.pageNow <= pages) {
+                console.log(555);
                 this.pageNow += 1
+
+                setUrlParams(this.getCartParams(this.pageNow))
                 if (nextPage) nextPage.classList.remove('disabled');
             } else {
                 if (nextPage) nextPage.classList.add('disabled');
             }
-            let output = document.querySelector("#output") as HTMLSpanElement;
-            if (output) output.innerText = `${this.pageNow + 1}`;
+
+            // let output = document.querySelector("#output") as HTMLSpanElement;
+            // if (output) output.innerText = `${this.pageNow + 1}`;
             this.visibleItems()
         });
 
         let previousPage = document.querySelector("#subtract");
         if (previousPage) previousPage.addEventListener("click", () => {
-            if (this.pageNow >= 1) {
+            if (this.pageNow > 1) {
                 this.pageNow -= 1
+                setUrlParams(this.getCartParams(this.pageNow))
                 if (nextPage) nextPage.classList.add('disabled');
                 let output = document.querySelector("#output") as HTMLSpanElement;
                 if (output) output.innerText = `${this.pageNow + 1}`;
@@ -479,6 +542,8 @@ class Cart implements ModuleInterface {
                 const target = e.target as HTMLSelectElement
                 let limitValue = +(target.value)
                 this.itemsPerPage = limitValue;
+                setUrlParams(this.getCartParams(null, this.itemsPerPage));
+
                 this.visibleItems();
                 if (limitValue === 3) {
                     productCart.forEach((el) => el.classList.add('padding'));
@@ -500,7 +565,7 @@ class Cart implements ModuleInterface {
                     <span>Pages: </span>
                     <div class="counter-pagination">
                         <button id="subtract"><svg id="left-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.028 0v6.425l5.549 5.575-5.549 5.575v6.425l11.944-12z"/></svg></button>
-                            <span id="output">1</span>
+                            <span id="output">${this.pageNow}</span>
                         <button id="add"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.028 0v6.425l5.549 5.575-5.549 5.575v6.425l11.944-12z"/></svg></button>
                     </div>
                 </div>
@@ -508,8 +573,8 @@ class Cart implements ModuleInterface {
                     <span>Visible items per page: </span>
                     <div class="cart-limit-select">
                         <select class="cart-limit">
-                            <option class="limit-option">4</option>
-                            <option class="limit-option">3</option>
+                            <option class="limit-option" ${this.itemsPerPage == 4 ? 'selected="selected"' : ''}>4</option>
+                            <option class="limit-option" ${this.itemsPerPage == 3 ? 'selected="selected"' : ''}>3</option>
                         </select>
                     </div>
                 </div>

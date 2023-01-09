@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import './index.html';
 import './index.scss';
 import Main from './pages/main';
@@ -18,21 +18,21 @@ import { items } from './data';
 
 const router = () => {
     const routes: Routes = {
-    '/': new Main(),
-    '/product/:id': new Product(),
-    '/category/:id': new Category(),
-    '/category': new Category(),
-    '/cart': new Cart(),
-    '/about' : new About(),
+        '/': Main,
+        '/product/:id': Product,
+        '/category/:id': Category,
+        '/category': Category,
+        '/cart': Cart,
+        '/about': About,
     }
 
     const request = parseRequestURL()
- 
+
     const parseUrl =
         (request.resource ? `/${request.resource}` : '/') +
         (request.id ? `/:id` : '') +
         (request.action ? `/${request.action}` : '');
-    const page: ModuleInterface = routes[parseUrl] ? routes[parseUrl] : new Error404();
+    const page: ModuleInterface = routes[parseUrl] ? new routes[parseUrl]() : new Error404();
 
     const main = document.getElementById('root') as HTMLInputElement | null
     if (main !== null) {
@@ -42,10 +42,10 @@ const router = () => {
 
     const HeaderModule = new Header();
     HeaderModule.init();
-    
+
     if (!localStorage.getItem('fullCart')) {
         localStorage.setItem('fullCart', JSON.stringify([]))
-    } 
+    }
     const amount = document.querySelector('.cart-amount') as HTMLElement;
     if (amount && localStorage.getItem('fullCart')) {
         amount.textContent = `${JSON.parse(localStorage.getItem('fullCart') || '')?.length}`;
@@ -53,7 +53,7 @@ const router = () => {
     if (localStorage.getItem('fullCart') && JSON.parse(localStorage.getItem('fullCart') || '').length > 0) {
         const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
         let arr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
-        let total = arr.reduce((acc : number, curr : storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+        let total = arr.reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
         totalMoneyHeader.innerHTML = `$${total}`
     } else {
         const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
