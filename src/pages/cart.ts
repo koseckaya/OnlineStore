@@ -3,7 +3,7 @@ import Checkout from "../modules/checkout";
 import { getUrlParams } from '../helpers/utils';
 import { items, categories } from "../data";
 import { CheckoutInterface, ModuleInterface, promoCode, storageItem } from "./types";
-import { NULL } from "sass";
+
 
 class Cart implements ModuleInterface {
     checkoutModule: CheckoutInterface | null = null;
@@ -168,7 +168,7 @@ class Cart implements ModuleInterface {
 
 
                     let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                    let discount:number = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
+                    let discount: number = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
                     let newValue = Math.round(total - (total - discount));
                     cartSpanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
                     let discountSpan = document.querySelector('.cart-span-discount');
@@ -191,133 +191,135 @@ class Cart implements ModuleInterface {
         if (counters) {
             counters.forEach(counter => {
                 counter.addEventListener('click', e => {
+
                     const target = e.target as HTMLElement
                     if (target) {
                         const parent = target.closest('.product-cart');
                         const counterEl = target.closest('.counter');
-                        if (parent && counterEl) { 
+                        if (parent && counterEl) {
                             const parentId = parent.getAttribute('id');
                             const parentSize = parent.getAttribute('size');
                             const counterElInput = counterEl.querySelector('input')
-                            if (counterElInput && parentId) { 
+                            if (counterElInput && parentId) {
                                 if (target.closest('.counter__button')) {
-                                    
+
                                     if (counterElInput.value == '' && (target.classList.contains('counter__button-minus') || target.classList.contains('counter__button-plus'))) {
                                         counterElInput.value = '1';
                                     }
 
                                     let value = parseInt(counterElInput.value);
-                                const cartTotalAmount = document.querySelector('.cart-total-amount')
-                                let available = parent.querySelector('.available');
-                                const spanPriceCart = parent.querySelector('.span-price-cart')
-                                const cartSpanTotal= document.querySelector('.cart-span-total') 
+                                    const cartTotalAmount = document.querySelector('.cart-total-amount')
+                                    let available = parent.querySelector('.available');
+                                    const spanPriceCart = parent.querySelector('.span-price-cart')
+                                    const cartSpanTotal = document.querySelector('.cart-span-total')
 
-                                if (target.classList.contains('counter__button-plus') && value < this.available) {
-                                    let productsInLocalStorage: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
-                                    value++;
-                                    productsInLocalStorage.forEach(el => {
-                                        if (parentId === el.id && parentSize === el.size) {
-                                            el.amount = value
+                                    if (target.classList.contains('counter__button-plus') && value < this.available) {
+                                        let productsInLocalStorage: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
+                                        value++;
+                                        productsInLocalStorage.forEach(el => {
+                                            if (Number(parentId) === Number(el.id) && parentSize === el.size) {
+                                                el.amount = value
+                                            }
+                                        })
+
+                                        localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
+                                        let amount = JSON.parse(localStorage.getItem('fullCart') || '').length;
+                                        if (available && cartTotalAmount && spanPriceCart && cartSpanTotal) {
+                                            cartTotalAmount.innerHTML = `${amount}`;
+                                            counterElInput.value = `${value}`;
+                                            spanPriceCart.innerHTML = `$${items[+parentId].price * value}`;
+                                            available.innerHTML = `Available: ${this.available - value}`
+
+                                            if (arrOfAddedPromo.length === 0) {
+                                                let total: number = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+                                                cartTotalAmount.innerHTML = `$${total} USD`
+                                            } else if (arrOfAddedPromo.length > 0) {
+                                                let total: number = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+                                                let discount = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
+                                                let newValue = Math.round(total - (total - discount));
+                                                cartSpanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
+                                                let discountSpan = document.querySelector('.cart-span-discount');
+                                                if (discountSpan) discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
+                                            }
                                         }
-                                    })
-                                    localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
-                                    let amount = JSON.parse(localStorage.getItem('fullCart') || '').length;
-                                    if (available && cartTotalAmount && spanPriceCart && cartSpanTotal){
-                                        cartTotalAmount.innerHTML = `${amount}`;
-                                        counterElInput.value = `${value}`;
-                                        spanPriceCart.innerHTML = `$${items[+parentId].price * value}`;
-                                        available.innerHTML = `Available: ${this.available - value}`
-                                   
-                                        if (arrOfAddedPromo.length === 0) {
-                                            let total:number = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                                            cartTotalAmount.innerHTML = `$${total} USD`
-                                        } else if (arrOfAddedPromo.length > 0) {
-                                            let total: number= JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+                                    } else if (target.classList.contains('counter__button-minus') && value === 1) {
+                                        let productsInLocalStorage: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
+                                        let neededItem = productsInLocalStorage.filter((el, _index) => +(el.id) === +(parentId) && el.size === parentSize);
+                                        let idOfNeededItem = productsInLocalStorage.indexOf(neededItem[0]);
+                                        productsInLocalStorage.splice(idOfNeededItem, 1);
+                                        localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
+                                        document.querySelector('.cart-products')?.removeChild(parent);
+                                        let amount = JSON.parse(localStorage.getItem('fullCart') || '').length;
+                                        let cartSpanAmount = document.querySelector('.cart-span-amount')
+                                        if (cartSpanAmount) cartSpanAmount.innerHTML = `${amount}`;
+                                        if (arrOfAddedPromo.length === 0 && cartSpanTotal) {
+                                            let total: number = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+                                            cartSpanTotal.innerHTML = `$${total} USD`
+                                        } else if (arrOfAddedPromo.length > 0 && cartSpanTotal) {
+                                            let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
                                             let discount = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
                                             let newValue = Math.round(total - (total - discount));
                                             cartSpanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
                                             let discountSpan = document.querySelector('.cart-span-discount');
                                             if (discountSpan) discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
                                         }
-                                    }
-                                } else if (target.classList.contains('counter__button-minus') && value === 1) {
-                                    let productsInLocalStorage: storageItem[]  = JSON.parse(localStorage.getItem('fullCart') || '');
-                                    let neededItem = productsInLocalStorage.filter((el, _index) => +(el.id) === +(parentId) && el.size === parentSize);
-                                    let idOfNeededItem = productsInLocalStorage.indexOf(neededItem[0]);
-                                    productsInLocalStorage.splice(idOfNeededItem, 1);
-                                    localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
-                                    document.querySelector('.cart-products')?.removeChild(parent);
-                                    let amount = JSON.parse(localStorage.getItem('fullCart') || '').length;
-                                    let cartSpanAmount = document.querySelector('.cart-span-amount')
-                                    if (cartSpanAmount) cartSpanAmount.innerHTML = `${amount}`;
-                                    if (arrOfAddedPromo.length === 0 && cartSpanTotal) {
-                                        let total: number = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                                        cartSpanTotal.innerHTML = `$${total} USD`
-                                    } else if (arrOfAddedPromo.length > 0 && cartSpanTotal) {
-                                        let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                                        let discount = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
-                                        let newValue = Math.round(total - (total - discount));
-                                        cartSpanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
-                                        let discountSpan = document.querySelector('.cart-span-discount');
-                                        if (discountSpan) discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
-                                    }
-                                } else if (target.classList.contains('counter__button-minus') && value > 1) {
-                                    let productsInLocalStorage: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
-                                    value--;
-                                    productsInLocalStorage.forEach(el => {
-                                        if (parentId === el.id && parentSize === el.size) {
-                                            el.amount = value
+                                    } else if (target.classList.contains('counter__button-minus') && value > 1) {
+                                        let productsInLocalStorage: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
+                                        value--;
+                                        productsInLocalStorage.forEach(el => {
+                                            if (Number(parentId) === Number(el.id) && parentSize === el.size) {
+                                                el.amount = value
+                                            }
+                                        })
+                                        localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
+                                        let amount = JSON.parse(localStorage.getItem('fullCart') || '').length;
+                                        let cartSpanAmount = document.querySelector('.cart-span-amount')
+                                        if (cartSpanAmount) cartSpanAmount.innerHTML = `${amount}`;
+                                        counterElInput.value = `${value}`;
+                                        if (spanPriceCart) spanPriceCart.innerHTML = `$${items[+parentId].price * value}`;
+                                        let available = parent.querySelector('.available');
+                                        if (available) available.innerHTML = `Available: ${this.available - value}`
+                                        if (arrOfAddedPromo.length === 0) {
+                                            let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+                                            if (cartSpanTotal) cartSpanTotal.innerHTML = `$${total} USD`
+                                        } else if (arrOfAddedPromo.length > 0) {
+                                            let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+                                            let discount = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
+                                            let newValue = Math.round(total - (total - discount));
+                                            if (cartSpanTotal) cartSpanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
+                                            let discountSpan = document.querySelector('.cart-span-discount');
+                                            if (discountSpan) discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
                                         }
-                                    })
-                                    localStorage.setItem('fullCart', `${JSON.stringify(productsInLocalStorage)}`);
-                                    let amount = JSON.parse(localStorage.getItem('fullCart') || '').length;
-                                    let cartSpanAmount = document.querySelector('.cart-span-amount')
-                                    if (cartSpanAmount) cartSpanAmount.innerHTML = `${amount}`;
-                                    counterElInput.value = `${value}`;
-                                    if (spanPriceCart) spanPriceCart.innerHTML = `$${items[+parentId].price * value}`;
-                                    let available = parent.querySelector('.available');
-                                    if (available) available.innerHTML = `Available: ${this.available - value}`
-                                    if (arrOfAddedPromo.length === 0) {
-                                        let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                                        if (cartSpanTotal) cartSpanTotal.innerHTML = `$${total} USD`
-                                    } else if (arrOfAddedPromo.length > 0) {
-                                        let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                                        let discount = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
-                                        let newValue = Math.round(total - (total - discount));
-                                        if (cartSpanTotal) cartSpanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`;
-                                        let discountSpan = document.querySelector('.cart-span-discount');
-                                        if (discountSpan) discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
-                                    }
 
-                                }
-                                if (localStorage.getItem('fullCart')) {
-                                    let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
-                                    let cartAmount = document.querySelector('.cart-amount')
-                                    if (cartAmount) cartAmount.innerHTML = `${productsInLocalStorage.length}`;
-                                }
-                                document.querySelectorAll('.product-cart__number').forEach((el, index) => el.innerHTML = `${index + 1}`)
-                                counterElInput.value = `${value}`;
-                                let arrayOfProductCart = document.querySelectorAll('.product-cart');
-                                document.querySelectorAll('.product-cart').forEach((_el, _index) => {
-                                    if (!Array.from(arrayOfProductCart).some(el => el.getAttribute('style') === '')) {
-                                        this.pageNow -= 1;
-                                        let output = document.getElementById('output')
-                                        if (output) output.innerText = `${this.pageNow + 1}`;
+                                    }
+                                    if (localStorage.getItem('fullCart')) {
+                                        let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
+                                        let cartAmount = document.querySelector('.cart-amount')
+                                        if (cartAmount) cartAmount.innerHTML = `${productsInLocalStorage.length}`;
+                                    }
+                                    document.querySelectorAll('.product-cart__number').forEach((el, index) => el.innerHTML = `${index + 1}`)
+                                    counterElInput.value = `${value}`;
+                                    let arrayOfProductCart = document.querySelectorAll('.product-cart');
+                                    document.querySelectorAll('.product-cart').forEach((_el, _index) => {
+                                        if (!Array.from(arrayOfProductCart).some(el => el.getAttribute('style') === '')) {
+                                            this.pageNow -= 1;
+                                            let output = document.getElementById('output')
+                                            if (output) output.innerText = `${this.pageNow + 1}`;
+                                            this.visibleItems()
+                                        };
                                         this.visibleItems()
-                                    };
-                                    this.visibleItems()
-                                });
+                                    });
                                     if (localStorage.getItem('fullCart') && JSON.parse(localStorage.getItem('fullCart') || '').length > 0) {
-                                    const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
-                                    let arr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
-                                    let total = arr.reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                                    totalMoneyHeader.innerHTML = `$${total}`
-                                } else {
-                                    const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
-                                    totalMoneyHeader.innerHTML = `$0`
-                                }
+                                        const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                                        let arr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
+                                        let total = arr.reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+                                        totalMoneyHeader.innerHTML = `$${total}`
+                                    } else {
+                                        const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
+                                        totalMoneyHeader.innerHTML = `$0`
+                                    }
                                     let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
-                                if (productsInLocalStorage.length === 0 || !productsInLocalStorage) return location.reload()
+                                    if (productsInLocalStorage.length === 0 || !productsInLocalStorage) return location.reload()
                                 }
                             }
                         }
@@ -329,19 +331,19 @@ class Cart implements ModuleInterface {
         }
         let nextPage = document.querySelector("#add");
         if (nextPage) nextPage.addEventListener("click", () => {
-                let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
-                let pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
-                if (this.pageNow < pages - 1) {
-                    this.pageNow += 1
-                    if (nextPage) nextPage.classList.remove('disabled');
-                } else {
-                    if (nextPage) nextPage.classList.add('disabled');
-                }
-                let output = document.querySelector("#output") as HTMLSpanElement;
-                if (output) output.innerText = `${this.pageNow + 1}`;
-                this.visibleItems()
+            let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
+            let pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
+            if (this.pageNow < pages - 1) {
+                this.pageNow += 1
+                if (nextPage) nextPage.classList.remove('disabled');
+            } else {
+                if (nextPage) nextPage.classList.add('disabled');
+            }
+            let output = document.querySelector("#output") as HTMLSpanElement;
+            if (output) output.innerText = `${this.pageNow + 1}`;
+            this.visibleItems()
         });
- 
+
         let previousPage = document.querySelector("#subtract");
         if (previousPage) previousPage.addEventListener("click", () => {
             if (this.pageNow >= 1) {
@@ -352,10 +354,10 @@ class Cart implements ModuleInterface {
                 this.visibleItems()
             }
         });
-        if (promoField && promoLabel) {  
+        if (promoField && promoLabel) {
             promoBtn?.addEventListener('click', () => {
-                
-                
+
+
                 if (promoField.value in promoValue && !arrOfAddedPromo.includes(`${promoValue[promoField.value]}`)) {
                     promoBtn.setAttribute("style", "background-color: green;")
                     promoLabel.setAttribute("style", "color: green;")
@@ -379,17 +381,18 @@ class Cart implements ModuleInterface {
                     if (arrOfAddedPromo.length > 0) {
                         discount = +(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total;
                     } else discount = 0;
-                    
+
                     let discountSpan = document.querySelector('.cart-span-discount');
                     let spanTotal = document.querySelector('.cart-span-total');
                     let newValue = Math.round(total - (total - discount));
-                    if (discountSpan && spanTotal) { 
+                    if (discountSpan && spanTotal) {
                         discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
-                        
+
                         spanTotal.innerHTML = `<span style='color: green;'>$${Math.round(total - newValue)} USD</span> <span style='text-decoration: line-through; color: grey;'>$${total} USD</span>`
                         discountsUl?.appendChild(elementLi);
                         elementLi.addEventListener('click', (e: Event) => {
                             const target = e.target as HTMLElement
+                            console.log('arrOfAddedPromo', arrOfAddedPromo, target);
                             let discountLi = target.closest('.discount-li')
                             if (target.closest('.delete-discount') && discountLi) {
                                 let discount = discountLi.getAttribute('discount');
@@ -405,15 +408,16 @@ class Cart implements ModuleInterface {
                                 } else {
                                     discount = '0';
 
+                                    console.log(arrOfAddedPromo);
+
                                     arrOfAddedPromo.splice(indexOfDiscount, 1);
-                                    total = JSON.parse(localStorage.getItem('fullCart')|| '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
-                                    discount = `${+(arrOfAddedPromo.reduce((a, b) => +a + b)) / 100 * total}`;
+                                    total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+                                    discount = `${+(arrOfAddedPromo.reduce((a, b) => a + Number(b), 0)) / 100 * total}`;
                                     newValue = Math.round(total - (total - +discount));
                                     if (discountSpan) discountSpan.innerHTML = `$${Math.round(newValue)} USD`;
                                     if (spanTotal) spanTotal.innerHTML = `<span>$${total} USD</span>`
                                     discountsUl?.removeChild(elementLi);
                                 }
-
                             }
                         })
                     }
@@ -434,14 +438,14 @@ class Cart implements ModuleInterface {
                         }
                         return false;
                     })
-                         
+
                     let indexOf = neededItem.indexOf(filteredItemIndex[0]);
                     let discountLi = document.querySelectorAll('.discount-li')
                     if (filteredItemIndex.length > 0) {
                         promoBtn.setAttribute("style", "pointerEvents: none;")
                         discountLi[indexOf].setAttribute("style", "animationName: horizontal;")
                         discountLi[indexOf].setAttribute("style", "animationDuration: 1.5s;")
-                        
+
                         setTimeout(() => {
                             document.querySelectorAll('.discount-li')[indexOf].removeAttribute('style');
                             promoBtn.removeAttribute('style');
@@ -449,7 +453,7 @@ class Cart implements ModuleInterface {
                     }
                 } else {
                     promoBtn.setAttribute("style", "background-color: red;")
-                    promoBtn.setAttribute("style", "color: red;") 
+                    promoBtn.setAttribute("style", "color: red;")
                     let formLabel = document.querySelector('.form__field');
                     let deletedValue = setInterval(() => {
                         if (promoField.value.length === 0) {
@@ -459,9 +463,9 @@ class Cart implements ModuleInterface {
                             promoLabel?.removeAttribute('style');
                         }
                         if (formLabel && promoField.value.length > 0) {
-                            formLabel.setAttribute("style", "border-image: linear-gradient(to right, red, #ffd199) 100% / 1 / 0 stretch;") 
-                            formLabel.setAttribute("style", "border-width: 3px;") 
-                            formLabel.setAttribute("style", "border-image-slice: 1;") 
+                            formLabel.setAttribute("style", "border-image: linear-gradient(to right, red, #ffd199) 100% / 1 / 0 stretch;")
+                            formLabel.setAttribute("style", "border-width: 3px;")
+                            formLabel.setAttribute("style", "border-image-slice: 1;")
                         }
                         promoField.value = promoField.value.slice(0, promoField.value.length - 1);
                     }, 175)
@@ -486,7 +490,7 @@ class Cart implements ModuleInterface {
     }
     render = () => {
         if (localStorage.getItem('fullCart')) {
-            if (JSON.parse(localStorage.getItem('fullCart')|| '').length === 0) {
+            if (JSON.parse(localStorage.getItem('fullCart') || '').length === 0) {
                 return `<div class="empty-cart"><span>Sorry, but cart is empty. You need to add products.</span><svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 231.523 231.523" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M107.415,145.798c0.399,3.858,3.656,6.73,7.451,6.73c0.258,0,0.518-0.013,0.78-0.04c4.12-0.426,7.115-4.111,6.689-8.231 l-3.459-33.468c-0.426-4.12-4.113-7.111-8.231-6.689c-4.12,0.426-7.115,4.111-6.689,8.231L107.415,145.798z"></path> <path d="M154.351,152.488c0.262,0.027,0.522,0.04,0.78,0.04c3.796,0,7.052-2.872,7.451-6.73l3.458-33.468 c0.426-4.121-2.569-7.806-6.689-8.231c-4.123-0.421-7.806,2.57-8.232,6.689l-3.458,33.468 C147.235,148.377,150.23,152.062,154.351,152.488z"></path> <path d="M96.278,185.088c-12.801,0-23.215,10.414-23.215,23.215c0,12.804,10.414,23.221,23.215,23.221 c12.801,0,23.216-10.417,23.216-23.221C119.494,195.502,109.079,185.088,96.278,185.088z M96.278,216.523 c-4.53,0-8.215-3.688-8.215-8.221c0-4.53,3.685-8.215,8.215-8.215c4.53,0,8.216,3.685,8.216,8.215 C104.494,212.835,100.808,216.523,96.278,216.523z"></path> <path d="M173.719,185.088c-12.801,0-23.216,10.414-23.216,23.215c0,12.804,10.414,23.221,23.216,23.221 c12.802,0,23.218-10.417,23.218-23.221C196.937,195.502,186.521,185.088,173.719,185.088z M173.719,216.523 c-4.53,0-8.216-3.688-8.216-8.221c0-4.53,3.686-8.215,8.216-8.215c4.531,0,8.218,3.685,8.218,8.215 C181.937,212.835,178.251,216.523,173.719,216.523z"></path> <path d="M218.58,79.08c-1.42-1.837-3.611-2.913-5.933-2.913H63.152l-6.278-24.141c-0.86-3.305-3.844-5.612-7.259-5.612H18.876 c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h24.94l6.227,23.946c0.031,0.134,0.066,0.267,0.104,0.398l23.157,89.046 c0.86,3.305,3.844,5.612,7.259,5.612h108.874c3.415,0,6.399-2.307,7.259-5.612l23.21-89.25C220.49,83.309,220,80.918,218.58,79.08z M183.638,165.418H86.362l-19.309-74.25h135.895L183.638,165.418z"></path> <path d="M105.556,52.851c1.464,1.463,3.383,2.195,5.302,2.195c1.92,0,3.84-0.733,5.305-2.198c2.928-2.93,2.927-7.679-0.003-10.607 L92.573,18.665c-2.93-2.928-7.678-2.927-10.607,0.002c-2.928,2.93-2.927,7.679,0.002,10.607L105.556,52.851z"></path> <path d="M159.174,55.045c1.92,0,3.841-0.733,5.306-2.199l23.552-23.573c2.928-2.93,2.925-7.679-0.005-10.606 c-2.93-2.928-7.679-2.925-10.606,0.005l-23.552,23.573c-2.928,2.93-2.925,7.679,0.005,10.607 C155.338,54.314,157.256,55.045,159.174,55.045z"></path> <path d="M135.006,48.311c0.001,0,0.001,0,0.002,0c4.141,0,7.499-3.357,7.5-7.498l0.008-33.311c0.001-4.142-3.356-7.501-7.498-7.502 c-0.001,0-0.001,0-0.001,0c-4.142,0-7.5,3.357-7.501,7.498l-0.008,33.311C127.507,44.951,130.864,48.31,135.006,48.311z"></path> </g> </g></svg></div>`
             }
             let amount = JSON.parse(localStorage.getItem('fullCart') || '').length;
