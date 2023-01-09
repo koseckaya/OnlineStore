@@ -173,16 +173,17 @@ class Product implements ModuleInterface {
                                 value++;
                                 closestCounterInput.value = `${value}`
 
+                
                     if (target.classList.contains('counter__button-plus') && value < this.available) {
                         value++;
-                        target.closest('.counter').querySelector('input').value = value
-                        this.cartProduct.amount = +(target.closest('.counter').querySelector('input').value)
-                        document.querySelector('.price-span')?.innerHTML = `$${this.selectedProduct.price * value} USD`
+                        closestCounterInput.value = `${value}`
+                        this.cartProduct.amount = +(closestCounterInput.value)
+                        priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`
                     } else if (target.classList.contains('counter__button-minus')) {
                         value--;
-                        target.closest('.counter').querySelector('input').value = value
-                        this.cartProduct.amount = +(target.closest('.counter').querySelector('input').value)
-                        document.querySelector('.price-span')?.innerHTML = `$${this.selectedProduct.price * value} USD`
+                        closestCounterInput.value = `${value}`
+                        this.cartProduct.amount = +(closestCounterInput.value)
+                        priceSpan.innerHTML = `$${this.selectedProduct.price * value} USD`
                     }
 
 
@@ -334,8 +335,8 @@ class Product implements ModuleInterface {
             }
             if (localStorage.getItem('fullCart')) {
                 const totalMoneyHeader = document.querySelector('.total-money');
-                let total = JSON.parse(localStorage.getItem('fullCart')).reduce((acc, curr) => acc + items[curr.id].price * curr.amount, 0);
-                totalMoneyHeader.innerHTML = `$${total}`
+                let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
+                if (totalMoneyHeader) totalMoneyHeader.innerHTML = `$${total}`
             }
         })
         document.querySelector('#slides-container')?.addEventListener('click', () => {
@@ -401,10 +402,10 @@ class Product implements ModuleInterface {
                 }
             }
 
-            if (localStorage.getItem('fullCart') && JSON.parse(localStorage.getItem('fullCart')).length > 0) {
+            if (localStorage.getItem('fullCart') && JSON.parse(localStorage.getItem('fullCart') || '').length > 0) {
                 const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
                 let arr: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '');
-                let total = arr.reduce((acc : number, curr : storageItem) => acc + items[curr.id].price * curr.amount, 0);
+                let total = arr.reduce((acc : number, curr : storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
                 totalMoneyHeader.innerHTML = `$${total}`
             } else {
                 const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
@@ -443,7 +444,7 @@ class Product implements ModuleInterface {
                     <img src="${starsImage}" alt="stars-rating-image">
                 </div>
                 <div class="product-available-colors">${this.selectedProduct.availableColors.map((_el, index) => {
-                if (this.selectedProduct.id === this.filterAvailableColors()[index].id) {
+                    if (this.selectedProduct && this.selectedProduct.id === this.filterAvailableColors()[index].id) {
                     return `<a href="#/product/${this.filterAvailableColors()[index].id}"><img class="product-color-btn activated" src="${this.filterAvailableColors()[index].url[0]}"></img></a>`
                 }
                 return `<a href="#/product/${this.filterAvailableColors()[index].id}"><img class="product-color-btn" src="${this.filterAvailableColors()[index].url[0]}"></img></a>`
