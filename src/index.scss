@@ -532,5 +532,10 @@ body .modal-container.show {
     transform: translateX(20%) !important;
 }
 
-
-
+@media (max-width: 500px) {
+    .checkout-container{
+        left: calc(50% - 175px);
+        width: 315px;
+        top: 90px;
+    }
+}
