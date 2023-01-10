@@ -452,7 +452,7 @@ class Category implements ModuleInterface {
         </div>
         <div class='filter-categories'>
             <ul class="categ-list">
-                <li class="categ-item"><a href="/#/category">All</a></li>
+                <li class="categ-item"><a href="index.html/category">All</a></li>
                 ${categories.map(cat => `
                     <li class="categ-item">
                         <a href="index.html#/category/${cat.name.toLowerCase()}">
