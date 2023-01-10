@@ -326,3 +326,23 @@ select option:hover {
     display: none;
     transition: all 1s ease;
 }
+
+@media (max-width: 1200px) {
+    .categories {
+        gap: 5px
+    }
+    .product-list {
+        gap: 5px
+    }
+    .card__image img {
+        width: 210px;
+        height: 260px;
+    }
+
+}
+
+@media (max-width: 860px) {
+    
+  
+
+}
