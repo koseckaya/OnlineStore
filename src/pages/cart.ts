@@ -193,7 +193,7 @@ class Cart implements ModuleInterface {
                     let amount = JSON.parse(localStorage.getItem('fullCart') || '').length;
                     const cartSpanAmount = document.querySelector('.cart-span-amount')
                     const cartProducts = document.querySelector('.cart-products')
-                    const cartAmount = document.querySelector('.cart-span-amount')
+                    const cartAmount = document.querySelector('.cart-amount')
                     if (cartSpanAmount && cartProducts && cartAmount) {
                         cartSpanAmount.innerHTML = `${amount}`;
                         cartProducts.removeChild(parent);
@@ -348,7 +348,7 @@ class Cart implements ModuleInterface {
                                     }
                                     if (localStorage.getItem('fullCart')) {
                                         let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
-                                        let cartAmount = document.querySelector('.cart-span-amount')
+                                        let cartAmount = document.querySelector('.cart-amount')
                                         if (cartAmount) cartAmount.innerHTML = `${productsInLocalStorage.length}`;
                                     }
                                     document.querySelectorAll('.product-cart__number').forEach((el, index) => el.innerHTML = `${index + 1}`)
