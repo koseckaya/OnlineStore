@@ -47,7 +47,7 @@ class Checkout implements CheckoutInterface {
                     containerEl.classList.remove('show')
 
                 }
-                window.location.href = '/'
+                window.location.href = 'index.html'
             }, 1000)
         })
             .catch(e => console.log('error', e))
