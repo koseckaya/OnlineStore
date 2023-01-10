@@ -144,7 +144,7 @@ class Cart implements ModuleInterface {
         }
     }
     bind = (): void => {
-        console.log('Промокоды: dope1, dope2, dope3, dope4');
+        console.log('Промокоды: dope1, dope2, dope3');
         const promoField = document.querySelector('.form__field') as HTMLInputElement;
         const promoLabel = document.querySelector('.form__label');
         const discountsUl = document.querySelector('.discounts-ul');
@@ -433,7 +433,7 @@ class Cart implements ModuleInterface {
                     let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
                     arrOfAddedPromo.push(`${promoValue[promoField.value]}`);
 
-                    let discount;
+                    let discount: number;
                     if (arrOfAddedPromo.length > 0) {
                         discount = +arrOfAddedPromo.reduce((a, b) => a + Number(b), 0) / 100 * total;
 
@@ -493,13 +493,11 @@ class Cart implements ModuleInterface {
                         }
                         return false;
                     })
-
                     let indexOf = neededItem.indexOf(filteredItemIndex[0]);
                     let discountLi = document.querySelectorAll('.discount-li')
                     if (filteredItemIndex.length > 0) {
-                        promoBtn.setAttribute("style", "pointerEvents: none;")
-                        discountLi[indexOf].setAttribute("style", "animationName: horizontal;")
-                        discountLi[indexOf].setAttribute("style", "animationDuration: 1.5s;")
+                        promoBtn.setAttribute("style", "pointer-events: none;")
+                        discountLi[indexOf].setAttribute("style", "animation-name: horizontal; animation-duration: 1.5s;")
 
                         setTimeout(() => {
                             document.querySelectorAll('.discount-li')[indexOf].removeAttribute('style');
@@ -590,6 +588,7 @@ class Cart implements ModuleInterface {
                         <ul class="discounts-ul">
                         </ul>
                     </fieldset>
+                    <div class="discount-codes">Promo codes for test: 'dope1', 'dope2', 'dope3'</div>
                     <div class="cart-total__cash">
                         <span>Total:</span><span class="cart-span-total">$${total} USD</span>
                     </div>
