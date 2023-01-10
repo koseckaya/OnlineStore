@@ -144,7 +144,6 @@ class Cart implements ModuleInterface {
         }
     }
     bind = (): void => {
-        console.log('Промокоды: dope1, dope2, dope3, dope4');
         const promoField = document.querySelector('.form__field') as HTMLInputElement;
         const promoLabel = document.querySelector('.form__label');
         const discountsUl = document.querySelector('.discounts-ul');
@@ -261,7 +260,7 @@ class Cart implements ModuleInterface {
                                     }
 
                                     let value = parseInt(counterElInput.value);
-                                    const cartTotalAmount = document.querySelector('.cart-total__amount')
+                                    const cartTotalAmount = document.querySelector('.cart-span-total')
                                     let available = parent.querySelector('.available');
                                     const spanPriceCart = parent.querySelector('.span-price-cart')
                                     const cartSpanTotal = document.querySelector('.cart-span-total')
@@ -415,7 +414,7 @@ class Cart implements ModuleInterface {
 
 
                 if (promoField.value in promoValue && !arrOfAddedPromo.includes(`${promoValue[promoField.value]}`)) {
-                    promoBtn.setAttribute("style", "background-color: green;")
+                    promoBtn.setAttribute("style", "background: green;")
                     promoLabel.setAttribute("style", "color: green;")
                     let elementLi = document.createElement('li');
                     elementLi.classList.add('discount-li');
@@ -433,7 +432,7 @@ class Cart implements ModuleInterface {
                     let total = JSON.parse(localStorage.getItem('fullCart') || '').reduce((acc: number, curr: storageItem) => acc + items[+curr.id].price * +curr.amount, 0);
                     arrOfAddedPromo.push(`${promoValue[promoField.value]}`);
 
-                    let discount;
+                    let discount: number;
                     if (arrOfAddedPromo.length > 0) {
                         discount = +arrOfAddedPromo.reduce((a, b) => a + Number(b), 0) / 100 * total;
 
@@ -493,13 +492,11 @@ class Cart implements ModuleInterface {
                         }
                         return false;
                     })
-
                     let indexOf = neededItem.indexOf(filteredItemIndex[0]);
                     let discountLi = document.querySelectorAll('.discount-li')
                     if (filteredItemIndex.length > 0) {
-                        promoBtn.setAttribute("style", "pointerEvents: none;")
-                        discountLi[indexOf].setAttribute("style", "animationName: horizontal;")
-                        discountLi[indexOf].setAttribute("style", "animationDuration: 1.5s;")
+                        promoBtn.setAttribute("style", "pointer-events: none;")
+                        discountLi[indexOf].setAttribute("style", "animation-name: horizontal; animation-duration: 1.5s;")
 
                         setTimeout(() => {
                             document.querySelectorAll('.discount-li')[indexOf].removeAttribute('style');
@@ -507,8 +504,6 @@ class Cart implements ModuleInterface {
                         }, 700)
                     }
                 } else {
-                    promoBtn.setAttribute("style", "background-color: red;")
-                    promoBtn.setAttribute("style", "color: red;")
                     let formLabel = document.querySelector('.form__field');
                     let deletedValue = setInterval(() => {
                         if (promoField.value.length === 0) {
@@ -518,9 +513,9 @@ class Cart implements ModuleInterface {
                             promoLabel?.removeAttribute('style');
                         }
                         if (formLabel && promoField.value.length > 0) {
-                            formLabel.setAttribute("style", "border-image: linear-gradient(to right, red, #ffd199) 100% / 1 / 0 stretch;")
-                            formLabel.setAttribute("style", "border-width: 3px;")
-                            formLabel.setAttribute("style", "border-image-slice: 1;")
+                            promoLabel.setAttribute("style", "color: red;")
+                            promoBtn.setAttribute("style", "transition: 0s; background: red;")
+                            formLabel.setAttribute("style", "border-image: linear-gradient(to right, red, #ffd199) 100% / 1 / 0 stretch; border-width: 3px; border-image-slice: 1;")
                         }
                         promoField.value = promoField.value.slice(0, promoField.value.length - 1);
                     }, 175)
@@ -577,7 +572,7 @@ class Cart implements ModuleInterface {
                 </div>
                 <div class="cart-total"> 
                     <div class="form__group field">
-                        <input type="input" class="form__field" placeholder="Promo" name="Promo" id='Promo' required />
+                        <input type="input" class="form__field" placeholder="" name="Promo" id='Promo' required />
                         <label for="Promo" class="form__label">Discount code</label>
                         <button class="promo-btn"><svg style="color: white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" zoomAndPan="magnify" viewBox="0 0 30 30.000001" height="24" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><clipPath id="id1"><path d="M 2.328125 4.222656 L 27.734375 4.222656 L 27.734375 24.542969 L 2.328125 24.542969 Z M 2.328125 4.222656 " clip-rule="nonzero" fill="white"></path></clipPath></defs><g clip-path="url(#id1)"><path fill="white" d="M 27.5 7.53125 L 24.464844 4.542969 C 24.15625 4.238281 23.65625 4.238281 23.347656 4.542969 L 11.035156 16.667969 L 6.824219 12.523438 C 6.527344 12.230469 6 12.230469 5.703125 12.523438 L 2.640625 15.539062 C 2.332031 15.84375 2.332031 16.335938 2.640625 16.640625 L 10.445312 24.324219 C 10.59375 24.472656 10.796875 24.554688 11.007812 24.554688 C 11.214844 24.554688 11.417969 24.472656 11.566406 24.324219 L 27.5 8.632812 C 27.648438 8.488281 27.734375 8.289062 27.734375 8.082031 C 27.734375 7.875 27.648438 7.679688 27.5 7.53125 Z M 27.5 7.53125 " fill-opacity="1" fill-rule="nonzero"></path></g></svg></button>
                     </div>
@@ -590,6 +585,7 @@ class Cart implements ModuleInterface {
                         <ul class="discounts-ul">
                         </ul>
                     </fieldset>
+                    <div class="discount-codes">Promo codes for test: 'dope1', 'dope2', 'dope3'</div>
                     <div class="cart-total__cash">
                         <span>Total:</span><span class="cart-span-total">$${total} USD</span>
                     </div>

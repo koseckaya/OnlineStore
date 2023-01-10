@@ -135,7 +135,7 @@ class Product implements ModuleInterface {
 
     bind = (): void => {
         const productAddBtn = document.querySelector('.product-add-btn') as HTMLButtonElement
-        const btnsContainer = document.querySelector('.buy-buttons-container') as HTMLButtonElement
+        const btnsContainer = document.querySelector('.buy-buttons-container') as HTMLDivElement
         const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
 
         const storageGetItem: storageItem[] = JSON.parse(localStorage.getItem('fullCart') || '')
@@ -203,7 +203,7 @@ class Product implements ModuleInterface {
         document.querySelector('.product-sizes')?.addEventListener('change', (e: Event) => {
             const target = e.target as HTMLSelectElement;
             const input = document.querySelector('input') as HTMLInputElement
-            const btnsContainer = document.querySelector('.buy-buttons-container') as HTMLButtonElement
+            const btnsContainer = document.querySelector('.buy-buttons-container') as HTMLDivElement
             this.cartProduct.size = target.value;
             if (input) {
                 input.value = '1';
@@ -228,13 +228,14 @@ class Product implements ModuleInterface {
                         const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
                         if (alreadyIn) {
                             alreadyIn.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
-                        } else if (!alreadyIn) {
+                        } else {
                             let availableInCart = document.createElement('div');
                             availableInCart.classList.add('already-in');
                             availableInCart.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
                             btnsContainer.appendChild(availableInCart);
                             const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
-                            availableInCart.style.left = `${(btnsContainer.offsetWidth / 2) - ((alreadyIn as HTMLDivElement).offsetWidth / 2)}px`;
+                            console.log(btnsContainer)
+                            alreadyIn.style.left = `${((btnsContainer as HTMLDivElement).offsetWidth / 2) - ((alreadyIn as HTMLDivElement).offsetWidth / 2)}px`;
                         }
                     }
 
@@ -259,7 +260,8 @@ class Product implements ModuleInterface {
                         availableInCart.classList.add('already-in');
                         availableInCart.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
                         document.querySelector('.buy-buttons-container')?.appendChild(availableInCart);
-                        availableInCart.style.left = `${(btnsContainer.offsetWidth / 2) - ((alreadyIn as HTMLDivElement).offsetWidth / 2)}px`;
+                        const alreadyIn = document.querySelector('.already-in') as HTMLDivElement;
+                        alreadyIn.style.left = `${((btnsContainer as HTMLDivElement).offsetWidth / 2) - ((alreadyIn as HTMLDivElement).offsetWidth / 2)}px`;
                     }
                 }
             }
@@ -288,9 +290,11 @@ class Product implements ModuleInterface {
                         }
 
                         localStorage.setItem('fullCart', JSON.stringify(arr));
+                        storageGetItem = JSON.parse(localStorage.getItem('fullCart') || '');
                         cartAmount.innerHTML = `${storageGetItem.length}`;
                     } else {
                         localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
+                        storageGetItem = JSON.parse(localStorage.getItem('fullCart') || '');
                         cartAmount.innerHTML = `${storageGetItem.length}`;
                     }
 
@@ -307,7 +311,8 @@ class Product implements ModuleInterface {
                             availableInCart.classList.add('already-in');
                             availableInCart.innerHTML = `You already have ${this.itemWeNeedToFind.amount} in your cart`;
                             btnsContainer.appendChild(availableInCart);
-                            availableInCart.style.left = `${(btnsContainer.offsetWidth / 2) - ((alreadyIn as HTMLDivElement).offsetWidth / 2)}px`;
+                            const alreadyIn = document.querySelector('.already-in') as HTMLDivElement
+                            alreadyIn.style.left = `${((btnsContainer as HTMLDivElement).offsetWidth / 2) - ((alreadyIn as HTMLDivElement).offsetWidth / 2)}px`;
                         }
                     }
                     if (this.available === 0) {
