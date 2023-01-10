@@ -358,7 +358,6 @@ class Category implements ModuleInterface {
     render = () => {
         return `
         <div class="categories container">
-            <div class="bread-crumbs"></div>
 
             <div class="categories-side">
                 <div class="filters"> 
@@ -439,7 +438,7 @@ class Category implements ModuleInterface {
 
         <div class="categories-main">
         <div class='sortBy'>
-             <div class="filters"> 
+             <div class="filters-sort"> 
                 <select name='sortBy' class="filter filter-sortBy" id="filter-sortBy">
                     <option class="filter-sortBy" value="">Sort by</option>
                      ${sortBy.map((s: SortByTypes) => `
