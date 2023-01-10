@@ -296,6 +296,9 @@ class Category implements ModuleInterface {
             const element = lists[i] as HTMLSelectElement;
             element.addEventListener('change', this.handleChangeFilters)
         }
+        
+        const filtersSort = document.querySelector(".filters-sort select") as HTMLSelectElement;
+        filtersSort.addEventListener('change', this.handleChangeFilters) 
 
         const resetBtn = document.querySelector('.btn-reset')
         resetBtn?.addEventListener('click', this.resetFilters)
@@ -452,7 +455,7 @@ class Category implements ModuleInterface {
         </div>
         <div class='filter-categories'>
             <ul class="categ-list">
-                <li class="categ-item"><a href="index.html/category">All</a></li>
+                <li class="categ-item"><a href="index.html#/category">All</a></li>
                 ${categories.map(cat => `
                     <li class="categ-item">
                         <a href="index.html#/category/${cat.name.toLowerCase()}">
