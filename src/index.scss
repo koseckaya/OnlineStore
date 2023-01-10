@@ -381,8 +381,8 @@ body .modal-container.show {
 
 #nav-icon4 {
     display: none;
-    width: 31px;
-    height: 29px;
+    width: 39px;
+    height: 16px;
     position: relative;
     margin: 50px auto;
     -webkit-transform: rotate(0deg);
@@ -404,34 +404,28 @@ body .modal-container.show {
     background: #d3531a;
     border-radius: 0px;
     opacity: 1;
-    left: 0;
+    left: 1px;
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
     transition: 0.25s ease-in-out;
   }
 
 #nav-icon4 span:nth-child(1) {
-  top: 0px;
-  -webkit-transform-origin: left center;
-  -moz-transform-origin: left center;
-  -o-transform-origin: left center;
-  transform-origin: left center;
+    top: 4px;
+    -webkit-transform-origin: left center;
+    transform-origin: left center;
 }
 
 #nav-icon4 span:nth-child(2) {
-  top: 11px;
-  -webkit-transform-origin: left center;
-  -moz-transform-origin: left center;
-  -o-transform-origin: left center;
-  transform-origin: left center;
+    top: 14px;
+    -webkit-transform-origin: left center;
+    transform-origin: left center;
 }
 
 #nav-icon4 span:nth-child(3) {
-  top: 22px;
-  -webkit-transform-origin: left center;
-  -moz-transform-origin: left center;
-  -o-transform-origin: left center;
-  transform-origin: left center;
+    top: 24px;
+    -webkit-transform-origin: left center;
+    transform-origin: left center;
 }
 
 #nav-icon4.open span:nth-child(1) {
@@ -439,8 +433,8 @@ body .modal-container.show {
   -moz-transform: rotate(45deg);
   -o-transform: rotate(45deg);
   transform: rotate(45deg);
-  top: -3px;
-  left: 8px;
+  top: 2px;
+  left: 6px;
 }
 
 #nav-icon4.open span:nth-child(2) {
@@ -453,25 +447,29 @@ body .modal-container.show {
   -moz-transform: rotate(-45deg);
   -o-transform: rotate(-45deg);
   transform: rotate(-45deg);
-  top: 19.5px;
-  left: 8px;
+  top: 25.4px;
+  left: 5.5px;
 }
 
 @include for-max-922px() {
     .header {
         position: relative;
         .nav {
+            z-index: 13;
             transform: translateX(120%);
             padding: 1rem;
-            position: absolute;
+            position: fixed;
             right: 0;
             flex-direction: column;
-            height: 100vh;
-            width: 50%;
+            top: 0;
+            bottom: 0;
+            width: 125%;
             box-sizing: border-box;
-            background: #252525;
+            background: #252525e6;
             z-index: 10;
+            display: flex;
             align-items: flex-start;
+            justify-content: flex-start;
             gap: 1rem;
             transition: .3s ease;
             &__burger {
@@ -481,19 +479,32 @@ body .modal-container.show {
                 display: flex;
                 flex-direction: column;
                 .menu-list {
-                    margin-top: 5rem;
+                    margin-top: 2rem;
                     flex-direction: column;
                     display: flex;
                     list-style: none;
-                    gap: 1rem;
+                    gap: 2.5rem;
+                    a {
+                        font-size: 3rem;
+                    }
                 }
             }
         }
         #nav-icon4 {
-            display: block;
-            position: absolute;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            background: #252525;
+            width: 64px;
+            height: 64px;
+            border: 1rem solid #252525;
+            border-radius: 50%;
             right: 0.5rem;
-            z-index: 11;
+            z-index: 14;
+            margin-right: 1rem;
+            padding-top: -10px;
+            box-sizing: border-box;
         }
         .settings {
             margin-left: 1rem;
@@ -501,7 +512,8 @@ body .modal-container.show {
             &__search {
                 order: 2;
                 input {
-                    left: 6rem;
+                    width: 130px;
+                    left: 5rem;
                 }
             }
         }

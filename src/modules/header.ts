@@ -62,25 +62,14 @@ class Header implements HeaderInterface {
         const burgerIcon = document.getElementById('nav-icon4');
         if (burgerIcon) {
         const nav = document.querySelector('.nav');
-        window.addEventListener('click', (e) => {
-                if (e.target === burgerIcon) {
-                    burgerIcon.classList.remove('open');
-                    nav?.classList.remove('openMenu');
-                } 
-                if (burgerIcon.classList.contains('open') && nav?.classList.contains('openMenu')) {
-                    burgerIcon.classList.remove('open');
-                    nav?.classList.remove('openMenu');
-                }
-        })
         burgerIcon?.addEventListener('click', (e) => {
-            e.stopPropagation();
             if (burgerIcon.className === 'open') {
                 burgerIcon.classList.remove('open');
                 nav?.classList.remove('openMenu');
-            } 
-            burgerIcon.classList.add('open');
-            nav?.classList.add('openMenu');
-            
+            } else {
+                burgerIcon.classList.add('open');
+                nav?.classList.add('openMenu');
+            }
         })
         }
     }
