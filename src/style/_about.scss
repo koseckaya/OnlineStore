@@ -25,3 +25,32 @@
         font-size: 18px;
     }
 }
+@media (max-width: 930px) {
+    .idea {
+        padding: 100px 0;
+    }
+}
+@media (max-width: 860px) {
+    .rewind {
+        width: 97%;
+    }
+}
+@media (max-width: 645px) {
+   .idea {
+        padding: 30px 0;
+        h1{
+            font-size: 3em;
+        }
+        p{
+            font-size: 1.5em;
+        }
+    }
+}
+@media (max-width: 435px) {
+   .idea {
+        padding: 10px 0;
+        h1{
+            font-size: 2.5em;
+        }
+    }
+}
