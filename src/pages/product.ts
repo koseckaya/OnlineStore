@@ -290,9 +290,11 @@ class Product implements ModuleInterface {
                         }
 
                         localStorage.setItem('fullCart', JSON.stringify(arr));
+                        storageGetItem = JSON.parse(localStorage.getItem('fullCart') || '');
                         cartAmount.innerHTML = `${storageGetItem.length}`;
                     } else {
                         localStorage.setItem('fullCart', JSON.stringify([this.cartProduct]));
+                        storageGetItem = JSON.parse(localStorage.getItem('fullCart') || '');
                         cartAmount.innerHTML = `${storageGetItem.length}`;
                     }
 
