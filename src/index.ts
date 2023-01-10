@@ -27,7 +27,7 @@ const router = () => {
     }
 
     const request = parseRequestURL()
-
+    
     const parseUrl =
         (request.resource ? `/${request.resource}` : '/') +
         (request.id ? `/:id` : '') +
@@ -59,6 +59,15 @@ const router = () => {
         const totalMoneyHeader = document.querySelector('.total-money') as HTMLElement;
         totalMoneyHeader.innerHTML = `$0`
     }
+    if (request) {
+        if (request.resource === undefined) {
+            const footerBlocks = document.querySelector('.footer__blocks') as HTMLDivElement;
+            footerBlocks.setAttribute('style', 'filter: invert(1);');
+        } else {
+            const footerBlocks = document.querySelector('.footer__blocks') as HTMLDivElement;
+            footerBlocks.removeAttribute('style');
+        }
+    } 
 }
 
 window.addEventListener('load', router)

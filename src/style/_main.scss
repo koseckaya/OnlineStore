@@ -1,7 +1,8 @@
 .jackets {
     display: flex;
-    border: 1px solid rgba($main, 0.15);
+    box-shadow: rgb(255 255 255) 0px 0px 15px;
     margin-bottom: 80px;
+    background-color: white;
     &__annok{
         padding: 200px 0;
         display: flex;
@@ -9,6 +10,7 @@
         align-items: center;
         text-align: left;
         width: 50%;
+        background: whit
     }
     &__title {
         font-size: 47px;
@@ -17,7 +19,6 @@
     &__desc{
         font-size: 25px;
         margin-bottom: 30px;
-        
     }
 
     &__img{
@@ -30,14 +31,28 @@
     }
 }
 
-.bottom{
-    &-desc{
+.bottom-desc {
+    color: white;
+    text-align: center;
+    .bottom__desc{
         text-align: center;
         margin-bottom: 50px;
     }
-    &__title{
+    .bottom__title{
         font-weight: 600;
         font-size: 18px;
         margin-bottom: 15px;
     }
+}
+
+video {
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    position: absolute;
+    -webkit-filter: hue-rotate(346deg) contrast(1.1);
+    filter: brightness(0.2) contrast(1) grayscale(1);
 }

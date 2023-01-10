@@ -3,7 +3,7 @@
 import { categories } from '../data';
 import { ModuleInterface } from './types'
 import video from '../img/video.mp4';
-
+import { parseRequestURL } from '../helpers/utils';
 class Main implements ModuleInterface {
 
     bind = () => { }
