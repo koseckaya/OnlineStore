@@ -10,7 +10,7 @@ class Main implements ModuleInterface {
     render = () => {
         return (`
         <div class="container-main">
-            <video autoplay="true" loop="" playsinline="" webkit-playsinline="true" data-overlay-video="true">
+            <video autoplay muted preload loop="true" playsinline="" webkit-playsinline="true" data-overlay-video="true">
                  <source src="${video}" type="video/mp4">
                 Your browser doesn't support HTML5 video tag.
             </video>
