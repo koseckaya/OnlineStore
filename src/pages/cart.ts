@@ -193,7 +193,7 @@ class Cart implements ModuleInterface {
                     let amount = JSON.parse(localStorage.getItem('fullCart') || '').length;
                     const cartSpanAmount = document.querySelector('.cart-span-amount')
                     const cartProducts = document.querySelector('.cart-products')
-                    const cartAmount = document.querySelector('.cart-amount')
+                    const cartAmount = document.querySelector('.cart-span-amount')
                     if (cartSpanAmount && cartProducts && cartAmount) {
                         cartSpanAmount.innerHTML = `${amount}`;
                         cartProducts.removeChild(parent);
@@ -261,7 +261,7 @@ class Cart implements ModuleInterface {
                                     }
 
                                     let value = parseInt(counterElInput.value);
-                                    const cartTotalAmount = document.querySelector('.cart-total__amount')
+                                    const cartTotalAmount = document.querySelector('.cart-span-total')
                                     let available = parent.querySelector('.available');
                                     const spanPriceCart = parent.querySelector('.span-price-cart')
                                     const cartSpanTotal = document.querySelector('.cart-span-total')
@@ -348,7 +348,7 @@ class Cart implements ModuleInterface {
                                     }
                                     if (localStorage.getItem('fullCart')) {
                                         let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
-                                        let cartAmount = document.querySelector('.cart-amount')
+                                        let cartAmount = document.querySelector('.cart-span-amount')
                                         if (cartAmount) cartAmount.innerHTML = `${productsInLocalStorage.length}`;
                                     }
                                     document.querySelectorAll('.product-cart__number').forEach((el, index) => el.innerHTML = `${index + 1}`)
