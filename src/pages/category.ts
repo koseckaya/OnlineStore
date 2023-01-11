@@ -120,6 +120,7 @@ class Category implements ModuleInterface {
         }
         if (search) {
             const searchString = search.toLowerCase();
+            console.log('search', searchString );
             const fields = ['brand', 'name', 'colorHTML', 'type', 'description']
             filteredItems = filteredItems.filter(item => {
                 const searchFields = fields.reduce((acc, field) => {
@@ -318,7 +319,7 @@ class Category implements ModuleInterface {
         productViewBtn.addEventListener('change', this.handleProductView)
 
         const searchInput = <HTMLInputElement>document.querySelector('.search-input')
-        searchInput.value = this.filters.search
+        searchInput.value = this.filters.search || ''
 
         this.initRangePrice()
         this.initRangeRating()
