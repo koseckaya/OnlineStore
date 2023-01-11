@@ -91,7 +91,7 @@ class Checkout implements CheckoutInterface {
             this.setInvalid(cardExpiry) :
             this.setValid(cardExpiry)
 
-        isNaN(Number(cvv.value)) ||  Number(cvv.value) < 100 || Number(cvv.value) > 999 ?
+        cvv.value === "" || cvv?.value.length !== 3 ?
             this.setInvalid(cvv) :
             this.setValid(cvv)
 
@@ -243,7 +243,7 @@ class Checkout implements CheckoutInterface {
                             </div>
                             <div class="input-box">
                                 <label for="card-number" class="input-label">CVV</label>
-                                <input class="checkout__input" id="card-cvv" name="card.number" type="password" pattern="^[0-9]{3, 4}$" autocomplete="off">
+                                <input class="checkout__input" id="card-cvv" name="card.number" type="password" autocomplete="off">
                             </div>
                         </div>
                      </div>
