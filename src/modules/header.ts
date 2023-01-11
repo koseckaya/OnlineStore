@@ -95,7 +95,10 @@ class Header implements HeaderInterface {
             newLi.classList.add('list-item');
             clone.setAttribute('style', 'display: block; order: 1; position: unset;');
             newLi.appendChild(clone);
-            menuList.insertAdjacentElement('afterbegin', newLi);
+            if (!menuList.querySelector('.dope-h1')) {
+                console.log(1)
+                menuList.insertAdjacentElement('afterbegin', newLi);
+            }
         }
     }
 
