@@ -368,7 +368,7 @@ class Cart implements ModuleInterface {
                                         if (!Array.from(arrayOfProductCart).some(el => el.getAttribute('style') === '')) {
                                             this.pageNow -= 1;
                                             let output = document.getElementById('output')
-                                            if (output) output.innerText = `${this.pageNow + 1}`;
+                                            if (output) output.innerText = `${this.pageNow}`;
                                             this.visibleItems()
                                         };
                                         this.visibleItems()
@@ -393,34 +393,35 @@ class Cart implements ModuleInterface {
             }
             )
         }
+        let previousPage = document.querySelector("#subtract") as HTMLButtonElement;
         let nextPage = document.querySelector("#add") as HTMLButtonElement;
         if (nextPage) nextPage.addEventListener("click", () => {
             let productsInLocalStorage = JSON.parse(localStorage.getItem('fullCart') || '');
             let pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
-            if (this.pageNow == pages) nextPage.disabled = true;
-            if (this.pageNow < pages) {
+            if (this.pageNow == pages) {
+                nextPage.style.pointerEvents = 'none';
+            } else if (this.pageNow < pages) {
                 this.pageNow += 1
-                //setUrlParams(this.getCartParams(this.pageNow))
                 this.changeUrl(this.getCartParams(this.pageNow))
-                if (nextPage) nextPage.disabled = false;
+                if (nextPage) nextPage.removeAttribute('style');
                 let output = document.querySelector("#output") as HTMLSpanElement;
                 if (output) output.innerText = `${this.pageNow}`;
+                previousPage.removeAttribute('style');
             }
             this.visibleItems()
         });
 
-        let previousPage = document.querySelector("#subtract") as HTMLButtonElement;
         if (previousPage) previousPage.addEventListener("click", () => {
-            console.log(this.pageNow);
             if (this.pageNow > 1) {
                 this.pageNow -= 1;
                 this.changeUrl(this.getCartParams(this.pageNow))
-                if (previousPage) previousPage.disabled = false;
+                if (previousPage) previousPage.removeAttribute('style');
                 let output = document.querySelector("#output") as HTMLSpanElement;
                 if (output) output.innerText = `${this.pageNow}`;
                 this.visibleItems()
+                nextPage.removeAttribute('style');
             } else {
-                previousPage.disabled = true;
+                previousPage.style.pointerEvents = 'none';
             }
         });
         if (promoField && promoLabel) {

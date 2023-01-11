@@ -318,7 +318,7 @@ class Category implements ModuleInterface {
         productViewBtn.addEventListener('change', this.handleProductView)
 
         const searchInput = <HTMLInputElement>document.querySelector('.search-input')
-        searchInput.value = this.filters.search
+        searchInput.value = this.filters.search || ''
 
         this.initRangePrice()
         this.initRangeRating()
