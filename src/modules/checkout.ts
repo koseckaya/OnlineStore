@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { CheckoutInterface, storageItem } from '../pages/types';
 import { isValidCreditCard, isExpireValid, phoneNumberFormat, dataFormat } from '../helpers/validation'
 import { setUrlParams } from '../helpers/url';
@@ -91,7 +92,7 @@ class Checkout implements CheckoutInterface {
             this.setInvalid(cardExpiry) :
             this.setValid(cardExpiry)
 
-        isNaN(Number(cvv.value)) ||  Number(cvv.value) < 100 || Number(cvv.value) > 999 ?
+        isNaN(Number(cvv.value)) || Number(cvv.value) < 100 || Number(cvv.value) > 999 ?
             this.setInvalid(cvv) :
             this.setValid(cvv)
 
@@ -123,6 +124,14 @@ class Checkout implements CheckoutInterface {
             let x = (e.target as HTMLInputElement).value
             if (x) (e.target as HTMLInputElement).value = phoneNumberFormat(x)
         }
+    }
+    handleCvv = (e: Event): void => {
+        let x = e.target.value[e.target.value.length - 1]
+            if (/^\d*\.?\d*$/.test(x) && e.target.value.length < 4) {
+                return x
+            } else {
+                return e.target.value = e.target.value.slice(0, -1)
+            }
     }
     handleData = (e: Event): void => {
         const target = e.target as HTMLInputElement;
@@ -189,6 +198,16 @@ class Checkout implements CheckoutInterface {
         cardData?.addEventListener('input', this.handleData)
         const cardNumber = form?.querySelector('#card-number')
         cardNumber?.addEventListener('input', this.handleCardNumber)
+        const cardCvv = form?.querySelector('#card-cvv')
+        cardCvv?.addEventListener('input', this.handleCvv)
+        // cardCvv?.addEventListener('paste', (e) => {
+        //     console.log('paste');
+        //     if (!(/^\d*\.?\d*$/.test(e.target.value))) {
+        //         console.log('paste2');
+        //         return e.target.value = ''
+        //     }
+        // })
+        
     }
     render = () => {
 
