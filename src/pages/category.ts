@@ -149,6 +149,9 @@ class Category implements ModuleInterface {
             if (sortBy === 'rating') {
                 this.items = this.items.sort((a, b) => a.rating < b.rating ? 1 : -1)
             }
+            if (sortBy === 'ratingDesc') {
+                this.items = this.items.sort((a, b) => a.rating > b.rating ? 1 : -1)
+            }
         }
     };
 

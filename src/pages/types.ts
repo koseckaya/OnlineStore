@@ -41,3 +41,6 @@ export interface storageItem {
 export interface promoCode {
     [key: string]: number;
 }
+export interface changeUrlType {
+    [key: string]: string;
+}

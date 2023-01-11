@@ -91,7 +91,7 @@ class Checkout implements CheckoutInterface {
             this.setInvalid(cardExpiry) :
             this.setValid(cardExpiry)
 
-        cvv.value === "" || cvv?.value.length !== 3 ?
+        isNaN(Number(cvv.value)) ||  Number(cvv.value) < 100 || Number(cvv.value) > 999 ?
             this.setInvalid(cvv) :
             this.setValid(cvv)
 
