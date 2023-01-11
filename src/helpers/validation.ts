@@ -12,7 +12,7 @@ export const amexCard = (num: string): boolean => {
     return cardRe.test(num);
 }
 export const isValidCreditCard = (cardNumber: string): string | null => {
-    var cardType = null;
+    var cardType = '';
     if (visaCard(cardNumber)) {
         cardType = 'visa';
     } else if (masterCard(cardNumber)) {

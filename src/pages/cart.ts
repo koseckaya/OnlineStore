@@ -2,7 +2,7 @@
 import Checkout from "../modules/checkout";
 import { getUrlParams } from '../helpers/utils';
 import { items, categories } from "../data";
-import { CheckoutInterface, ModuleInterface, promoCode, storageItem } from "./types";
+import { changeUrlType, CheckoutInterface, ModuleInterface, promoCode, storageItem } from "./types";
 import { setUrlParams } from './../helpers/url';
 import { url } from "inspector";
 
@@ -45,6 +45,7 @@ class Cart implements ModuleInterface {
         }
 
         if (urlParams.has('page')) {
+
             const getPages = Number(urlParams.get('page'));
             const pages = Math.ceil(productsInLocalStorage.length / this.itemsPerPage);
 
@@ -54,6 +55,16 @@ class Cart implements ModuleInterface {
                 setUrlParams(this.getCartParams())
             }
         }
+
+
+    }
+    changeUrl = (params: changeUrlType): void => {
+        const url = new URL(window.location.toString());
+        for (let param in params) {
+            url.searchParams.set(param, params[param])
+        }
+        window.history.pushState({}, '', url);
+
     }
 
     getCartParams = (newPage: number | string | null = null, newLimit: number | string | null = null) => {
@@ -389,21 +400,24 @@ class Cart implements ModuleInterface {
             if (this.pageNow == pages) nextPage.disabled = true;
             if (this.pageNow < pages) {
                 this.pageNow += 1
-                setUrlParams(this.getCartParams(this.pageNow))
+                //setUrlParams(this.getCartParams(this.pageNow))
+                this.changeUrl(this.getCartParams(this.pageNow))
                 if (nextPage) nextPage.disabled = false;
+                let output = document.querySelector("#output") as HTMLSpanElement;
+                if (output) output.innerText = `${this.pageNow}`;
             }
             this.visibleItems()
         });
 
         let previousPage = document.querySelector("#subtract") as HTMLButtonElement;
         if (previousPage) previousPage.addEventListener("click", () => {
-            
+            console.log(this.pageNow);
             if (this.pageNow > 1) {
-                this.pageNow -= 1
-                setUrlParams(this.getCartParams(this.pageNow))
+                this.pageNow -= 1;
+                this.changeUrl(this.getCartParams(this.pageNow))
                 if (previousPage) previousPage.disabled = false;
                 let output = document.querySelector("#output") as HTMLSpanElement;
-                if (output) output.innerText = `${this.pageNow + 1}`;
+                if (output) output.innerText = `${this.pageNow}`;
                 this.visibleItems()
             } else {
                 previousPage.disabled = true;
@@ -530,6 +544,7 @@ class Cart implements ModuleInterface {
                 let limitValue = +(target.value)
                 this.itemsPerPage = limitValue;
                 setUrlParams(this.getCartParams(null, this.itemsPerPage));
+                //this.changeUrl(this.getCartParams(null, this.itemsPerPage));
 
                 this.visibleItems();
                 if (limitValue === 3) {
