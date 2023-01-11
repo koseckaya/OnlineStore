@@ -40,19 +40,6 @@ class Header implements HeaderInterface {
             this.handleSearch(e);
         }
     }
-    // burgerLogic: EventListener = (e: Event): void => {
-
-    //     console.log(e)
-    //     const burgerIcon = document.getElementById('nav-icon4') as HTMLDivElement;
-    //     const nav = document.querySelector('.nav');
-    //     if (burgerIcon.classList.contains('open')) {
-    //         burgerIcon.removeAttribute('class');
-    //         nav?.classList.remove('openMenu');
-    //     } else {
-    //         burgerIcon.classList.add('open');
-    //         nav?.classList.add('openMenu');
-    //     }
-    // }
     bind = (): void => {
         const search = document.querySelector('.settings__search .settings__btn')
         if (search) search.addEventListener('click', this.handleSearch)
@@ -96,7 +83,6 @@ class Header implements HeaderInterface {
             clone.setAttribute('style', 'display: block; order: 1; position: unset;');
             newLi.appendChild(clone);
             if (!menuList.querySelector('.dope-h1')) {
-                console.log(1)
                 menuList.insertAdjacentElement('afterbegin', newLi);
             }
         }
