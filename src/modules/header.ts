@@ -71,12 +71,12 @@ class Header implements HeaderInterface {
             }
         });
         
-        const burgerIcon = document.getElementById('nav-icon4');
+        const burgerIcon = document.getElementById('nav-icon4') as HTMLDivElement;
         burgerIcon?.addEventListener('click', burgerLogic)
         if (burgerIcon) {
         const nav = document.querySelector('.nav');
         const headerLinks = document.querySelectorAll('.header-link');
-        headerLinks.forEach(el => el.addEventListener('click', (e) => {
+        headerLinks.forEach(el => el.addEventListener('click', () => {
             if (window.innerWidth <= 922) {
                 burgerIcon.classList.remove('open');
                 nav?.classList.remove('openMenu');
@@ -86,6 +86,16 @@ class Header implements HeaderInterface {
                 }, 50)
             }
         }))
+        }
+        if (window.innerWidth <= 586) {
+            const menuList = document.querySelector('.menu-list') as HTMLUListElement;
+            const dopeH1 = document.querySelector('.dope-h1') as HTMLElement;
+            const clone = dopeH1?.cloneNode(true) as HTMLElement;
+            const newLi = document.createElement('li');
+            newLi.classList.add('list-item');
+            clone.setAttribute('style', 'display: block; order: 1; position: unset;');
+            newLi.appendChild(clone);
+            menuList.insertAdjacentElement('afterbegin', newLi);
         }
     }
 
