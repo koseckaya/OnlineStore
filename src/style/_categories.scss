@@ -1,3 +1,5 @@
+@import 'var';
+
 .categories {
     display: flex;
     flex-direction: row;
@@ -36,9 +38,13 @@
     display: flex;
 
 }
-.category{
+.category {
     position: relative;
-   
+    @include for-max-1155px() {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     a {
         color: $text;
     }
@@ -62,6 +68,10 @@
             color: $white;
             font-size: 20px;
             line-height: 23px;
+        }
+        @include for-max-1155px() {
+            width: 274px;
+            left: auto;
         }
     }
 }
@@ -432,5 +442,26 @@ select option:hover {
     }
     .categ-list{
         flex-wrap: wrap;
+    }
+}
+
+
+@include for-max-1155px(){
+    .container-main {
+        .categories {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            grid-template-columns: 1fr 1fr;   
+            width: 100%;
+            margin: 2.5rem auto;
+        }
+    }
+}
+@include for-max-769px() {
+    .container-main {
+        .categories {
+            grid-template-rows: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr;
+        }
     }
 }
