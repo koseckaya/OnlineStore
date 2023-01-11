@@ -6,7 +6,8 @@ export const colors: string[] = ['black', 'grey', 'blue', 'violet', 'white', 'pe
 export const sortBy: SortByTypes[] = [
   SortByTypes.priceAsc,
   SortByTypes.priceDesc,
-  SortByTypes.rating
+  SortByTypes.rating,
+  SortByTypes.ratingDesc
 ]
 
 export const modelsName: string[] = ['Adept', 'Akin', 'Blizzard', 'Common', 'Con', 'Cyclone', 'Daily', 'Iconic', 'JT', 'Notorious', 'Ozed', 'Regular', 'Standard', 'Tigress', 'Yeti'];

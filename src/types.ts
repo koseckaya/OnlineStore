@@ -33,7 +33,8 @@ export interface Category {
 export enum SortByTypes {
   priceAsc = 'priceAsc',
   priceDesc = 'priceDesc',
-  rating = 'rating'
+  rating = 'rating',
+  ratingDesc = 'ratingDesc'
 }
 
 export type StringsSortByType = {
