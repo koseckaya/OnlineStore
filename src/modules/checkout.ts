@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { CheckoutInterface, storageItem } from '../pages/types';
 import { isValidCreditCard, isExpireValid, phoneNumberFormat, dataFormat } from '../helpers/validation'
 import { setUrlParams } from '../helpers/url';
@@ -125,12 +124,12 @@ class Checkout implements CheckoutInterface {
             if (x) (e.target as HTMLInputElement).value = phoneNumberFormat(x)
         }
     }
-    handleCvv = (e: Event): void => {
-        let x = e.target.value[e.target.value.length - 1]
-            if (/^\d*\.?\d*$/.test(x) && e.target.value.length < 4) {
+    handleCvv = (e: Event): string => {
+        let x: string = (e.target as HTMLInputElement).value[(e.target as HTMLInputElement).value.length - 1]
+            if (/^\d*\.?\d*$/.test(x) && (e.target as HTMLInputElement).value.length < 4) {
                 return x
             } else {
-                return e.target.value = e.target.value.slice(0, -1)
+                return (e.target as HTMLInputElement).value = (e.target as HTMLInputElement).value.slice(0, -1)
             }
     }
     handleData = (e: Event): void => {
@@ -200,13 +199,9 @@ class Checkout implements CheckoutInterface {
         cardNumber?.addEventListener('input', this.handleCardNumber)
         const cardCvv = form?.querySelector('#card-cvv')
         cardCvv?.addEventListener('input', this.handleCvv)
-        // cardCvv?.addEventListener('paste', (e) => {
-        //     console.log('paste');
-        //     if (!(/^\d*\.?\d*$/.test(e.target.value))) {
-        //         console.log('paste2');
-        //         return e.target.value = ''
-        //     }
-        // })
+        cardCvv?.addEventListener('paste', (e: Event) => {
+            e.preventDefault();
+        })
         
     }
     render = () => {
