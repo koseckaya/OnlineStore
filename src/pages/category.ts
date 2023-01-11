@@ -296,6 +296,9 @@ class Category implements ModuleInterface {
             const element = lists[i] as HTMLSelectElement;
             element.addEventListener('change', this.handleChangeFilters)
         }
+        
+        const filtersSort = document.querySelector(".filters-sort select") as HTMLSelectElement;
+        filtersSort.addEventListener('change', this.handleChangeFilters) 
 
         const resetBtn = document.querySelector('.btn-reset')
         resetBtn?.addEventListener('click', this.resetFilters)
@@ -358,7 +361,6 @@ class Category implements ModuleInterface {
     render = () => {
         return `
         <div class="categories container">
-            <div class="bread-crumbs"></div>
 
             <div class="categories-side">
                 <div class="filters"> 
@@ -439,7 +441,7 @@ class Category implements ModuleInterface {
 
         <div class="categories-main">
         <div class='sortBy'>
-             <div class="filters"> 
+             <div class="filters-sort"> 
                 <select name='sortBy' class="filter filter-sortBy" id="filter-sortBy">
                     <option class="filter-sortBy" value="">Sort by</option>
                      ${sortBy.map((s: SortByTypes) => `
@@ -453,7 +455,7 @@ class Category implements ModuleInterface {
         </div>
         <div class='filter-categories'>
             <ul class="categ-list">
-                <li class="categ-item"><a href="/#/category">All</a></li>
+                <li class="categ-item"><a href="index.html#/category">All</a></li>
                 ${categories.map(cat => `
                     <li class="categ-item">
                         <a href="index.html#/category/${cat.name.toLowerCase()}">
