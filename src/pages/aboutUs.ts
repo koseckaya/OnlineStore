@@ -1,8 +1,10 @@
 import { ModuleInterface } from "./types"
-
+import burgerLogic from "../helpers/handleBurger";
 class About implements ModuleInterface {
 
     bind = () => {
+        const burgerIcon = document.getElementById('nav-icon4');
+        burgerIcon?.removeEventListener('click', burgerLogic)
     }
     render = () => {
         return `

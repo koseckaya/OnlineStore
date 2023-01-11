@@ -1,7 +1,7 @@
 
 import { getUrlWithParams } from '../helpers/utils';
 import { HeaderInterface } from '../pages/types';
-
+import burgerLogic from '../helpers/handleBurger';
 class Header implements HeaderInterface {
     search = '';
     isActive = false;
@@ -40,7 +40,19 @@ class Header implements HeaderInterface {
             this.handleSearch(e);
         }
     }
+    // burgerLogic: EventListener = (e: Event): void => {
 
+    //     console.log(e)
+    //     const burgerIcon = document.getElementById('nav-icon4') as HTMLDivElement;
+    //     const nav = document.querySelector('.nav');
+    //     if (burgerIcon.classList.contains('open')) {
+    //         burgerIcon.removeAttribute('class');
+    //         nav?.classList.remove('openMenu');
+    //     } else {
+    //         burgerIcon.classList.add('open');
+    //         nav?.classList.add('openMenu');
+    //     }
+    // }
     bind = (): void => {
         const search = document.querySelector('.settings__search .settings__btn')
         if (search) search.addEventListener('click', this.handleSearch)
@@ -59,18 +71,31 @@ class Header implements HeaderInterface {
             }
         });
         
-        const burgerIcon = document.getElementById('nav-icon4');
+        const burgerIcon = document.getElementById('nav-icon4') as HTMLDivElement;
+        burgerIcon?.addEventListener('click', burgerLogic)
         if (burgerIcon) {
         const nav = document.querySelector('.nav');
-        burgerIcon?.addEventListener('click', (e) => {
-            if (burgerIcon.className === 'open') {
+        const headerLinks = document.querySelectorAll('.header-link');
+        headerLinks.forEach(el => el.addEventListener('click', () => {
+            if (window.innerWidth <= 922) {
                 burgerIcon.classList.remove('open');
                 nav?.classList.remove('openMenu');
-            } else {
-                burgerIcon.classList.add('open');
-                nav?.classList.add('openMenu');
+                burgerIcon?.removeEventListener('click', burgerLogic)
+                setTimeout(() => {
+                    burgerIcon?.addEventListener('click', burgerLogic)
+                }, 50)
             }
-        })
+        }))
+        }
+        if (window.innerWidth <= 586) {
+            const menuList = document.querySelector('.menu-list') as HTMLUListElement;
+            const dopeH1 = document.querySelector('.dope-h1') as HTMLElement;
+            const clone = dopeH1?.cloneNode(true) as HTMLElement;
+            const newLi = document.createElement('li');
+            newLi.classList.add('list-item');
+            clone.setAttribute('style', 'display: block; order: 1; position: unset;');
+            newLi.appendChild(clone);
+            menuList.insertAdjacentElement('afterbegin', newLi);
         }
     }
 

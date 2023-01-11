@@ -1,8 +1,13 @@
+@import 'var';
+
 .jackets {
     display: flex;
     box-shadow: rgb(255 255 255) 0px 0px 15px;
     margin-bottom: 80px;
     background-color: white;
+    @include for-max-1155px() {
+        display: none;
+    }
     &__annok{
         padding: 200px 0;
         display: flex;
