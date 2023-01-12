@@ -121,7 +121,7 @@ class Category implements ModuleInterface {
         if (search) {
             const searchString = search.toLowerCase();
             console.log('search', searchString );
-            const fields = ['brand', 'name', 'colorHTML', 'type', 'description']
+            const fields = ['brand', 'name', 'colorHTML', 'type', 'description', 'price', 'rating', 'gender']
             filteredItems = filteredItems.filter(item => {
                 const searchFields = fields.reduce((acc, field) => {
                     acc += ' ' + item[field as ItemFieldsType];
